@@ -38,13 +38,16 @@ app.get("/api/offers", async (req, res) => {
       .map(line => {
         const parts = line.split(",");
         return {
+          id: parts[0],
           title: parts[1],
-          payout: parts[2],
+          description: parts[2],
           link: parts[3],
-          country: parts[4],
-          image: parts[5]
+          image: parts[4],
+          country: parts[6],
+          payout: parseFloat(parts[8])
         };
-      });
+      })
+      .filter(offer => offer.country === "NL"); // فلترة هولندا فقط
     res.json(offers);
   } catch (e) {
     console.error(e);
