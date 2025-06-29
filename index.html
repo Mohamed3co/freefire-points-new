@@ -14,6 +14,8 @@
   <div id="user-info"></div>
   <button id="login-btn">تسجيل الدخول بحساب Google</button>
 
+  <div id="points-count">نقاطك: 0</div>
+
   <div id="id-section" style="display:none;">
     <input type="text" id="user-id" placeholder="أدخل الآيدي الخاص بك">
     <button id="save-id">حفظ الآيدي</button>
@@ -40,6 +42,7 @@
 
     let currentUserUid = null;
 
+    // زر تسجيل الدخول
     document.getElementById('login-btn').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider)
@@ -53,6 +56,7 @@
             email: user.email
           });
           localStorage.setItem('uid', user.uid);
+          loadPoints();
         })
         .catch(error => {
           console.error(error);
@@ -60,6 +64,7 @@
         });
     });
 
+    // زر حفظ الآيدي
     document.getElementById('save-id').addEventListener('click', () => {
       const enteredId = document.getElementById('user-id').value.trim();
       if (!enteredId) {
@@ -76,6 +81,7 @@
       alert("تم حفظ الآيدي بنجاح");
     });
 
+    // تحميل العروض
     async function loadOffers() {
       try {
         const res = await fetch('/api/offers');
@@ -85,7 +91,7 @@
         offers.slice(0, 10).forEach(o => {
           const li = document.createElement('li');
           li.innerHTML = `
-            <a href="${o.offer_url}" target="_blank">${o.title}</a>
+            <a href="#" onclick="addPoints(${o.payout}, '${o.offer_url}')">${o.title}</a>
             - ${o.payout}$<br>
             ${o.description}
           `;
@@ -96,6 +102,36 @@
       }
     }
 
+    // إضافة النقاط
+    function addPoints(payout, url) {
+      if (!currentUserUid) {
+        alert("سجل الدخول أولًا");
+        return;
+      }
+      const pointsToAdd = Math.floor(payout * 300);
+      const userRef = db.ref('users/' + currentUserUid + '/points');
+
+      userRef.once('value').then(snapshot => {
+        const currentPoints = snapshot.val() || 0;
+        const newPoints = currentPoints + pointsToAdd;
+        userRef.set(newPoints);
+        alert(`تم إضافة ${pointsToAdd} نقطة. مجموع نقاطك: ${newPoints}`);
+        document.getElementById('points-count').innerText = `نقاطك: ${newPoints}`;
+        window.open(url, '_blank');
+      });
+    }
+
+    // تحميل النقاط
+    function loadPoints() {
+      if (!currentUserUid) return;
+      const userRef = db.ref('users/' + currentUserUid + '/points');
+      userRef.once('value').then(snapshot => {
+        const pts = snapshot.val() || 0;
+        document.getElementById('points-count').innerText = `نقاطك: ${pts}`;
+      });
+    }
+
+    // إرسال إشعار
     async function notify() {
       await fetch('/api/notify?message=شخص دخل على الموقع');
       alert("تم الإرسال");
