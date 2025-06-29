@@ -27,7 +27,7 @@ admin.initializeApp({
 // Serve static HTML
 app.use(express.static(__dirname));
 
-// عروض CPA
+// ✅ عروض CPA - فلترة هولندا فقط
 app.get("/api/offers", async (req, res) => {
   try {
     const response = await fetch("https://www.cpagrip.com/common/offer_feed_csv.php?user_id=2407883&key=3f2682325b819c43e34f23f6d074a4c8");
@@ -41,13 +41,13 @@ app.get("/api/offers", async (req, res) => {
           id: parts[0],
           title: parts[1],
           description: parts[2],
-          link: parts[3],
+          offer_url: parts[3],
           image: parts[4],
           country: parts[6],
-          payout: parseFloat(parts[8])
+          payout: parts[8]
         };
       })
-      .filter(offer => offer.country === "NL"); // فلترة هولندا فقط
+      .filter(offer => offer.country === "NL"); // ✅ فلترة عروض هولندا
     res.json(offers);
   } catch (e) {
     console.error(e);
@@ -55,7 +55,7 @@ app.get("/api/offers", async (req, res) => {
   }
 });
 
-// Telegram Notification
+// ✅ Telegram Notification
 app.get("/api/notify", async (req, res) => {
   const { message } = req.query;
   if (!message) return res.status(400).send("Missing message");
