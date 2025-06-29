@@ -12,9 +12,7 @@
   <h1>عروض CPA</h1>
 
   <div id="user-info"></div>
-  <button id="login-btn">تسجيل الدخول بحساب Google</button>
-
-  <div id="points-count">نقاطك: 0</div>
+  <button id="login-btn" style="display:none;">تسجيل الدخول بحساب Google</button>
 
   <div id="id-section" style="display:none;">
     <input type="text" id="user-id" placeholder="أدخل الآيدي الخاص بك">
@@ -42,6 +40,20 @@
 
     let currentUserUid = null;
 
+    // مراقبة حالة تسجيل الدخول
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUserUid = user.uid;
+        document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
+        document.getElementById('login-btn').style.display = "none";
+        document.getElementById('id-section').style.display = "block";
+        loadOffers();
+      } else {
+        document.getElementById('login-btn').style.display = "block";
+      }
+    });
+
+    // زر تسجيل الدخول
     document.getElementById('login-btn').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider)
@@ -55,7 +67,7 @@
             email: user.email
           });
           localStorage.setItem('uid', user.uid);
-          loadPoints();
+          loadOffers();
         })
         .catch(error => {
           console.error(error);
@@ -63,6 +75,7 @@
         });
     });
 
+    // زر حفظ الآيدي
     document.getElementById('save-id').addEventListener('click', () => {
       const enteredId = document.getElementById('user-id').value.trim();
       if (!enteredId) {
@@ -79,6 +92,7 @@
       alert("تم حفظ الآيدي بنجاح");
     });
 
+    // تحميل العروض
     async function loadOffers() {
       try {
         const res = await fetch('/api/offers');
@@ -87,29 +101,11 @@
         ul.innerHTML = '';
         offers.slice(0, 10).forEach(o => {
           const li = document.createElement('li');
-          const link = document.createElement('a');
-          link.href = o.offer_url;
-          link.target = "_blank";
-          link.innerText = `${o.title} - ${o.payout}$`;
-          link.addEventListener('click', (e) => {
-            if (!currentUserUid) {
-              e.preventDefault();
-              alert("سجل الدخول أولًا");
-              return;
-            }
-            const pointsToAdd = Math.floor(o.payout * 300);
-            const userRef = db.ref('users/' + currentUserUid + '/points');
-            userRef.once('value').then(snapshot => {
-              const currentPoints = snapshot.val() || 0;
-              const newPoints = currentPoints + pointsToAdd;
-              userRef.set(newPoints);
-              document.getElementById('points-count').innerText = `نقاطك: ${newPoints}`;
-            });
-          });
-          li.appendChild(link);
-          const desc = document.createElement('div');
-          desc.innerText = o.description;
-          li.appendChild(desc);
+          li.innerHTML = `
+            <a href="${o.offer_url}" target="_blank">${o.title}</a>
+            - ${o.payout}$<br>
+            ${o.description}
+          `;
           ul.appendChild(li);
         });
       } catch (e) {
@@ -117,21 +113,11 @@
       }
     }
 
-    function loadPoints() {
-      if (!currentUserUid) return;
-      const userRef = db.ref('users/' + currentUserUid + '/points');
-      userRef.once('value').then(snapshot => {
-        const pts = snapshot.val() || 0;
-        document.getElementById('points-count').innerText = `نقاطك: ${pts}`;
-      });
-    }
-
+    // إرسال إشعار
     async function notify() {
       await fetch('/api/notify?message=شخص دخل على الموقع');
       alert("تم الإرسال");
     }
-
-    loadOffers();
   </script>
 </body>
 </html>
