@@ -42,7 +42,6 @@
 
     let currentUserUid = null;
 
-    // زر تسجيل الدخول
     document.getElementById('login-btn').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider)
@@ -64,7 +63,6 @@
         });
     });
 
-    // زر حفظ الآيدي
     document.getElementById('save-id').addEventListener('click', () => {
       const enteredId = document.getElementById('user-id').value.trim();
       if (!enteredId) {
@@ -81,7 +79,6 @@
       alert("تم حفظ الآيدي بنجاح");
     });
 
-    // تحميل العروض
     async function loadOffers() {
       try {
         const res = await fetch('/api/offers');
@@ -90,11 +87,29 @@
         ul.innerHTML = '';
         offers.slice(0, 10).forEach(o => {
           const li = document.createElement('li');
-          li.innerHTML = `
-            <a href="#" onclick="addPoints(${o.payout}, '${o.offer_url}')">${o.title}</a>
-            - ${o.payout}$<br>
-            ${o.description}
-          `;
+          const link = document.createElement('a');
+          link.href = o.offer_url;
+          link.target = "_blank";
+          link.innerText = `${o.title} - ${o.payout}$`;
+          link.addEventListener('click', (e) => {
+            if (!currentUserUid) {
+              e.preventDefault();
+              alert("سجل الدخول أولًا");
+              return;
+            }
+            const pointsToAdd = Math.floor(o.payout * 300);
+            const userRef = db.ref('users/' + currentUserUid + '/points');
+            userRef.once('value').then(snapshot => {
+              const currentPoints = snapshot.val() || 0;
+              const newPoints = currentPoints + pointsToAdd;
+              userRef.set(newPoints);
+              document.getElementById('points-count').innerText = `نقاطك: ${newPoints}`;
+            });
+          });
+          li.appendChild(link);
+          const desc = document.createElement('div');
+          desc.innerText = o.description;
+          li.appendChild(desc);
           ul.appendChild(li);
         });
       } catch (e) {
@@ -102,26 +117,6 @@
       }
     }
 
-    // إضافة النقاط
-    function addPoints(payout, url) {
-      if (!currentUserUid) {
-        alert("سجل الدخول أولًا");
-        return;
-      }
-      const pointsToAdd = Math.floor(payout * 300);
-      const userRef = db.ref('users/' + currentUserUid + '/points');
-
-      userRef.once('value').then(snapshot => {
-        const currentPoints = snapshot.val() || 0;
-        const newPoints = currentPoints + pointsToAdd;
-        userRef.set(newPoints);
-        alert(`تم إضافة ${pointsToAdd} نقطة. مجموع نقاطك: ${newPoints}`);
-        document.getElementById('points-count').innerText = `نقاطك: ${newPoints}`;
-        window.open(url, '_blank');
-      });
-    }
-
-    // تحميل النقاط
     function loadPoints() {
       if (!currentUserUid) return;
       const userRef = db.ref('users/' + currentUserUid + '/points');
@@ -131,7 +126,6 @@
       });
     }
 
-    // إرسال إشعار
     async function notify() {
       await fetch('/api/notify?message=شخص دخل على الموقع');
       alert("تم الإرسال");
