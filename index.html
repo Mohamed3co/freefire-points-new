@@ -14,6 +14,11 @@
   <div id="user-info"></div>
   <button id="login-btn">تسجيل الدخول بحساب Google</button>
 
+  <div id="id-section" style="display:none;">
+    <input type="text" id="user-id" placeholder="أدخل الآيدي الخاص بك">
+    <button id="save-id">حفظ الآيدي</button>
+  </div>
+
   <ul id="offers"></ul>
   <button onclick="notify()">أرسل إشعار تليغرام</button>
 
@@ -33,14 +38,17 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    // تسجيل الدخول
+    let currentUserUid = null;
+
     document.getElementById('login-btn').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider)
         .then(result => {
           const user = result.user;
+          currentUserUid = user.uid;
           document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
-          db.ref('users/' + user.uid).set({
+          document.getElementById('id-section').style.display = "block";
+          db.ref('users/' + user.uid).update({
             name: user.displayName,
             email: user.email
           });
@@ -52,7 +60,22 @@
         });
     });
 
-    // تحميل العروض
+    document.getElementById('save-id').addEventListener('click', () => {
+      const enteredId = document.getElementById('user-id').value.trim();
+      if (!enteredId) {
+        alert("أدخل الآيدي أولا");
+        return;
+      }
+      if (!currentUserUid) {
+        alert("سجل الدخول أولاً");
+        return;
+      }
+      db.ref('users/' + currentUserUid).update({
+        userId: enteredId
+      });
+      alert("تم حفظ الآيدي بنجاح");
+    });
+
     async function loadOffers() {
       try {
         const res = await fetch('/api/offers');
@@ -78,7 +101,6 @@
       alert("تم الإرسال");
     }
 
-    // استدعاء تحميل العروض
     loadOffers();
   </script>
 </body>
