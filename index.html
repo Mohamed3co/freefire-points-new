@@ -3,31 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <title>عروضي</title>
+  <style>
+    body { font-family: Arial; background: #f5f5f5; padding: 20px; }
+    ul { list-style: none; padding: 0; }
+    li { background: #fff; margin: 10px 0; padding: 10px; border-radius: 5px; }
+    a { text-decoration: none; color: #007BFF; }
+    .payout { color: green; font-weight: bold; }
+  </style>
 </head>
 <body>
-  <h1>عروض CPA</h1>
+  <h1>عروض CPA (اختر أي عرض)</h1>
   <ul id="offers"></ul>
   <button onclick="notify()">أرسل إشعار تليغرام</button>
+
   <script>
+    let allOffers = [];
+    let currentOffers = [];
+
     async function loadOffers() {
       const res = await fetch('/api/offers');
-      const offers = await res.json();
+      allOffers = await res.json();
+      // خذ أول 10 عروض
+      currentOffers = allOffers.slice(0, 10);
+      renderOffers();
+    }
+
+    function renderOffers() {
       const ul = document.getElementById('offers');
-      offers.forEach(o => {
+      ul.innerHTML = '';
+      currentOffers.forEach((o, idx) => {
         const li = document.createElement('li');
         li.innerHTML = `
-          <h3>${o.title}</h3>
-          <p>${o.description}</p>
-          <p>قيمة العرض: $${o.payout}</p>
-          <a href="${o.offer_url}" target="_blank">اذهب للعرض</a>
+          <div><strong>${o.title}</strong></div>
+          <div>${o.description}</div>
+          <div class="payout">${o.payout} $</div>
+          <a href="${o.offer_url}" target="_blank" onclick="removeOffer(${idx})">فتح العرض</a>
         `;
         ul.appendChild(li);
       });
     }
+
+    function removeOffer(index) {
+      // حذف العرض من القائمة
+      currentOffers.splice(index, 1);
+      // تعويضه بعرض جديد لو فيه عروض أخرى
+      const next = allOffers[currentOffers.length + index];
+      if (next) currentOffers.push(next);
+      renderOffers();
+    }
+
     async function notify() {
       await fetch('/api/notify?message=شخص دخل على الموقع');
       alert("تم الإرسال");
     }
+
     loadOffers();
   </script>
 </body>
