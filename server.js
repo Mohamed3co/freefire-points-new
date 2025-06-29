@@ -27,7 +27,7 @@ admin.initializeApp({
 // Serve static HTML
 app.use(express.static(__dirname));
 
-// ✅ عروض CPA - فلترة هولندا فقط + ترتيب الحقول
+// ✅ عروض CPA - جميع العروض بدون فلترة
 app.get("/api/offers", async (req, res) => {
   try {
     const response = await fetch("https://www.cpagrip.com/common/offer_feed_csv.php?user_id=2407883&key=3f2682325b819c43e34f23f6d074a4c8");
@@ -44,11 +44,9 @@ app.get("/api/offers", async (req, res) => {
           offer_url: parts[3],
           image: parts[4],
           country: parts[6],
-          payout: parseFloat(parts[8])
+          payout: parts[8]
         };
-      })
-      .filter(offer => offer.country === "NL"); // ✅ هولندا فقط
-
+      });
     res.json(offers);
   } catch (e) {
     console.error(e);
