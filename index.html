@@ -15,7 +15,12 @@
       const ul = document.getElementById('offers');
       offers.forEach(o => {
         const li = document.createElement('li');
-        li.innerHTML = `<a href="${o.link}">${o.title}</a> - ${o.payout}$`;
+        li.innerHTML = `
+          <h3>${o.title}</h3>
+          <p>${o.description}</p>
+          <p>قيمة العرض: $${o.payout}</p>
+          <a href="${o.offer_url}" target="_blank">اذهب للعرض</a>
+        `;
         ul.appendChild(li);
       });
     }
