@@ -25,34 +25,33 @@ admin.initializeApp({
   databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
 });
 
-// Serve static files (your frontend)
+// Serve static files (frontend)
 app.use(express.static(__dirname));
 
-// ✅ Endpoint: Postback to record conversions
+// ✅ Endpoint: Postback
 app.get("/postback", async (req, res) => {
-  const { subid, payout } = req.query;
+  const { player_id, payout } = req.query;
 
-  if (!subid || !payout) {
-    return res.status(400).send("Missing subid or payout");
+  if (!player_id || !payout) {
+    return res.status(400).send("Missing player_id or payout");
   }
 
   try {
-    // 👇 المسار في قاعدة البيانات
-    const userRef = admin.database().ref(`users/${subid}`);
+    const userRef = admin.database().ref(`users/${player_id}`);
 
-    // 👇 جلب النقاط الحالية
+    // جلب النقاط الحالية
     const snapshot = await userRef.child("points").once("value");
     const currentPoints = snapshot.val() || 0;
 
-    // 👇 تحويل الـpayout إلى رقم ثم ضربه
+    // حساب النقاط
     const pointsToAdd = Math.round(parseFloat(payout) * 300); // 1$ = 300 نقطة
 
-    // 👇 تحديث النقاط
+    // تحديث النقاط
     await userRef.update({
       points: currentPoints + pointsToAdd
     });
 
-    console.log(`✅ Added ${pointsToAdd} points to user ${subid}`);
+    console.log(`✅ Added ${pointsToAdd} points to user ${player_id}`);
     res.send("Postback OK");
   } catch (error) {
     console.error(error);
@@ -60,7 +59,7 @@ app.get("/postback", async (req, res) => {
   }
 });
 
-// ✅ Telegram Notification example (يمكنك الاحتفاظ به أو حذفه)
+// ✅ Telegram Notification (إذا أردت)
 app.get("/api/notify", async (req, res) => {
   const { message } = req.query;
   if (!message) return res.status(400).send("Missing message");
