@@ -1,193 +1,144 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>موقع النقاط والشحن</title>
+  <meta charset="UTF-8" />
+  <title>نظام النقاط</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      direction: rtl;
+    body {margin:0;font-family:'Cairo',sans-serif;background:#121212;color:#f1f1f1;}
+    .sidebar {
+      position:fixed;top:0;right:0;width:220px;height:100%;
+      background:#1e1e1e;display:flex;flex-direction:column;align-items:center;padding-top:40px;
     }
-    header {
-      background: #4CAF50;
-      color: white;
-      padding: 1em;
-      text-align: center;
-      font-size: 1.4em;
+    .sidebar button {width:90%;margin:10px 0;padding:12px;border:none;
+      background:#d32f2f;color:white;font-size:16px;border-radius:6px;cursor:pointer;}
+    .sidebar button:hover {background:#b71c1c;}
+    .content {margin-right:240px;padding:30px;}
+    .hidden {display:none;}
+    a {color:#f44336;text-decoration:none;}
+    a:hover {text-decoration:underline;}
+    ul {list-style:none;padding:0;}
+    li {background:#1e1e1e;margin:10px 0;padding:15px;border-radius:6px;}
+    h1,h2 {color:#f44336;}
+    input, button.save-id {
+      padding:10px;margin-top:10px;border:none;border-radius:4px;
     }
-    #sidebar {
-      position: fixed;
-      right: 0;
-      top: 0;
-      width: 200px;
-      height: 100%;
-      background: #333;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      padding-top: 2em;
-    }
-    #sidebar button {
-      background: none;
-      border: none;
-      color: white;
-      padding: 1em;
-      text-align: right;
-      cursor: pointer;
-      font-size: 1em;
-    }
-    #sidebar button:hover {
-      background: #555;
-    }
-    #content {
-      margin-right: 200px;
-      padding: 2em;
-    }
-    .hidden {
-      display: none;
-    }
-    .welcome {
-      text-align: center;
-      margin-top: 50px;
-    }
-    .welcome img {
-      max-width: 300px;
-      border-radius: 10px;
-    }
-    .offers-list li {
-      background: white;
-      margin: 0.5em 0;
-      padding: 0.5em;
-      border-radius: 5px;
-      list-style: none;
-    }
-    .offers-list a {
-      color: #4CAF50;
-      text-decoration: none;
-    }
+    input {width:calc(100% - 22px);}
+    button.save-id {background:#d32f2f;color:white;cursor:pointer;}
+    button.save-id:hover {background:#b71c1c;}
   </style>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
+  <div class="sidebar">
+    <button onclick="showSection('home')">الرئيسية</button>
+    <button onclick="showSection('offers')">العروض</button>
+    <button onclick="showSection('profile')">حسابي</button>
+  </div>
 
-<header>
-  منصة النقاط وشحن جواهر فري فاير
-</header>
+  <div class="content">
+    <div id="home">
+      <h1>🎮 مرحبًا بك في نظام النقاط</h1>
+      <p>اكسب النقاط واستبدلها بالجوائز. اضغط على "العروض" للبدء.</p>
+    </div>
 
-<div id="sidebar">
-  <button onclick="showSection('welcome')">🏠 الرئيسية</button>
-  <button onclick="showSection('offers')">💰 العروض</button>
-  <button onclick="showSection('profile')">👤 حسابي</button>
-  <button onclick="showSection('redeem')">🎁 طلب الشحن</button>
-  <button onclick="signIn()">🔑 تسجيل الدخول</button>
-</div>
+    <div id="offers" class="hidden">
+      <h2>📝 العروض</h2>
+      <ul id="offers-list"></ul>
+      <button onclick="notify()">📢 إرسال إشعار</button>
+    </div>
 
-<div id="content">
-  <div id="welcome" class="section">
-    <div class="welcome">
-      <img src="https://images.unsplash.com/photo-1605902711622-cfb43c44367f?crop=entropy&cs=tinysrgb&fit=max&h=400&w=600" alt="ترحيب">
-      <h2>مرحبًا بك في منصتنا</h2>
-      <p>ابدأ بجمع النقاط من العروض واستبدلها بجواهر فري فاير بكل سهولة!</p>
+    <div id="profile" class="hidden">
+      <h2>👤 حسابك</h2>
+      <div id="user-info"></div>
+      <button id="login-btn">تسجيل الدخول بجوجل</button>
+      <div id="id-section" style="display:none;">
+        <input type="text" id="user-id" placeholder="أدخل الآيدي الخاص بك">
+        <button class="save-id" id="save-id">حفظ الآيدي</button>
+        <button id="request-recharge">💎 طلب شحن</button>
+      </div>
     </div>
   </div>
 
-  <div id="offers" class="section hidden">
-    <h2>العروض المتاحة</h2>
-    <ul id="offers-list" class="offers-list"></ul>
-  </div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
+      authDomain: "freefirerewardsdz-69572.firebaseapp.com",
+      databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
+      projectId: "freefirerewardsdz-69572",
+      storageBucket: "freefirerewardsdz-69572.appspot.com",
+      messagingSenderId: "145782934523",
+      appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e",
+      measurementId: "G-JJ4BK2H8QY"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    let currentUserUid = null;
 
-  <div id="profile" class="section hidden">
-    <h2>معلومات حسابك</h2>
-    <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
-    <div id="id-section" style="display:none;">
-      <input type="text" id="user-id" placeholder="أدخل الآيدي الخاص بك">
-      <button onclick="saveId()">حفظ الآيدي</button>
-    </div>
-  </div>
+    function showSection(id) {
+      ['home','offers','profile'].forEach(sec => {
+        document.getElementById(sec).classList.add('hidden');
+      });
+      document.getElementById(id).classList.remove('hidden');
+      if (id === 'offers') loadOffers();
+    }
 
-  <div id="redeem" class="section hidden">
-    <h2>طلب الشحن</h2>
-    <p>للطلب يرجى التواصل معنا عبر التليغرام بعد تحقيق الحد الأدنى من النقاط.</p>
-  </div>
-</div>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
-    authDomain: "freefirerewardsdz-69572.firebaseapp.com",
-    databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
-    projectId: "freefirerewardsdz-69572",
-    storageBucket: "freefirerewardsdz-69572.appspot.com",
-    messagingSenderId: "145782934523",
-    appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e",
-    measurementId: "G-JJ4BK2H8QY"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.database();
-  let currentUserUid = null;
-
-  function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    if (id === 'offers') loadOffers();
-  }
-
-  function signIn() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-      .then(result => {
-        const user = result.user;
+    auth.onAuthStateChanged(user => {
+      if (user) {
         currentUserUid = user.uid;
         document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
         document.getElementById('id-section').style.display = "block";
-        db.ref('users/' + user.uid).update({
-          name: user.displayName,
-          email: user.email
-        });
-        localStorage.setItem('uid', user.uid);
-      })
-      .catch(error => {
+      } else {
+        currentUserUid = null;
+        document.getElementById('user-info').innerHTML = "";
+        document.getElementById('id-section').style.display = "none";
+      }
+    });
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(error => {
         console.error(error);
         alert('فشل تسجيل الدخول');
       });
-  }
-
-  function saveId() {
-    const enteredId = document.getElementById('user-id').value.trim();
-    if (!enteredId) {
-      alert("أدخل الآيدي أولا");
-      return;
-    }
-    if (!currentUserUid) {
-      alert("سجل الدخول أولاً");
-      return;
-    }
-    db.ref('users/' + currentUserUid).update({ userId: enteredId });
-    alert("تم حفظ الآيدي بنجاح");
-  }
-
-  async function loadOffers() {
-    const res = await fetch('/api/offers');
-    const offers = await res.json();
-    const ul = document.getElementById('offers-list');
-    ul.innerHTML = '';
-    offers.slice(0, 10).forEach(o => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <a href="${o.offer_url}" target="_blank">${o.title}</a>
-        - ${o.payout}$<br>${o.description}
-      `;
-      ul.appendChild(li);
     });
-  }
-</script>
 
+    document.getElementById('save-id').addEventListener('click', () => {
+      const enteredId = document.getElementById('user-id').value.trim();
+      if (!enteredId) return alert("أدخل الآيدي أولاً");
+      if (!currentUserUid) return alert("سجل الدخول أولاً");
+      db.ref('users/' + currentUserUid).update({ userId: enteredId });
+      alert("تم حفظ الآيدي");
+    });
+
+    document.getElementById('request-recharge').addEventListener('click', async () => {
+      if (!currentUserUid) return alert("سجل الدخول أولاً");
+      await fetch(`/api/notify?message=🔔 طلب شحن من ${currentUserUid}`);
+      alert("تم إرسال طلب الشحن بنجاح");
+    });
+
+    async function loadOffers() {
+      try {
+        const res = await fetch('/api/offers');
+        const offers = await res.json();
+        const ul = document.getElementById('offers-list');
+        ul.innerHTML = '';
+        offers.slice(0, 10).forEach(o => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a href="${o.offer_url}" target="_blank">${o.title}</a> - ${o.payout}$<br>${o.description}`;
+          ul.appendChild(li);
+        });
+      } catch (e) {console.error(e);}
+    }
+
+    async function notify() {
+      await fetch('/api/notify?message=شخص دخل على الموقع');
+      alert("تم الإرسال");
+    }
+  </script>
 </body>
 </html>
