@@ -1,123 +1,193 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>عروضي</title>
-  <!-- مكتبات Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <title>موقع النقاط والشحن</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      direction: rtl;
+    }
+    header {
+      background: #4CAF50;
+      color: white;
+      padding: 1em;
+      text-align: center;
+      font-size: 1.4em;
+    }
+    #sidebar {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 200px;
+      height: 100%;
+      background: #333;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding-top: 2em;
+    }
+    #sidebar button {
+      background: none;
+      border: none;
+      color: white;
+      padding: 1em;
+      text-align: right;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    #sidebar button:hover {
+      background: #555;
+    }
+    #content {
+      margin-right: 200px;
+      padding: 2em;
+    }
+    .hidden {
+      display: none;
+    }
+    .welcome {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .welcome img {
+      max-width: 300px;
+      border-radius: 10px;
+    }
+    .offers-list li {
+      background: white;
+      margin: 0.5em 0;
+      padding: 0.5em;
+      border-radius: 5px;
+      list-style: none;
+    }
+    .offers-list a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-  <h1>عروض CPA</h1>
 
-  <div id="user-info"></div>
-  <button id="login-btn" style="display:none;">تسجيل الدخول بحساب Google</button>
+<header>
+  منصة النقاط وشحن جواهر فري فاير
+</header>
 
-  <div id="id-section" style="display:none;">
-    <input type="text" id="user-id" placeholder="أدخل الآيدي الخاص بك">
-    <button id="save-id">حفظ الآيدي</button>
+<div id="sidebar">
+  <button onclick="showSection('welcome')">🏠 الرئيسية</button>
+  <button onclick="showSection('offers')">💰 العروض</button>
+  <button onclick="showSection('profile')">👤 حسابي</button>
+  <button onclick="showSection('redeem')">🎁 طلب الشحن</button>
+  <button onclick="signIn()">🔑 تسجيل الدخول</button>
+</div>
+
+<div id="content">
+  <div id="welcome" class="section">
+    <div class="welcome">
+      <img src="https://images.unsplash.com/photo-1605902711622-cfb43c44367f?crop=entropy&cs=tinysrgb&fit=max&h=400&w=600" alt="ترحيب">
+      <h2>مرحبًا بك في منصتنا</h2>
+      <p>ابدأ بجمع النقاط من العروض واستبدلها بجواهر فري فاير بكل سهولة!</p>
+    </div>
   </div>
 
-  <ul id="offers"></ul>
-  <button onclick="notify()">أرسل إشعار تليغرام</button>
+  <div id="offers" class="section hidden">
+    <h2>العروض المتاحة</h2>
+    <ul id="offers-list" class="offers-list"></ul>
+  </div>
 
-  <script>
-    // إعداد Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
-      authDomain: "freefirerewardsdz-69572.firebaseapp.com",
-      databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
-      projectId: "freefirerewardsdz-69572",
-      storageBucket: "freefirerewardsdz-69572.appspot.com",
-      messagingSenderId: "145782934523",
-      appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e",
-      measurementId: "G-JJ4BK2H8QY"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+  <div id="profile" class="section hidden">
+    <h2>معلومات حسابك</h2>
+    <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
+    <div id="id-section" style="display:none;">
+      <input type="text" id="user-id" placeholder="أدخل الآيدي الخاص بك">
+      <button onclick="saveId()">حفظ الآيدي</button>
+    </div>
+  </div>
 
-    let currentUserUid = null;
+  <div id="redeem" class="section hidden">
+    <h2>طلب الشحن</h2>
+    <p>للطلب يرجى التواصل معنا عبر التليغرام بعد تحقيق الحد الأدنى من النقاط.</p>
+  </div>
+</div>
 
-    // مراقبة حالة تسجيل الدخول
-    auth.onAuthStateChanged(user => {
-      if (user) {
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
+    authDomain: "freefirerewardsdz-69572.firebaseapp.com",
+    databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
+    projectId: "freefirerewardsdz-69572",
+    storageBucket: "freefirerewardsdz-69572.appspot.com",
+    messagingSenderId: "145782934523",
+    appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e",
+    measurementId: "G-JJ4BK2H8QY"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+  let currentUserUid = null;
+
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    if (id === 'offers') loadOffers();
+  }
+
+  function signIn() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then(result => {
+        const user = result.user;
         currentUserUid = user.uid;
         document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
-        document.getElementById('login-btn').style.display = "none";
         document.getElementById('id-section').style.display = "block";
-        loadOffers();
-      } else {
-        document.getElementById('login-btn').style.display = "block";
-      }
-    });
-
-    // زر تسجيل الدخول
-    document.getElementById('login-btn').addEventListener('click', () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then(result => {
-          const user = result.user;
-          currentUserUid = user.uid;
-          document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
-          document.getElementById('id-section').style.display = "block";
-          db.ref('users/' + user.uid).update({
-            name: user.displayName,
-            email: user.email
-          });
-          localStorage.setItem('uid', user.uid);
-          loadOffers();
-        })
-        .catch(error => {
-          console.error(error);
-          alert('فشل تسجيل الدخول');
+        db.ref('users/' + user.uid).update({
+          name: user.displayName,
+          email: user.email
         });
-    });
-
-    // زر حفظ الآيدي
-    document.getElementById('save-id').addEventListener('click', () => {
-      const enteredId = document.getElementById('user-id').value.trim();
-      if (!enteredId) {
-        alert("أدخل الآيدي أولا");
-        return;
-      }
-      if (!currentUserUid) {
-        alert("سجل الدخول أولاً");
-        return;
-      }
-      db.ref('users/' + currentUserUid).update({
-        userId: enteredId
+        localStorage.setItem('uid', user.uid);
+      })
+      .catch(error => {
+        console.error(error);
+        alert('فشل تسجيل الدخول');
       });
-      alert("تم حفظ الآيدي بنجاح");
+  }
+
+  function saveId() {
+    const enteredId = document.getElementById('user-id').value.trim();
+    if (!enteredId) {
+      alert("أدخل الآيدي أولا");
+      return;
+    }
+    if (!currentUserUid) {
+      alert("سجل الدخول أولاً");
+      return;
+    }
+    db.ref('users/' + currentUserUid).update({ userId: enteredId });
+    alert("تم حفظ الآيدي بنجاح");
+  }
+
+  async function loadOffers() {
+    const res = await fetch('/api/offers');
+    const offers = await res.json();
+    const ul = document.getElementById('offers-list');
+    ul.innerHTML = '';
+    offers.slice(0, 10).forEach(o => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <a href="${o.offer_url}" target="_blank">${o.title}</a>
+        - ${o.payout}$<br>${o.description}
+      `;
+      ul.appendChild(li);
     });
+  }
+</script>
 
-    // تحميل العروض
-    async function loadOffers() {
-      try {
-        const res = await fetch('/api/offers');
-        const offers = await res.json();
-        const ul = document.getElementById('offers');
-        ul.innerHTML = '';
-        offers.slice(0, 10).forEach(o => {
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <a href="${o.offer_url}" target="_blank">${o.title}</a>
-            - ${o.payout}$<br>
-            ${o.description}
-          `;
-          ul.appendChild(li);
-        });
-      } catch (e) {
-        console.error("خطأ تحميل العروض:", e);
-      }
-    }
-
-    // إرسال إشعار
-    async function notify() {
-      await fetch('/api/notify?message=شخص دخل على الموقع');
-      alert("تم الإرسال");
-    }
-  </script>
 </body>
 </html>
