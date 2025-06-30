@@ -1,5 +1,6 @@
+// server.js
+
 import express from "express";
-import fetch from "node-fetch";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
 import path from "path";
@@ -14,7 +15,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Firebase
+// Firebase config
 const serviceAccount = JSON.parse(
   fs.readFileSync(path.join(__dirname, "serviceAccountKey.json"))
 );
@@ -24,37 +25,42 @@ admin.initializeApp({
   databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
 });
 
-// Serve static HTML
+// Serve static files (your frontend)
 app.use(express.static(__dirname));
 
-// ✅ عروض CPA
-app.get("/api/offers", async (req, res) => {
+// ✅ Endpoint: Postback to record conversions
+app.get("/postback", async (req, res) => {
+  const { subid, payout } = req.query;
+
+  if (!subid || !payout) {
+    return res.status(400).send("Missing subid or payout");
+  }
+
   try {
-    const response = await fetch("https://www.cpagrip.com/common/offer_feed_csv.php?user_id=2407883&key=3f2682325b819c43e34f23f6d074a4c8");
-    const csv = await response.text();
-    const lines = csv.split("\n").slice(1);
-    const offers = lines
-      .filter(line => line.trim() !== "")
-      .map(line => {
-        const parts = line.split(",");
-        return {
-          id: parts[0],
-          title: parts[1],
-          description: parts[2],
-          offer_url: parts[3],
-          image: parts[4],
-          country: parts[6],
-          payout: parts[8]
-        };
-      });
-    res.json(offers);
-  } catch (e) {
-    console.error(e);
-    res.status(500).send("Error fetching offers");
+    // 👇 المسار في قاعدة البيانات
+    const userRef = admin.database().ref(`users/${subid}`);
+
+    // 👇 جلب النقاط الحالية
+    const snapshot = await userRef.child("points").once("value");
+    const currentPoints = snapshot.val() || 0;
+
+    // 👇 تحويل الـpayout إلى رقم ثم ضربه
+    const pointsToAdd = Math.round(parseFloat(payout) * 300); // 1$ = 300 نقطة
+
+    // 👇 تحديث النقاط
+    await userRef.update({
+      points: currentPoints + pointsToAdd
+    });
+
+    console.log(`✅ Added ${pointsToAdd} points to user ${subid}`);
+    res.send("Postback OK");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error processing postback");
   }
 });
 
-// ✅ Telegram Notification
+// ✅ Telegram Notification example (يمكنك الاحتفاظ به أو حذفه)
 app.get("/api/notify", async (req, res) => {
   const { message } = req.query;
   if (!message) return res.status(400).send("Missing message");
@@ -70,13 +76,9 @@ app.get("/api/notify", async (req, res) => {
     res.send("Sent");
   } catch (e) {
     console.error(e);
-    res.status(500).send("Error sending");
+    res.status(500).send("Error sending notification");
   }
 });
 
-// ✅ مسار postback المؤقت لتأكيد الرابط
-app.get("/postback", (req, res) => {
-  res.send("Postback OK");
-});
-
+// ✅ Start server
 app.listen(port, () => console.log(`✅ Server running on port ${port}`));
