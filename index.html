@@ -41,11 +41,12 @@
     .active {
       display: block;
     }
-    ul#offers li {
-      background: #222;
-      margin: 0.5em 0;
-      padding: 0.5em;
-      border-radius: 4px;
+    iframe {
+      width: 100%;
+      height: 80vh;
+      border: none;
+      border-radius: 8px;
+      margin-top: 1em;
     }
     input, button {
       font-size: 1em;
@@ -64,13 +65,13 @@
   <!-- 🏠 الرئيسية -->
   <div id="home" class="section active">
     <h2>مرحبًا بك!</h2>
-    <p>اكسب النقاط من خلال إكمال العروض وقم بشحن جواهر Free Fire مجانًا 🎁</p>
+    <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
   </div>
 
   <!-- 🎁 العروض -->
   <div id="offers" class="section">
     <h2>العروض المتاحة</h2>
-    <ul id="offers-list"></ul>
+    <iframe src="https://reward-me.eu/2878f010-55df-11f0-888d-c2a106037d45" id="offerwall"></iframe>
   </div>
 
   <!-- 👤 حسابي -->
@@ -88,7 +89,7 @@
   <!-- 💎 طلب الشحن -->
   <div id="redeem" class="section">
     <h2>طلب شحن الجواهر</h2>
-    <p>الحد الأدنى للشحن: 100 نقطة</p>
+    <p>الحد الأدنى للشحن: 1500 نقطة</p>
     <button id="redeem-btn">طلب الشحن</button>
   </div>
 
@@ -97,13 +98,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
-    // التبديل بين الأقسام
     function showSection(id) {
       document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // إعداد Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
       authDomain: "freefirerewardsdz-69572.firebaseapp.com",
@@ -117,22 +116,31 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    let currentUserUid = null;
+    let currentUserUid = localStorage.getItem('uid') || null;
 
-    // تسجيل الدخول
+    function updateUserInfo(user) {
+      document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
+      document.getElementById('login-btn').style.display = 'none';
+      db.ref('users/' + user.uid).once('value').then(snap => {
+        const data = snap.val();
+        document.getElementById('user-points').innerText = data?.points || 0;
+      });
+    }
+
+    if (currentUserUid) {
+      auth.onAuthStateChanged(user => {
+        if (user) updateUserInfo(user);
+      });
+    }
+
     document.getElementById('login-btn').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider)
         .then(result => {
           const user = result.user;
           currentUserUid = user.uid;
-          document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
-          document.getElementById('login-btn').style.display = 'none';
-          // تحميل النقاط
-          db.ref('users/' + currentUserUid).once('value').then(snap => {
-            const data = snap.val();
-            document.getElementById('user-points').innerText = data?.points || 0;
-          });
+          localStorage.setItem('uid', user.uid);
+          updateUserInfo(user);
         })
         .catch(error => {
           console.error(error);
@@ -140,7 +148,6 @@
         });
     });
 
-    // حفظ الآيدي
     document.getElementById('save-id').addEventListener('click', () => {
       const id = document.getElementById('user-id').value.trim();
       if (!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
@@ -148,29 +155,15 @@
       alert('تم حفظ الآيدي');
     });
 
-    // طلب الشحن
     document.getElementById('redeem-btn').addEventListener('click', () => {
       if (!currentUserUid) return alert('سجل الدخول أولاً');
       db.ref('users/' + currentUserUid).once('value').then(snap => {
         const data = snap.val();
-        if ((data?.points || 0) < 100) return alert('ليس لديك نقاط كافية');
-        fetch('/api/notify?message=طلب شحن من: ' + data.userId);
+        if ((data?.points || 0) < 1500) return alert('ليس لديك نقاط كافية');
+        fetch('/api/notify?message=طلب شحن من الآيدي: ' + (data.userId || 'غير محدد'));
         alert('تم إرسال طلبك، سيتم التنفيذ قريبًا');
       });
     });
-
-    // تحميل العروض
-    async function loadOffers() {
-      const res = await fetch('/api/offers');
-      const offers = await res.json();
-      const ul = document.getElementById('offers-list');
-      offers.slice(0, 10).forEach(o => {
-        const li = document.createElement('li');
-        li.innerHTML = `<a href="${o.offer_url}" target="_blank">${o.title}</a> - ${o.payout}$`;
-        ul.appendChild(li);
-      });
-    }
-    loadOffers();
   </script>
 </body>
 </html>
