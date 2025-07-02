@@ -71,7 +71,7 @@
   <!-- 🎁 العروض -->
   <div id="offers" class="section">
     <h2>العروض المتاحة</h2>
-    <iframe src="https://reward-me.eu/2878f010-55df-11f0-888d-c2a106037d45" id="offerwall"></iframe>
+    <iframe id="offerwall" src=""></iframe>
   </div>
 
   <!-- 👤 حسابي -->
@@ -117,6 +117,8 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
+    const myleadBaseUrl = "https://reward-me.eu/2878f010-55df-11f0-888d-c2a106037d45";
+
     let currentUserUid = localStorage.getItem('uid') || null;
 
     function updateUserInfo(user) {
@@ -127,6 +129,9 @@
         const data = snap.val();
         document.getElementById('user-points').innerText = data?.points || 0;
       });
+      // عند تسجيل الدخول، حمل رابط العروض مع subid
+      const offerUrl = myleadBaseUrl + "?subid=" + user.uid;
+      document.getElementById('offerwall').src = offerUrl;
     }
 
     if (currentUserUid) {
@@ -150,7 +155,6 @@
         });
     });
 
-    // هذا هو الكود المعدل بالكامل
     document.getElementById('logout-btn').addEventListener('click', () => {
       auth.signOut().then(() => {
         currentUserUid = null;
@@ -159,8 +163,8 @@
         document.getElementById('login-btn').style.display = 'inline-block';
         document.getElementById('logout-btn').style.display = 'none';
         document.getElementById('user-points').innerText = '0';
-        // إعادة تحميل العروض عند تسجيل الخروج
-        document.getElementById('offerwall').src = document.getElementById('offerwall').src;
+        // تفريغ العروض عند تسجيل الخروج
+        document.getElementById('offerwall').src = "";
       });
     });
 
