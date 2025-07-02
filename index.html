@@ -118,35 +118,39 @@
     const db = firebase.database();
 
     const myleadBaseUrl = "https://reward-me.eu/2878f010-55df-11f0-888d-c2a106037d45";
-    let currentUserUid = localStorage.getItem('uid') || null;
-
-    function updateUserInfo(user) {
-      document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
-      document.getElementById('login-btn').style.display = 'none';
-      document.getElementById('logout-btn').style.display = 'inline-block';
-      db.ref('users/' + user.uid).once('value').then(snap => {
-        const data = snap.val();
-        document.getElementById('user-points').innerText = data?.points || 0;
-      });
-      const offerUrl = myleadBaseUrl + "?subid=" + user.uid;
-      document.getElementById('offerwall').src = offerUrl;
-    }
-
-    if (currentUserUid) {
-      auth.onAuthStateChanged(user => {
-        if (user) updateUserInfo(user);
-      });
-    }
+    let currentUserUid = null;
 
     window.addEventListener('load', () => {
+      console.log("🔥 الصفحة جاهزة");
+
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUserUid = user.uid;
+          console.log("✅ تسجيل الدخول:", currentUserUid);
+          document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
+          document.getElementById('login-btn').style.display = 'none';
+          document.getElementById('logout-btn').style.display = 'inline-block';
+          db.ref('users/' + user.uid).once('value').then(snap => {
+            const data = snap.val();
+            document.getElementById('user-points').innerText = data?.points || 0;
+          });
+          document.getElementById('offerwall').src = myleadBaseUrl + "?subid=" + user.uid;
+        } else {
+          console.log("👤 لم يتم تسجيل الدخول");
+        }
+      });
+
       document.getElementById('login-btn').addEventListener('click', () => {
         const provider = new firebase.auth.GoogleAuthProvider();
         auth.signInWithPopup(provider)
           .then(result => {
             const user = result.user;
             currentUserUid = user.uid;
-            localStorage.setItem('uid', user.uid);
-            updateUserInfo(user);
+            console.log("✅ تسجيل دخول جديد:", currentUserUid);
+            document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
+            document.getElementById('login-btn').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'inline-block';
+            document.getElementById('offerwall').src = myleadBaseUrl + "?subid=" + user.uid;
           })
           .catch(error => {
             console.error(error);
@@ -157,7 +161,7 @@
       document.getElementById('logout-btn').addEventListener('click', () => {
         auth.signOut().then(() => {
           currentUserUid = null;
-          localStorage.removeItem('uid');
+          console.log("🚪 تم تسجيل الخروج");
           document.getElementById('user-info').innerHTML = 'لم تقم بتسجيل الدخول بعد.';
           document.getElementById('login-btn').style.display = 'inline-block';
           document.getElementById('logout-btn').style.display = 'none';
@@ -170,7 +174,7 @@
         const id = document.getElementById('user-id').value.trim();
         if (!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
         db.ref('users/' + currentUserUid).update({ userId: id });
-        alert('تم حفظ الآيدي');
+        alert('✅ تم حفظ الآيدي');
       });
 
       document.getElementById('redeem-btn').addEventListener('click', () => {
@@ -178,7 +182,7 @@
         db.ref('users/' + currentUserUid).once('value').then(snap => {
           const data = snap.val();
           fetch('/api/notify?message=طلب شحن من الآيدي: ' + (data?.userId || 'غير محدد'));
-          alert('✅ تم إرسال طلب الشحن مجانًا، تحقق من Telegram الآن');
+          alert('✅ تم إرسال طلب الشحن مجانًا');
         });
       });
     });
