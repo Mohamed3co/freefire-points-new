@@ -79,6 +79,7 @@
     <h2>معلومات الحساب</h2>
     <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
     <button id="login-btn">تسجيل الدخول بحساب Google</button>
+    <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
     <p>عدد نقاطك: <span id="user-points">0</span></p>
     <div>
       <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
@@ -121,6 +122,7 @@
     function updateUserInfo(user) {
       document.getElementById('user-info').innerHTML = `مرحبًا، ${user.displayName}`;
       document.getElementById('login-btn').style.display = 'none';
+      document.getElementById('logout-btn').style.display = 'inline-block';
       db.ref('users/' + user.uid).once('value').then(snap => {
         const data = snap.val();
         document.getElementById('user-points').innerText = data?.points || 0;
@@ -146,6 +148,17 @@
           console.error(error);
           alert('فشل تسجيل الدخول');
         });
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        currentUserUid = null;
+        localStorage.removeItem('uid');
+        document.getElementById('user-info').innerHTML = 'لم تقم بتسجيل الدخول بعد.';
+        document.getElementById('login-btn').style.display = 'inline-block';
+        document.getElementById('logout-btn').style.display = 'none';
+        document.getElementById('user-points').innerText = '0';
+      });
     });
 
     document.getElementById('save-id').addEventListener('click', () => {
