@@ -1,15 +1,185 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>تجربة زر</title>
+  <title>نقاط Free Fire</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Tajawal', sans-serif;
+      background: #111;
+      color: #fff;
+    }
+    header {
+      background: #c40000;
+      padding: 1em;
+      text-align: center;
+      font-size: 1.5em;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+      background: #222;
+      padding: 0.5em;
+    }
+    nav button {
+      background: #c40000;
+      border: none;
+      padding: 0.5em 1em;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .section {
+      display: none;
+      padding: 1em;
+      max-width: 600px;
+      margin: auto;
+    }
+    .active {
+      display: block;
+    }
+    iframe {
+      width: 100%;
+      height: 80vh;
+      border: none;
+      border-radius: 8px;
+      margin-top: 1em;
+    }
+    input, button {
+      font-size: 1em;
+    }
+  </style>
 </head>
 <body>
-  <h1>زر تجريبي</h1>
-  <button id="redeem-btn">طلب الشحن</button>
+  <header>🎮 نقاط Free Fire 🎮</header>
+  <nav>
+    <button onclick="showSection('home')">الرئيسية</button>
+    <button onclick="showSection('offers')">العروض</button>
+    <button onclick="showSection('account')">حسابي</button>
+    <button onclick="showSection('redeem')">طلب الشحن</button>
+  </nav>
+
+  <!-- 🏠 الرئيسية -->
+  <div id="home" class="section active">
+    <h2>مرحبًا بك!</h2>
+    <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
+  </div>
+
+  <!-- 🎁 العروض -->
+  <div id="offers" class="section">
+    <h2>العروض المتاحة</h2>
+    <iframe id="offerwall" src=""></iframe>
+  </div>
+
+  <!-- 👤 حسابي -->
+  <div id="account" class="section">
+    <h2>معلومات الحساب</h2>
+    <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
+    <button id="login-btn">تسجيل الدخول بحساب Google</button>
+    <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
+    <p>عدد نقاطك: <span id="user-points">0</span></p>
+    <div>
+      <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
+      <button id="save-id">حفظ الآيدي</button>
+    </div>
+  </div>
+
+  <!-- 💎 طلب الشحن -->
+  <div id="redeem" class="section">
+    <h2>طلب شحن الجواهر</h2>
+    <p>✅ الشحن تجريبي بدون خصم نقاط لاختبار التليغرام</p>
+    <button id="redeem-btn">طلب الشحن</button>
+  </div>
+
+  <!-- 🔥 Firebase و JS -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
-    document.getElementById('redeem-btn').addEventListener('click', () => {
-      alert('✅ الزر يعمل!');
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
+      authDomain: "freefirerewardsdz-69572.firebaseapp.com",
+      databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
+      projectId: "freefirerewardsdz-69572",
+      storageBucket: "freefirerewardsdz-69572.appspot.com",
+      messagingSenderId: "145782934523",
+      appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const myleadBaseUrl = "https://reward-me.eu/2878f010-55df-11f0-888d-c2a106037d45";
+    let currentUserUid = null;
+
+    window.addEventListener('load', () => {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUserUid = user.uid;
+          document.getElementById('user-info').innerText = `مرحبًا ${user.displayName}`;
+          document.getElementById('login-btn').style.display = 'none';
+          document.getElementById('logout-btn').style.display = 'inline-block';
+          document.getElementById('offerwall').src = myleadBaseUrl + "?subid=" + user.uid;
+
+          const userRef = db.ref('users/' + currentUserUid);
+          userRef.once('value').then(snap => {
+            if (!snap.exists()) {
+              userRef.set({ points: 0, userId: "" }).then(() => {
+                document.getElementById('user-points').innerText = "0";
+                document.getElementById('user-id').value = "";
+              });
+            } else {
+              const data = snap.val();
+              document.getElementById('user-points').innerText = data?.points || "0";
+              document.getElementById('user-id').value = data?.userId || "";
+            }
+          });
+
+        } else {
+          document.getElementById('user-info').innerText = 'لم تقم بتسجيل الدخول بعد.';
+          document.getElementById('login-btn').style.display = 'inline-block';
+          document.getElementById('logout-btn').style.display = 'none';
+          document.getElementById('user-points').innerText = "0";
+          document.getElementById('user-id').value = "";
+          document.getElementById('offerwall').src = "";
+        }
+      });
+
+      document.getElementById('login-btn').addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider);
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        auth.signOut();
+      });
+
+      document.getElementById('save-id').addEventListener('click', () => {
+        const id = document.getElementById('user-id').value.trim();
+        if (!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
+        db.ref('users/' + currentUserUid).update({ userId: id }).then(() => {
+          alert('✅ تم حفظ الآيدي بنجاح');
+        });
+      });
+
+      document.getElementById('redeem-btn').addEventListener('click', () => {
+        if (!currentUserUid) return alert('سجل الدخول أولاً');
+        db.ref('users/' + currentUserUid).once('value').then(snap => {
+          const data = snap.val();
+          if (!data) return alert('⚠️ لم يتم حفظ بياناتك بعد، احفظ الآيدي أولًا.');
+          fetch('/api/notify?message=طلب شحن من الآيدي: ' + (data.userId || 'غير محدد'))
+            .then(() => alert('✅ تم إرسال طلب الشحن'))
+            .catch(() => alert('❌ فشل الإرسال'));
+        });
+      });
     });
   </script>
 </body>
