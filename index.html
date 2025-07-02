@@ -158,6 +158,8 @@
         document.getElementById('login-btn').style.display = 'inline-block';
         document.getElementById('logout-btn').style.display = 'none';
         document.getElementById('user-points').innerText = '0';
+        // إعادة تحميل العروض عند تسجيل الخروج
+        document.getElementById('offerwall').src = document.getElementById('offerwall').src;
       });
     });
 
