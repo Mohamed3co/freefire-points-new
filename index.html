@@ -116,82 +116,90 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
+
     const myleadBaseUrl = "https://reward-me.eu/2878f010-55df-11f0-888d-c2a106037d45";
     let currentUserUid = null;
 
-    // أحداث الأزرار
-    document.getElementById('login-btn').addEventListener('click', () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider);
-    });
+    window.addEventListener('load', () => {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUserUid = user.uid;
+          document.getElementById('user-info').innerText = `مرحبًا ${user.displayName}`;
+          document.getElementById('login-btn').style.display = 'none';
+          document.getElementById('logout-btn').style.display = 'inline-block';
+          document.getElementById('offerwall').src = myleadBaseUrl + "?subid=" + user.uid;
 
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      auth.signOut();
-    });
+          const userRef = db.ref('users/' + currentUserUid);
+          userRef.once('value').then(snap => {
+            if (!snap.exists()) {
+              userRef.set({ points: 0, userId: "" }).then(() => {
+                document.getElementById('user-points').innerText = "0";
+                document.getElementById('user-id').value = "";
+              });
+            } else {
+              const data = snap.val();
+              document.getElementById('user-points').innerText = data?.points || "0";
+              document.getElementById('user-id').value = data?.userId || "";
+            }
+          });
 
-    document.getElementById('save-id').addEventListener('click', () => {
-      const id = document.getElementById('user-id').value.trim();
-      if (!currentUserUid) {
-        alert('سجل الدخول أولًا');
-        return;
-      }
-      if (!id) {
-        alert('اكتب الآيدي');
-        return;
-      }
-      db.ref('users/' + currentUserUid).update({ userId: id }).then(() => {
-        alert('✅ تم حفظ الآيدي بنجاح');
+        } else {
+          document.getElementById('user-info').innerText = 'لم تقم بتسجيل الدخول بعد.';
+          document.getElementById('login-btn').style.display = 'inline-block';
+          document.getElementById('logout-btn').style.display = 'none';
+          document.getElementById('user-points').innerText = "0";
+          document.getElementById('user-id').value = "";
+          document.getElementById('offerwall').src = "";
+        }
       });
-    });
 
-    document.getElementById('redeem-btn').addEventListener('click', () => {
-      if (!currentUserUid) {
-        alert('سجل الدخول أولًا');
-        return;
-      }
-      db.ref('users/' + currentUserUid).once('value').then(snap => {
-        const data = snap.val();
-        if (!data) {
-          alert('⚠️ لم يتم حفظ بياناتك بعد.');
+      document.getElementById('login-btn').addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider);
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        auth.signOut();
+      });
+
+      document.getElementById('save-id').addEventListener('click', () => {
+        const id = document.getElementById('user-id').value.trim();
+        if (!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
+        db.ref('users/' + currentUserUid).update({ userId: id }).then(() => {
+          alert('✅ تم حفظ الآيدي بنجاح');
+        });
+      });
+
+      document.getElementById('redeem-btn').addEventListener('click', () => {
+        if (!currentUserUid) {
+          alert('⚠️ يجب تسجيل الدخول أولًا');
           return;
         }
-        fetch('/api/notify?message=طلب شحن من الآيدي: ' + (data.userId || 'غير محدد'))
-          .then(() => alert('✅ تم إرسال طلب الشحن'))
-          .catch(() => alert('❌ فشل الإرسال'));
-      });
-    });
-
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        currentUserUid = user.uid;
-        document.getElementById('user-info').innerText = `مرحبًا ${user.displayName}`;
-        document.getElementById('login-btn').style.display = 'none';
-        document.getElementById('logout-btn').style.display = 'inline-block';
-        document.getElementById('offerwall').src = myleadBaseUrl + "?subid=" + user.uid;
-
-        const userRef = db.ref('users/' + currentUserUid);
-        userRef.once('value').then(snap => {
-          if (!snap.exists()) {
-            userRef.set({ points: 0, userId: "" }).then(() => {
-              document.getElementById('user-points').innerText = "0";
-              document.getElementById('user-id').value = "";
-            });
-          } else {
-            const data = snap.val();
-            document.getElementById('user-points').innerText = data?.points || "0";
-            document.getElementById('user-id').value = data?.userId || "";
+        db.ref('users/' + currentUserUid).once('value').then(snap => {
+          const data = snap.val();
+          if (!data || !data.userId) {
+            alert('⚠️ لم يتم حفظ الآيدي بعد، احفظه أولًا.');
+            return;
           }
-        });
 
-      } else {
-        currentUserUid = null;
-        document.getElementById('user-info').innerText = 'لم تقم بتسجيل الدخول بعد.';
-        document.getElementById('login-btn').style.display = 'inline-block';
-        document.getElementById('logout-btn').style.display = 'none';
-        document.getElementById('user-points').innerText = "0";
-        document.getElementById('user-id').value = "";
-        document.getElementById('offerwall').src = "";
-      }
+          const BOT_TOKEN = "8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
+          const CHAT_ID = "6285856969";
+          const message = `📢 طلب شحن جديد\n\nآيدي Free Fire:\n${data.userId}\n\nUID Firebase:\n${currentUserUid}`;
+
+          fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`)
+            .then(response => {
+              if (response.ok) {
+                alert('✅ تم إرسال طلب الشحن بنجاح');
+              } else {
+                alert('❌ حدث خطأ أثناء إرسال الطلب');
+              }
+            })
+            .catch(error => {
+              console.error(error);
+              alert('❌ فشل الاتصال بتليغرام');
+            });
+        });
+      });
     });
   </script>
 </body>
