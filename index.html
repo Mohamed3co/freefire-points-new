@@ -4,53 +4,15 @@
   <meta charset="UTF-8" />
   <title>نقاط Free Fire</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Tajawal', sans-serif;
-      background: #111;
-      color: #fff;
-    }
-    header {
-      background: #c40000;
-      padding: 1em;
-      text-align: center;
-      font-size: 1.5em;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1em;
-      background: #222;
-      padding: 0.5em;
-    }
-    nav button {
-      background: #c40000;
-      border: none;
-      padding: 0.5em 1em;
-      color: #fff;
-      cursor: pointer;
-      border-radius: 4px;
-      font-weight: bold;
-    }
-    .section {
-      display: none;
-      padding: 1em;
-      max-width: 600px;
-      margin: auto;
-    }
-    .active {
-      display: block;
-    }
-    iframe {
-      width: 100%;
-      height: 80vh;
-      border: none;
-      border-radius: 8px;
-      margin-top: 1em;
-    }
-    input, button {
-      font-size: 1em;
-    }
+    body { margin:0; font-family:'Tajawal',sans-serif; background:#111; color:#fff; }
+    header { background:#c40000; padding:1em; text-align:center; font-size:1.5em; }
+    nav { display:flex; justify-content:center; gap:1em; background:#222; padding:0.5em; }
+    nav button { background:#c40000; border:none; padding:0.5em 1em; color:#fff; cursor:pointer; border-radius:4px; font-weight:bold; }
+    .section { display:none; padding:1em; max-width:600px; margin:auto; }
+    .active { display:block; }
+    .offer { background:#222; padding:1em; margin-bottom:1em; border-radius:6px; }
+    .offer button { margin-top:0.5em; }
+    input, button { font-size:1em; }
   </style>
 </head>
 <body>
@@ -90,8 +52,18 @@
   <!-- 💎 طلب الشحن -->
   <div id="redeem" class="section">
     <h2>طلب شحن الجواهر</h2>
-    <p>✅ الشحن تجريبي بدون خصم نقاط لاختبار التليغرام</p>
-    <button id="redeem-btn">طلب الشحن</button>
+    <div class="offer">
+      <p>💎 100 جوهرة مقابل 1500 نقطة</p>
+      <button onclick="requestRecharge(100,1500)">طلب هذا الشحن</button>
+    </div>
+    <div class="offer">
+      <p>💎 200 جوهرة مقابل 3500 نقطة</p>
+      <button onclick="requestRecharge(200,3500)">طلب هذا الشحن</button>
+    </div>
+    <div class="offer">
+      <p>💎 500 جوهرة مقابل 8000 نقطة</p>
+      <button onclick="requestRecharge(500,8000)">طلب هذا الشحن</button>
+    </div>
   </div>
 
   <!-- 🔥 Firebase و JS -->
@@ -128,22 +100,17 @@
           document.getElementById('login-btn').style.display = 'none';
           document.getElementById('logout-btn').style.display = 'inline-block';
           document.getElementById('offerwall').src = myleadBaseUrl + "?subid=" + user.uid;
-
           const userRef = db.ref('users/' + currentUserUid);
           userRef.once('value').then(snap => {
             if (!snap.exists()) {
-              userRef.set({ points: 0, userId: "" }).then(() => {
-                document.getElementById('user-points').innerText = "0";
-                document.getElementById('user-id').value = "";
-              });
-            } else {
-              const data = snap.val();
-              document.getElementById('user-points').innerText = data?.points || "0";
-              document.getElementById('user-id').value = data?.userId || "";
+              userRef.set({ points: 0, userId: "" });
             }
+            const data = snap.val();
+            document.getElementById('user-points').innerText = data?.points || "0";
+            document.getElementById('user-id').value = data?.userId || "";
           });
-
         } else {
+          currentUserUid = null;
           document.getElementById('user-info').innerText = 'لم تقم بتسجيل الدخول بعد.';
           document.getElementById('login-btn').style.display = 'inline-block';
           document.getElementById('logout-btn').style.display = 'none';
@@ -169,19 +136,28 @@
           alert('✅ تم حفظ الآيدي بنجاح');
         });
       });
+    });
 
-      document.getElementById('redeem-btn').addEventListener('click', () => {
-        if (!currentUserUid) return alert('سجل الدخول أولاً');
-        db.ref('users/' + currentUserUid).once('value').then(snap => {
-          const data = snap.val();
-          if (!data || !data.userId) return alert('⚠️ لم يتم حفظ الآيدي بعد.');
-          const message = `🔔 طلب شحن جديد\n\n🆔 الآيدي: ${data.userId}\n👤 المستخدم: ${data.userId}\n✅ طلب بدون خصم نقاط (تجريبي)`;
-          fetch(`https://api.telegram.org/bot8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo/sendMessage?chat_id=6285856969&text=${encodeURIComponent(message)}`)
-          .then(() => alert('✅ تم إرسال طلبك للتليغرام بنجاح'))
-          .catch(() => alert('❌ فشل الإرسال'));
+    function requestRecharge(amount, cost) {
+      if (!currentUserUid) return alert('سجل الدخول أولاً');
+      db.ref('users/' + currentUserUid).once('value').then(snap => {
+        const data = snap.val();
+        if (!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
+        if (!data.userId) return alert('⚠️ الرجاء حفظ الآيدي أولاً');
+        const points = data.points || 0;
+        if (points < cost) return alert(`❌ ليس لديك نقاط كافية (نقاطك: ${points})`);
+        // خصم النقاط
+        db.ref('users/' + currentUserUid).update({ points: points - cost }).then(() => {
+          alert(`✅ تم خصم ${cost} نقطة، سيتم إرسال طلبك`);
+          // إرسال رسالة تليغرام
+          fetch(`https://api.telegram.org/bot8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo/sendMessage?chat_id=6285856969&text=🔔 طلب شحن جديد:%0A💎 الكمية: ${amount} جوهرة%0A🆔 الآيدي: ${data.userId}%0A👤 المستخدم: ${data.displayName || 'غير معروف'}`)
+          .then(() => alert('✅ تم إرسال طلب الشحن'))
+          .catch(() => alert('❌ فشل إرسال الرسالة للتليغرام'));
+          // تحديث النقاط في الواجهة
+          document.getElementById('user-points').innerText = points - cost;
         });
       });
-    });
+    }
   </script>
 </body>
 </html>
