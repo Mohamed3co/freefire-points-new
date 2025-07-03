@@ -171,33 +171,14 @@
       });
 
       document.getElementById('redeem-btn').addEventListener('click', () => {
-        if (!currentUserUid) {
-          alert('⚠️ يجب تسجيل الدخول أولًا');
-          return;
-        }
+        if (!currentUserUid) return alert('سجل الدخول أولاً');
         db.ref('users/' + currentUserUid).once('value').then(snap => {
           const data = snap.val();
-          if (!data || !data.userId) {
-            alert('⚠️ لم يتم حفظ الآيدي بعد، احفظه أولًا.');
-            return;
-          }
-
-          const BOT_TOKEN = "8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
-          const CHAT_ID = "6285856969";
-          const message = `📢 طلب شحن جديد\n\nآيدي Free Fire:\n${data.userId}\n\nUID Firebase:\n${currentUserUid}`;
-
-          fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`)
-            .then(response => {
-              if (response.ok) {
-                alert('✅ تم إرسال طلب الشحن بنجاح');
-              } else {
-                alert('❌ حدث خطأ أثناء إرسال الطلب');
-              }
-            })
-            .catch(error => {
-              console.error(error);
-              alert('❌ فشل الاتصال بتليغرام');
-            });
+          if (!data || !data.userId) return alert('⚠️ لم يتم حفظ الآيدي بعد.');
+          const message = `🔔 طلب شحن جديد\n\n🆔 الآيدي: ${data.userId}\n👤 المستخدم: ${data.userId}\n✅ طلب بدون خصم نقاط (تجريبي)`;
+          fetch(`https://api.telegram.org/bot8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo/sendMessage?chat_id=6285856969&text=${encodeURIComponent(message)}`)
+          .then(() => alert('✅ تم إرسال طلبك للتليغرام بنجاح'))
+          .catch(() => alert('❌ فشل الإرسال'));
         });
       });
     });
