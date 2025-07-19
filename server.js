@@ -30,7 +30,7 @@ app.use(express.static(__dirname));
 
 // ✅ Endpoint: Postback
 app.get("/postback", async (req, res) => {
-  const { player_id, payout } = req.query;
+  const { ml_sub1: player_id, payout } = req.query;
 
   if (!player_id || !payout) {
     return res.status(400).send("Missing player_id or payout");
