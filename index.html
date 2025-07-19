@@ -1,3 +1,4 @@
+<!-- ✅ كود كامل معدل بالرابط الجديد -->
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -62,19 +63,16 @@
     <button onclick="showSection('redeem')">طلب الشحن</button>
   </nav>
 
-  <!-- 🏠 الرئيسية -->
   <div id="home" class="section active">
     <h2>مرحبًا بك!</h2>
     <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
   </div>
 
-  <!-- 🎁 العروض -->
   <div id="offers" class="section">
     <h2>العروض المتاحة</h2>
     <iframe id="offerwall" src=""></iframe>
   </div>
 
-  <!-- 👤 حسابي -->
   <div id="account" class="section">
     <h2>معلومات الحساب</h2>
     <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
@@ -87,7 +85,6 @@
     </div>
   </div>
 
-  <!-- 💎 طلب الشحن -->
   <div id="redeem" class="section">
     <h2>طلب شحن الجواهر</h2>
     <p>✅ اختر كمية الجواهر:</p>
@@ -96,7 +93,6 @@
     <button onclick="redeem(8000)">✅ 500 جوهرة - 8000 نقطة</button>
   </div>
 
-  <!-- 🔥 Firebase و JS -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -119,7 +115,8 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    const myleadBaseUrl = "https://reward-me.eu/2878f010-55df-11f0-888d-c2a106037d45";
+    // ✅ رابط العروض الجديد
+    const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
     let currentUserUid = null;
 
     window.addEventListener('load', () => {
@@ -129,7 +126,6 @@
           document.getElementById('user-info').innerText = `مرحبًا ${user.displayName}`;
           document.getElementById('login-btn').style.display = 'none';
           document.getElementById('logout-btn').style.display = 'inline-block';
-          // ✅ هنا رابط العروض مع UID
           document.getElementById('offerwall').src = myleadBaseUrl + "?subid=" + user.uid;
 
           const userRef = db.ref('users/' + currentUserUid);
@@ -179,9 +175,7 @@
         const data = snap.val();
         if (!data) return alert('⚠️ لم يتم حفظ بياناتك بعد، احفظ الآيدي أولًا.');
         if ((data.points || 0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية لهذا الشحن.');
-        // خصم النقاط
         db.ref('users/' + currentUserUid).update({ points: data.points - pointsRequired });
-        // إرسال إشعار تلغرام
         fetch('/api/notify?message=طلب شحن '+pointsRequired+' نقطة من الآيدي: ' + (data.userId || 'غير محدد'))
           .then(() => alert('✅ تم إرسال طلب الشحن'))
           .catch(() => alert('❌ فشل إرسال الطلب'));
