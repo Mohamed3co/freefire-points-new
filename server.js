@@ -1,103 +1,83 @@
-import express from 'express';
-import admin from 'firebase-admin';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import path from 'path';
-import fs from 'fs';
+// server.js
 
-// Load environment variables
+import express from "express";
+import dotenv from "dotenv";
+import admin from "firebase-admin";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+
 dotenv.config();
 
-// Firebase Admin Setup
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Firebase config
 const serviceAccount = JSON.parse(
-  fs.readFileSync(path.join(__dirname, 'serviceAccountKey.json'))
+  fs.readFileSync(path.join(__dirname, "serviceAccountKey.json"))
 );
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.FIREBASE_DATABASE_URL
+  databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
 });
 
-// Express App
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Serve static files (frontend)
+app.use(express.static(__dirname));
 
-/**
- * MyLead Postback Handler
- * Endpoint: /postback
- * Expected Params:
- * - ml_sub1: User ID
- * - payout: Payout amount
- * - transaction_id: Unique transaction ID
- */
-app.get('/postback', async (req, res) => {
+// ✅ Endpoint: Postback
+app.get("/postback", async (req, res) => {
+  const { ml_sub1: player_id, payout } = req.query;
+
+  if (!player_id || !payout) {
+    return res.status(400).send("Missing player_id or payout");
+  }
+
   try {
-    // 1. Validate Input
-    const { ml_sub1: rawUserId, payout, transaction_id } = req.query;
+    const userRef = admin.database().ref(`users/${player_id}`);
 
-    if (!rawUserId || !payout || !transaction_id) {
-      return res.status(400).json({ 
-        success: false,
-        message: 'Missing required parameters'
-      });
-    }
+    // جلب النقاط الحالية
+    const snapshot = await userRef.child("points").once("value");
+    const currentPoints = snapshot.val() || 0;
 
-    // 2. Sanitize User ID
-    const userId = rawUserId.replace(/[^a-zA-Z0-9_-]/g, '');
+    // حساب النقاط
+    const pointsToAdd = Math.round(parseFloat(payout) * 300); // 1$ = 300 نقطة
 
-    // 3. Validate Payout
-    const payoutValue = parseFloat(payout);
-    if (isNaN(payoutValue) || payoutValue <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid payout value'
-      });
-    }
-
-    // 4. Calculate Points (1$ = 300 points)
-    const pointsToAdd = Math.round(payoutValue * 300);
-
-    // 5. Update Firebase
-    const userRef = admin.database().ref(`users/${userId}`);
-    const updates = {
-      points: admin.database.ServerValue.increment(pointsToAdd),
-      last_transaction: transaction_id,
-      last_updated: new Date().toISOString()
-    };
-
-    await userRef.update(updates);
-
-    // 6. Log Success
-    console.log(`💰 Points added | User: ${userId} | Points: ${pointsToAdd} | TX: ${transaction_id}`);
-
-    // 7. Send Response
-    res.json({
-      success: true,
-      message: 'Points credited successfully',
-      data: {
-        userId,
-        pointsAdded: pointsToAdd,
-        transactionId: transaction_id
-      }
+    // تحديث النقاط
+    await userRef.update({
+      points: currentPoints + pointsToAdd
     });
 
+    console.log(`✅ Added ${pointsToAdd} points to user ${player_id}`);
+    res.send("Postback OK");
   } catch (error) {
-    console.error('🔥 Postback Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-      error: error.message
-    });
+    console.error(error);
+    res.status(500).send("Error processing postback");
   }
 });
 
-// Start Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🔗 Postback URL: http://yourdomain.com/postback?ml_sub1=USER_ID&payout=AMOUNT&transaction_id=TX_ID`);
+// ✅ Telegram Notification (إذا أردت)
+app.get("/api/notify", async (req, res) => {
+  const { message } = req.query;
+  if (!message) return res.status(400).send("Missing message");
+  try {
+    await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: process.env.CHAT_ID,
+        text: message
+      })
+    });
+    res.send("Sent");
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Error sending notification");
+  }
 });
+
+// ✅ Start server
+app.listen(port, () => console.log(`✅ Server running on port ${port}`));
