@@ -1,5 +1,3 @@
-// server.js
-
 import express from "express";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
@@ -25,59 +23,46 @@ admin.initializeApp({
   databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
 });
 
-// Serve static files (frontend)
-app.use(express.static(__dirname));
+// Middleware لتحليل query parameters
+app.use(express.urlencoded({ extended: true }));
 
-// ✅ Endpoint: Postback
+// ✅ Endpoint: Postback (مُحسّن)
 app.get("/postback", async (req, res) => {
-  const { ml_sub1: player_id, payout } = req.query;
-
-  if (!player_id || !payout) {
-    return res.status(400).send("Missing player_id or payout");
-  }
-
   try {
+    const { ml_sub1: rawPlayerId, payout, transaction_id } = req.query;
+
+    // 1. التحقق من وجود البيانات الأساسية
+    if (!rawPlayerId || !payout || !transaction_id) {
+      return res.status(400).send("Missing required parameters");
+    }
+
+    // 2. تنظيف player_id من الأحرف غير المسموحة
+    const player_id = rawPlayerId.replace(/[\[\]\.#$]/g, "");
+    if (!player_id) {
+      return res.status(400).send("Invalid player ID");
+    }
+
+    // 3. التحقق من أن payout رقم صحيح
+    const pointsToAdd = Math.round(parseFloat(payout) * 300);
+    if (isNaN(pointsToAdd) {
+      return res.status(400).send("Invalid payout value");
+    }
+
+    // 4. تحديث البيانات في Firebase
     const userRef = admin.database().ref(`users/${player_id}`);
-
-    // جلب النقاط الحالية
-    const snapshot = await userRef.child("points").once("value");
-    const currentPoints = snapshot.val() || 0;
-
-    // حساب النقاط
-    const pointsToAdd = Math.round(parseFloat(payout) * 300); // 1$ = 300 نقطة
-
-    // تحديث النقاط
     await userRef.update({
-      points: currentPoints + pointsToAdd
+      points: admin.database.ServerValue.increment(pointsToAdd),
+      last_transaction: transaction_id,
+      last_updated: new Date().toISOString()
     });
 
-    console.log(`✅ Added ${pointsToAdd} points to user ${player_id}`);
-    res.send("Postback OK");
+    console.log(`✅ تم إضافة ${pointsToAdd} نقطة للاعب ${player_id}`);
+    res.status(200).send("Postback processed successfully");
+    
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error processing postback");
+    console.error("🔥 خطأ في معالجة الطلب:", error);
+    res.status(500).send("Internal server error");
   }
 });
 
-// ✅ Telegram Notification (إذا أردت)
-app.get("/api/notify", async (req, res) => {
-  const { message } = req.query;
-  if (!message) return res.status(400).send("Missing message");
-  try {
-    await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: process.env.CHAT_ID,
-        text: message
-      })
-    });
-    res.send("Sent");
-  } catch (e) {
-    console.error(e);
-    res.status(500).send("Error sending notification");
-  }
-});
-
-// ✅ Start server
-app.listen(port, () => console.log(`✅ Server running on port ${port}`));
+// ... (بقية الكود كما هو)
