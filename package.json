@@ -1,15 +1,17 @@
 {
-  "name": "cpa-offers-app",
+  "name": "freefire-points-server",
   "version": "1.0.0",
-  "type": "module",
+  "description": "Server for Free Fire points system with Firebase",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "firebase-admin": "^11.10.1",
-    "node-fetch": "^3.3.2"
+    "firebase-admin": "^11.10.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "node-fetch": "^3.3.1"
   }
 }
