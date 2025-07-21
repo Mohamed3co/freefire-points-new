@@ -1,81 +1,89 @@
-import express from "express";
-import admin from "firebase-admin";
-import dotenv from "dotenv";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
+// server.js
 
-// تحميل متغيرات البيئة
+import express from "express";
+import dotenv from "dotenv";
+import admin from "firebase-admin";
+import path from "path";
+import { fileURLToPath } from "url";
+import fetch from "node-fetch"; // مهم إذا لم يكن موجود
+// تحميل متغيرات البيئة من .env
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// إعداد Firebase Admin
-const serviceAccount = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "serviceAccountKey.json"), "utf8")
-);
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.FIREBASE_DB_URL, // ضع هذا في ملف .env
-});
-
-const db = admin.database();
+// إنشاء التطبيق
 const app = express();
 const port = process.env.PORT || 3000;
 
-// السماح باستخدام ملفات استاتيكية (اختياري إن لم تكن تستخدم CSS/JS خارجي)
-app.use(express.static("public"));
+// ✅ تأكيد عرض التوقيت الحالي مباشرة
+const now = new Date();
+console.log("🕒 Server boot time (UTC):", now.toISOString());
 
-// تقديم صفحة HTML
-app.get("/", (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html lang="ar">
-    <head>
-      <meta charset="UTF-8" />
-      <title>Firebase Check</title>
-    </head>
-    <body>
-      <h2>تحقق من نقاط المستخدم</h2>
-      <form id="form">
-        <input type="text" id="uid" placeholder="أدخل UID" />
-        <button type="submit">تحقق</button>
-      </form>
-      <p id="result"></p>
-      <script>
-        const form = document.getElementById("form");
-        const result = document.getElementById("result");
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const uid = document.getElementById("uid").value.trim();
-          const res = await fetch("/check/" + uid);
-          const data = await res.json();
-          result.innerText = data.error ? data.error : "النقاط: " + data.points;
-        });
-      </script>
-    </body>
-    </html>
-  `);
-});
+// ✅ إعداد Firebase باستخدام متغير البيئة بدلاً من الملف
+try {
+  const firebaseCredentials = JSON.parse(process.env.FIREBASE_CREDENTIAL);
 
-// Endpoint للتحقق من النقاط
-app.get("/check/:uid", async (req, res) => {
-  const uid = req.params.uid;
+  admin.initializeApp({
+    credential: admin.credential.cert(firebaseCredentials),
+    databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
+  });
+
+  console.log("✅ Firebase initialized successfully (from .env).");
+} catch (err) {
+  console.error("❌ Firebase initialization error:", err);
+}
+
+// 📂 تقديم الملفات الساكنة
+app.use(express.static(__dirname));
+
+// ✅ Postback endpoint
+app.get("/postback", async (req, res) => {
+  const { ml_sub1: player_id, payout } = req.query;
+
+  if (!player_id || !payout) {
+    return res.status(400).send("Missing player_id or payout");
+  }
+
   try {
-    const snapshot = await db.ref("users/" + uid + "/points").once("value");
-    const points = snapshot.val();
-    if (points === null) {
-      res.json({ error: "المستخدم غير موجود أو لا يملك نقاط" });
-    } else {
-      res.json({ points });
-    }
+    const userRef = admin.database().ref(`users/${player_id}`);
+    const snapshot = await userRef.child("points").once("value");
+    const currentPoints = snapshot.val() || 0;
+    const pointsToAdd = Math.round(parseFloat(payout) * 300);
+
+    await userRef.update({ points: currentPoints + pointsToAdd });
+
+    console.log(`✅ Added ${pointsToAdd} points to user ${player_id}`);
+    res.send("Postback OK");
   } catch (error) {
-    res.status(500).json({ error: "حدث خطأ في الاتصال بقاعدة البيانات" });
+    console.error("❌ Error in /postback:", error);
+    res.status(500).send("Error processing postback");
   }
 });
 
+// ✅ Telegram Notification (اختياري)
+app.get("/api/notify", async (req, res) => {
+  const { message } = req.query;
+  if (!message) return res.status(400).send("Missing message");
+
+  try {
+    await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: process.env.CHAT_ID,
+        text: message
+      })
+    });
+
+    res.send("Sent");
+  } catch (e) {
+    console.error("❌ Error sending Telegram message:", e);
+    res.status(500).send("Error sending notification");
+  }
+});
+
+// ✅ تشغيل الخادم
 app.listen(port, () => {
-  console.log(`الخادم يعمل على http://localhost:${port}`);
+  console.log(`🚀 Server is running on port ${port}`);
 });
