@@ -7,28 +7,40 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 
+// تحميل المتغيرات من .env
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// إنشاء التطبيق
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Firebase config
-const serviceAccount = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "serviceAccountKey.json"))
-);
+// ✅ تأكيد عرض التوقيت الحالي مباشرة
+const now = new Date();
+console.log("🕒 Server boot time (UTC):", now.toISOString());
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
-});
+// 🟡 Firebase إعداد
+try {
+  const serviceAccount = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "serviceAccountKey.json"))
+  );
 
-// Serve static files (frontend)
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
+  });
+
+  console.log("✅ Firebase initialized successfully.");
+} catch (err) {
+  console.error("❌ Firebase initialization error:", err);
+}
+
+// 📂 تقديم الملفات الساكنة
 app.use(express.static(__dirname));
 
-// ✅ Endpoint: Postback
+// ✅ Postback endpoint
 app.get("/postback", async (req, res) => {
   const { ml_sub1: player_id, payout } = req.query;
 
@@ -38,31 +50,25 @@ app.get("/postback", async (req, res) => {
 
   try {
     const userRef = admin.database().ref(`users/${player_id}`);
-
-    // جلب النقاط الحالية
     const snapshot = await userRef.child("points").once("value");
     const currentPoints = snapshot.val() || 0;
+    const pointsToAdd = Math.round(parseFloat(payout) * 300);
 
-    // حساب النقاط
-    const pointsToAdd = Math.round(parseFloat(payout) * 300); // 1$ = 300 نقطة
-
-    // تحديث النقاط
-    await userRef.update({
-      points: currentPoints + pointsToAdd
-    });
+    await userRef.update({ points: currentPoints + pointsToAdd });
 
     console.log(`✅ Added ${pointsToAdd} points to user ${player_id}`);
     res.send("Postback OK");
   } catch (error) {
-    console.error(error);
+    console.error("❌ Error in /postback:", error);
     res.status(500).send("Error processing postback");
   }
 });
 
-// ✅ Telegram Notification (إذا أردت)
+// ✅ Telegram Notification (اختياري)
 app.get("/api/notify", async (req, res) => {
   const { message } = req.query;
   if (!message) return res.status(400).send("Missing message");
+
   try {
     await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
       method: "POST",
@@ -72,12 +78,15 @@ app.get("/api/notify", async (req, res) => {
         text: message
       })
     });
+
     res.send("Sent");
   } catch (e) {
-    console.error(e);
+    console.error("❌ Error sending Telegram message:", e);
     res.status(500).send("Error sending notification");
   }
 });
 
-// ✅ Start server
-app.listen(port, () => console.log(`✅ Server running on port ${port}`));
+// ✅ تشغيل الخادم
+app.listen(port, () => {
+  console.log(`🚀 Server is running on port ${port}`);
+});
