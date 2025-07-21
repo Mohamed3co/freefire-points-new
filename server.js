@@ -1,11 +1,10 @@
-// server.js
-
 import express from "express";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import fetch from "node-fetch"; // 🔥 مهم
 
 dotenv.config();
 
@@ -25,8 +24,8 @@ admin.initializeApp({
   databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
 });
 
-// Serve static files (frontend)
-app.use(express.static(__dirname));
+// Serve frontend safely
+app.use(express.static(path.join(__dirname, "public"))); // انقل index.html هنا
 
 // ✅ Endpoint: Postback
 app.get("/postback", async (req, res) => {
@@ -36,17 +35,15 @@ app.get("/postback", async (req, res) => {
     return res.status(400).send("Missing player_id or payout");
   }
 
+  const parsedPayout = parseFloat(payout);
+  if (isNaN(parsedPayout)) return res.status(400).send("Payout is not a number");
+
   try {
     const userRef = admin.database().ref(`users/${player_id}`);
-
-    // جلب النقاط الحالية
     const snapshot = await userRef.child("points").once("value");
     const currentPoints = snapshot.val() || 0;
+    const pointsToAdd = Math.round(parsedPayout * 300);
 
-    // حساب النقاط
-    const pointsToAdd = Math.round(parseFloat(payout) * 300); // 1$ = 300 نقطة
-
-    // تحديث النقاط
     await userRef.update({
       points: currentPoints + pointsToAdd
     });
@@ -54,15 +51,16 @@ app.get("/postback", async (req, res) => {
     console.log(`✅ Added ${pointsToAdd} points to user ${player_id}`);
     res.send("Postback OK");
   } catch (error) {
-    console.error(error);
+    console.error("❌ Error in /postback:", error.message);
     res.status(500).send("Error processing postback");
   }
 });
 
-// ✅ Telegram Notification (إذا أردت)
+// ✅ Telegram Notification
 app.get("/api/notify", async (req, res) => {
   const { message } = req.query;
   if (!message) return res.status(400).send("Missing message");
+
   try {
     await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
       method: "POST",
@@ -74,10 +72,9 @@ app.get("/api/notify", async (req, res) => {
     });
     res.send("Sent");
   } catch (e) {
-    console.error(e);
+    console.error("❌ Error sending Telegram message:", e.message);
     res.status(500).send("Error sending notification");
   }
 });
 
-// ✅ Start server
 app.listen(port, () => console.log(`✅ Server running on port ${port}`));
