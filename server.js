@@ -1,79 +1,93 @@
 // server.js
-
 import express from "express";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
 import path from "path";
 import { fileURLToPath } from "url";
-import cors from "cors";
+import fs from "fs";
 
-// تحميل متغيرات البيئة من .env
+// تحميل المتغيرات من .env
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// إنشاء التطبيق
 const app = express();
-app.use(cors());
-app.use(express.json());
+const port = process.env.PORT || 3000;
 
-const PORT = process.env.PORT || 3000;
+// ✅ تأكيد عرض التوقيت الحالي مباشرة
+const now = new Date();
+console.log("🕒 Server boot time (UTC):", now.toISOString());
 
-// إعداد Firebase Admin SDK
-const serviceAccount = {
-  "type": "service_account",
-  "project_id": process.env.FB_PROJECT_ID,
-  "private_key_id": process.env.FB_PRIVATE_KEY_ID,
-  "private_key": process.env.FB_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  "client_email": process.env.FB_CLIENT_EMAIL,
-  "client_id": process.env.FB_CLIENT_ID,
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": process.env.FB_CLIENT_CERT_URL
-};
+// 🟡 Firebase إعداد
+try {
+const serviceAccount = JSON.parse(
+fs.readFileSync(path.join(__dirname, "serviceAccountKey.json"))
+);
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.FB_DB_URL
+credential: admin.credential.cert(serviceAccount),
+databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
 });
 
-const db = admin.firestore();
+console.log("✅ Firebase initialized successfully.");
+} catch (err) {
+console.error("❌ Firebase initialization error:", err);
+}
 
-// 📌 رابط الـ POSTBACK الذي تستدعيه شركة الإعلانات
+// 📂 تقديم الملفات الساكنة
+app.use(express.static(__dirname));
+
+// ✅ Postback endpoint
 app.get("/postback", async (req, res) => {
-  const { transaction_id, program_name, payout, ml_sub1 } = req.query;
+const { ml_sub1: player_id, payout } = req.query;
 
-  if (!transaction_id || !program_name || !payout || !ml_sub1) {
-    return res.status(400).send("❌ بيانات ناقصة في الرابط.");
-  }
+if (!player_id || !payout) {
+return res.status(400).send("Missing player_id or payout");
+}
 
-  try {
-    const userRef = db.collection("users").doc(ml_sub1);
-    const userDoc = await userRef.get();
+try {
+const userRef = admin.database().ref(users/${player_id});
+const snapshot = await userRef.child("points").once("value");
+const currentPoints = snapshot.val() || 0;
+const pointsToAdd = Math.round(parseFloat(payout) * 300);
 
-    if (!userDoc.exists) {
-      return res.status(404).send("❌ المستخدم غير موجود.");
-    }
+await userRef.update({ points: currentPoints + pointsToAdd });
 
-    const currentPoints = userDoc.data().points || 0;
-    const addedPoints = parseInt(payout);
+console.log(✅ Added ${pointsToAdd} points to user ${player_id});
+res.send("Postback OK");
 
-    await userRef.update({
-      points: currentPoints + addedPoints,
-      last_offer: program_name,
-      last_transaction_id: transaction_id,
-      last_update: admin.firestore.FieldValue.serverTimestamp()
-    });
-
-    return res.status(200).send("✅ تم إضافة النقاط بنجاح.");
-  } catch (error) {
-    console.error("🔥 خطأ في postback:", error);
-    return res.status(500).send("❌ خطأ في معالجة الاسترجاع.");
-  }
+} catch (error) {
+console.error("❌ Error in /postback:", error);
+res.status(500).send("Error processing postback");
+}
 });
 
-// استماع للسيرفر
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+// ✅ Telegram Notification (اختياري)
+app.get("/api/notify", async (req, res) => {
+const { message } = req.query;
+if (!message) return res.status(400).send("Missing message");
+
+try {
+await fetch(https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage, {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+chat_id: process.env.CHAT_ID,
+text: message
+})
+});
+
+res.send("Sent");
+
+} catch (e) {
+console.error("❌ Error sending Telegram message:", e);
+res.status(500).send("Error sending notification");
+}
+});
+
+// ✅ تشغيل الخادم
+app.listen(port, () => {
+console.log(🚀 Server is running on port ${port});
 });
