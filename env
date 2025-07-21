@@ -1,2 +1,3 @@
 BOT_TOKEN=8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo
 CHAT_ID=6285856969
+FIREBASE_DB_URL=https://your-project-id.firebaseio.com
