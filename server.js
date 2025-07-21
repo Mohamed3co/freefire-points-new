@@ -1,68 +1,103 @@
-import express from "express";
-import dotenv from "dotenv";
-import admin from "firebase-admin";
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
+import express from 'express';
+import admin from 'firebase-admin';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import fs from 'fs';
 
+// Load environment variables
 dotenv.config();
 
+// Firebase Admin Setup
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
-const port = process.env.PORT || 3000;
-
-// Firebase config
 const serviceAccount = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "serviceAccountKey.json"))
+  fs.readFileSync(path.join(__dirname, 'serviceAccountKey.json'))
 );
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
+  databaseURL: process.env.FIREBASE_DATABASE_URL
 });
 
-// Middleware لتحليل query parameters
+// Express App
+const app = express();
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Endpoint: Postback (مُحسّن)
-app.get("/postback", async (req, res) => {
+/**
+ * MyLead Postback Handler
+ * Endpoint: /postback
+ * Expected Params:
+ * - ml_sub1: User ID
+ * - payout: Payout amount
+ * - transaction_id: Unique transaction ID
+ */
+app.get('/postback', async (req, res) => {
   try {
-    const { ml_sub1: rawPlayerId, payout, transaction_id } = req.query;
+    // 1. Validate Input
+    const { ml_sub1: rawUserId, payout, transaction_id } = req.query;
 
-    // 1. التحقق من وجود البيانات الأساسية
-    if (!rawPlayerId || !payout || !transaction_id) {
-      return res.status(400).send("Missing required parameters");
+    if (!rawUserId || !payout || !transaction_id) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Missing required parameters'
+      });
     }
 
-    // 2. تنظيف player_id من الأحرف غير المسموحة
-    const player_id = rawPlayerId.replace(/[\[\]\.#$]/g, "");
-    if (!player_id) {
-      return res.status(400).send("Invalid player ID");
+    // 2. Sanitize User ID
+    const userId = rawUserId.replace(/[^a-zA-Z0-9_-]/g, '');
+
+    // 3. Validate Payout
+    const payoutValue = parseFloat(payout);
+    if (isNaN(payoutValue) || payoutValue <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid payout value'
+      });
     }
 
-    // 3. التحقق من أن payout رقم صحيح
-    const pointsToAdd = Math.round(parseFloat(payout) * 300);
-    if (isNaN(pointsToAdd) {
-      return res.status(400).send("Invalid payout value");
-    }
+    // 4. Calculate Points (1$ = 300 points)
+    const pointsToAdd = Math.round(payoutValue * 300);
 
-    // 4. تحديث البيانات في Firebase
-    const userRef = admin.database().ref(`users/${player_id}`);
-    await userRef.update({
+    // 5. Update Firebase
+    const userRef = admin.database().ref(`users/${userId}`);
+    const updates = {
       points: admin.database.ServerValue.increment(pointsToAdd),
       last_transaction: transaction_id,
       last_updated: new Date().toISOString()
+    };
+
+    await userRef.update(updates);
+
+    // 6. Log Success
+    console.log(`💰 Points added | User: ${userId} | Points: ${pointsToAdd} | TX: ${transaction_id}`);
+
+    // 7. Send Response
+    res.json({
+      success: true,
+      message: 'Points credited successfully',
+      data: {
+        userId,
+        pointsAdded: pointsToAdd,
+        transactionId: transaction_id
+      }
     });
 
-    console.log(`✅ تم إضافة ${pointsToAdd} نقطة للاعب ${player_id}`);
-    res.status(200).send("Postback processed successfully");
-    
   } catch (error) {
-    console.error("🔥 خطأ في معالجة الطلب:", error);
-    res.status(500).send("Internal server error");
+    console.error('🔥 Postback Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
   }
 });
 
-// ... (بقية الكود كما هو)
+// Start Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🔗 Postback URL: http://yourdomain.com/postback?ml_sub1=USER_ID&payout=AMOUNT&transaction_id=TX_ID`);
+});
