@@ -1,74 +1,35 @@
 import express from "express";
-import dotenv from "dotenv";
 import admin from "firebase-admin";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
 
-// إصلاح مشكلة التوقيت (يجب أن يكون في الأعلى)
+// لضبط التوقيت على UTC
 process.env.TZ = 'UTC';
 
-// تحميل المتغيرات من .env
-dotenv.config();
-
+// مسارات الملفات
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// إنشاء التطبيق
+// بدء التطبيق
 const app = express();
 const port = process.env.PORT || 3000;
 
-console.log("🕒 Server boot time (UTC):", new Date().toISOString());
+// ✅ Firebase إعداد
+admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: "freefirerewardsdz-69572",
+    clientEmail: "firebase-adminsdk-fbsvc@freefirerewardsdz-69572.iam.gserviceaccount.com",
+    privateKey: `-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCdxbOc5RFjmNN4\nIIqTZSnHkW+THjkcfZvMt1Nz2b3O8YTJMQG7xVkRY10TKpvwPy7KFA4/U7QdXJf7\ncw11wrBUh8EKtg+vfQaC/lGFVzeNr2wCGB96NIlScF1TmcQWU7YQqGd6u4YirTrH\nNOj/aDr57HEH9zCcndBFYpJV5YCGgm1uUeo/ui2OPnSsy6+xcTtY9pC1kj7YcyLh\nMu/j8mGsLgX8oxAFqvijYurgEAXFXEym3sXPx5LwVHvGPUwEDvTSmgj4I1aPKt1k\n5TaTlwnV+hbIqovFr0B+vJmTWLv0N44PVqD2JmV1htK/+wgVnSmsbEww3tqo8Y1+\nNzmNIuUNAgMBAAECggEAFe8orakWDg3u5m5FvcCseouQYrhqsbiPyrn4/uv4bLcc\nohjvWALTg2yYQcQkelXaZCs+INU6/vMCySlBZ4wJ1jKqZpoRm7Dq0RbY0AwkU80d\n27utUqDPr5eiDe+ceIsqTm4PNtuvxg3l1FCZjPqZamoR+8zEpB13mVHfLNRzlh9/\nZrJbzaP4A0JyESTaKHg9VI5R5i0FSkq87VTA1O/rqY3VTB8vvlDKlREGOcPplJ2c\niaK++XOXdSCbDWizXh9PPjb4rV9zzSctif7QLY9QoK02oz4CILqCIdI+FEMQZF3/\ngtLBZRxbwIavHkc5HZ7VMYGo6ge00BJzPvHB1agJ0QKBgQDWTqthpFA4YyMcFtXO\n06lSQIG9V6ghEFVuSAy/fapURrLa2ysLv06jwoV7PIJhS/MmaxBXtDFwTnCHtTrG\nHmDAJsC7PtiQzwf2C0KBlklqylcIzOs+deGKN3qkfAKZSrh2/yFmMsKB8OIguCiY\nZ3Agn8Y4ocPrt2YickHofUaGXQKBgQC8d16XRhipToZA4+6puUO4GZGpXmiRhOD5\ncPjkVAZ4iA/SDpvr7bovlVuj5DNvFsNqAtFB/yoThiZXhA2w3qTqmXs5MG1j6AVT\neiJRvWrkqdI8JCWX3/dT6kJ5E8rN7hsPic4JZLBPTU7OMvEHrRwTshpS0HoRUc/h\nxiwDkMKOcQKBgQCJi/6Fcd+nAUIUkjdyQvmG+C4NJ4iaiBA88vNzqCU9aA79VvPe\n20+O3ZesjB6mcgfCna7ki5u7mCyzfUcWx4KTcYv74g8/ihFzArER2TKP3wRTeqp1\n8VTr0EXf8lP8rS+N+JwoKuYaXk/Ubj5n6uPVnJat3G2SCaj87NaOcHFmZQKBgAZu\nHDAVGCpOn43/ONlZlNHnLW0V54NvgS2BiTxhEYdzPPbxwKggCEYvVl0VIBweLrSj\nO/iAeDMKVKyPuNfcAMxwSB//YvwRonzioeEgEVGT6bRbl1zDK3EVgQcYgcbc5Nd2\n4Cy53roV7SZj3o1gfqC9ZuCEdGW64NjXJhFJExpBAoGBAME/8X+Mp1rOb427qA8J\nqy495+SR7bfTe2mt2zx37lwv+bbVsSoHZof1+2b8nTXG7dq/PuObyQugmrLA0wh0\nKSNvZH9FB2K2ozNS+1JGiQX2uuiy4nN4eRqVK9IExJG6IoIqifFAMsUhi9ZIq0kg\npF0ADGtG3O27mMgXOgAMLTKS\n-----END PRIVATE KEY-----\n`
+  }),
+  databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
+});
 
-// 🟡 Firebase إعداد (النسخة المعدلة)
-try {
-  // الطريقة الجديدة بدون استخدام ملف serviceAccountKey.json
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: "freefirerewardsdz-69572",
-      clientEmail: "firebase-adminsdk-fbsvc@freefirerewardsdz-69572.iam.gserviceaccount.com",
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || 
-        "-----BEGIN PRIVATE KEY-----\n" +
-        "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCoRS8WGCkdP9S3\n" +
-        "34C3IMFl5EmPnMMyY32v/smzEnzkRmMZVAV9FvJ0e20jrs+WMACetQOXniEYDx18\n" +
-        "4IY6ZixTcLuRClfA7ri/qrccgXe0SShuq3+swQHFyk/rOHOrXsnQ5ASKF3Q+rXMp\n" +
-        "+db2vH0aFuIzkb7DXiIEHRymLdsq70OmneeA2u+QYkiFjc73hezgtbRhHsyZxQbl\n" +
-        "xT1fg2xTrQS5jqlb2p+uKCIEYTKOhBmH9nzdKiThIkhkw+bE1bz8dUelCQAKLxze\n" +
-        "YZxtoXQP4eDEAtn5VtSnXGZJWkLRD0zr0x8DPv9Vjs1JWSlDia4vGR6+fTRy2sOw\n" +
-        "eyAxIeXpAgMBAAECggEAF51P8JiW6oMq+dv8nxaSdZduSGB+V0u1l5WY3k/dpZaI\n" +
-        "MUWEmKu3/mdU53FQshnN+HfcR3KaX9s9Lul+hOMSXOpg9EegjZOi60kMtgwoTa2H\n" +
-        "plJcklSqyERuZ0sOlpHwnidlyLBmcKZcV1t30rwcjWUBPS36uMW03eFtBBhC3fko\n" +
-        "QhYcDqEhpXLx4esLCvuxBaVxW8Yvthk2uCFwM1HC2FcOUkAIDUL8tmlTNh4gG1L4\n" +
-        "Fm/34+hmY00ZvZY78Zgkx8sCfqMzTQQinyKi/0dYDbeAM4pqqcQ5587xRw+CIfmb\n" +
-        "r1SLi3BO+P6Vb5+LxsqbZvN+p5oAzMlSNVMTUYPMNQKBgQDRpa40pZ6++AL5ub52\n" +
-        "L+I+3VrhveTSDeOi1KZKmi01N8qPD0zXlik69N/u35QX6Ps6wu/8KwTNUbDkhcVI\n" +
-        "s4wMO+XiwB/MUa8/NsWXdbiuME4ox9XscJdPueBbbsUqGVIf/L4Ai1XgxxLJS5PE\n" +
-        "3+BiyiwM6WzHWlLXRU7E3a5aLQKBgQDNeYL+jWelRJE7xm7aWvCCb5cAKyzpLUCj\n" +
-        "alUucM4EVg3nlvjSfqbIRPYD6Q1eE64kln+mWjHqOmb1QH4Fii1djpGD9ApcinE4\n" +
-        "mmNL0Pdly1NzigJntxTh8T1NHtotGZWI7agTAg6PIaEkRDhvPgaFPU6ARQJ/bj5f\n" +
-        "CWPaxS+8LQKBgQCJoUsMJO5iUE8jwlzXGfhdbNQM/q0JeTTH4PKKZ0zmcwn3gQPh\n" +
-        "RCMtITUhjIWcbMcBfJgv483zPH30iB1L7RMztN7mTVqSt81kooB1PkNPl0a4XviB\n" +
-        "kCjFnjE71Sx6xsSzWykhElf+iLI8k/EefhrAwBjLITLYbOOVj1p2w1GCwQKBgQC7\n" +
-        "RkjSYWdaBkioxo86jTAwciyahr+ENy52wu+oSEA9S4GY1s0qbSzt04y2u67nU+Cg\n" +
-        "kFr/760W4uv8FC/INMxsPQj7z22yMqxG/tAJxgf2y37gC6VtijyKQimxJLGN8YeN\n" +
-        "Ka7KxFEou2n3eAZHvayLu/jUiBFiu8Q1MoXEW3zKcQKBgBb9eCyzUNk05EthOuJT\n" +
-        "zcfG7Qfmgy8cBHMC2tTQfxE/CPXWeB+tdcjMAse4OK9pTOwfK/3EtGMpBv5M6Z3n\n" +
-        "mJYy20Y1xJob5PcQHilKNeGUAYZliKTWxkG3u8JDlCHYI2gihcoY5eaZKf1P6Syy\n" +
-        "VRDDAldV0wO04Rg2ICO1UdLT\n" +
-        "-----END PRIVATE KEY-----"
-    }),
-    databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
-  });
-  console.log("✅ Firebase initialized successfully.");
-} catch (err) {
-  console.error("❌ Firebase initialization error:", err);
-  process.exit(1); // إيقاف السيرفر إذا فشلت التهيئة
-}
+console.log("✅ Firebase initialized successfully.");
 
-// 📂 تقديم الملفات الساكنة
+// ملفات HTML أو أي ملفات ثابتة
 app.use(express.static(__dirname));
 
-// ✅ Postback endpoint
+// ✅ نقطة postback
 app.get("/postback", async (req, res) => {
   const { ml_sub1: player_id, payout } = req.query;
 
@@ -92,8 +53,7 @@ app.get("/postback", async (req, res) => {
   }
 });
 
-// ... (بقية الكود كما هو)
-
+// تشغيل السيرفر
 app.listen(port, () => {
   console.log(`🚀 Server is running on port ${port}`);
 });
