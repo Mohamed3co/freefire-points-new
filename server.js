@@ -1,55 +1,60 @@
 import express from "express";
 import admin from "firebase-admin";
+import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-process.env.TZ = 'UTC';
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-// إعداد Firebase
+// إعداد Firebase Admin
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+
 admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: "freefirerewardsdz-69572",
-    clientEmail: "firebase-adminsdk-fbsvc@freefirerewardsdz-69572.iam.gserviceaccount.com",
-    privateKey: `-----BEGIN PRIVATE KEY-----\n...مفتاحك...\n-----END PRIVATE KEY-----\n`
-  }),
-  databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: process.env.FIREBASE_DB_URL,
 });
 
-console.log("✅ Firebase initialized successfully.");
+const db = admin.firestore();
 
-// تقديم ملفات HTML
-app.use(express.static(__dirname));
+app.use(express.static("public"));
+app.use(express.json());
 
-// ✅ نقطة postback
-app.get("/postback", async (req, res) => {
-  const { ml_sub1: player_id, payout } = req.query;
-
-  if (!player_id || !payout) {
-    return res.status(400).send("Missing player_id or payout");
+// Endpoint جلب العروض من Firebase
+app.get("/offers", async (req, res) => {
+  try {
+    const snapshot = await db.collection("offers").get();
+    const offers = snapshot.docs.map(doc => doc.data());
+    res.json(offers);
+  } catch (error) {
+    console.error("خطأ أثناء جلب العروض:", error);
+    res.status(500).send("حدث خطأ أثناء جلب العروض.");
   }
+});
+
+// تتبع النقرة
+app.post("/track-click", async (req, res) => {
+  const { userId, offerTitle } = req.body;
+  if (!userId || !offerTitle) return res.status(400).send("بيانات غير كافية.");
 
   try {
-    const db = admin.database();
-    const userRef = db.ref(`users/${player_id}`);
-    const snapshot = await userRef.child("points").once("value");
-    const pointsToAdd = Math.round(parseFloat(payout) * 300);
-    const newPoints = (snapshot.val() || 0) + pointsToAdd;
-
-    await userRef.update({ points: newPoints });
-    console.log(`✅ Added ${pointsToAdd} points to ${player_id} (Total: ${newPoints})`);
-    res.send("Postback OK");
-  } catch (error) {
-    console.error("❌ Postback Error:", error);
-    res.status(500).send("Error processing postback");
+    const ref = db.collection("clicks").doc();
+    await ref.set({
+      userId,
+      offerTitle,
+      timestamp: Date.now(),
+    });
+    res.send("تم التتبع.");
+  } catch (err) {
+    res.status(500).send("خطأ أثناء التتبع.");
   }
 });
 
-app.listen(port, () => {
-  console.log(`🚀 Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`السيرفر شغال على http://localhost:${PORT}`);
 });
