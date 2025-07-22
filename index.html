@@ -1,4 +1,4 @@
-<!-- ✅ كود كامل معدل بالرابط الجديد -->
+<!-- ✅ index.html المعدل فقط في سطر واحد كما طلبت -->
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -115,7 +115,6 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    // ✅ رابط العروض الجديد
     const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
     let currentUserUid = null;
 
@@ -126,7 +125,8 @@
           document.getElementById('user-info').innerText = `مرحبًا ${user.displayName}`;
           document.getElementById('login-btn').style.display = 'none';
           document.getElementById('logout-btn').style.display = 'inline-block';
-          document.getElementById('offerwall').src = myleadBaseUrl + "?subid=" + user.uid;
+          // ✅ تعديل هنا: استخدم ml_sub1 بدل subid
+          document.getElementById('offerwall').src = myleadBaseUrl + "?ml_sub1=" + user.uid;
 
           const userRef = db.ref('users/' + currentUserUid);
           userRef.once('value').then(snap => {
