@@ -87,9 +87,9 @@
   <div id="redeem" class="section">
     <h2>طلب شحن الجواهر</h2>
     <p>✅ اختر كمية الجواهر:</p>
-    <button onclick="redeem(1500)">✅ 100 جوهرة - 1500 نقطة</button>
-    <button onclick="redeem(3500)">✅ 200 جوهرة - 3500 نقطة</button>
-    <button onclick="redeem(8000)">✅ 500 جوهرة - 8000 نقطة</button>
+    <button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
+    <button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
+    <button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -125,10 +125,8 @@
           document.getElementById('login-btn').style.display = 'none';
           document.getElementById('logout-btn').style.display = 'inline-block';
           
-          // ✅ تعديل هنا: استخدم ml_sub1 بدل subid
           document.getElementById('offerwall').src = myleadBaseUrl + "?ml_sub1=" + user.uid;
 
-          // ✅ أسطر الفحص (debug)
           const url = document.getElementById('offerwall').src;
           const box = document.createElement('div');
           box.id = 'debug-url';
@@ -177,14 +175,20 @@
       });
     });
 
-    function redeem(pointsRequired) {
+    function redeem(pointsRequired, gems) {
       if (!currentUserUid) return alert('سجل الدخول أولاً');
       db.ref('users/' + currentUserUid).once('value').then(snap => {
         const data = snap.val();
         if (!data) return alert('⚠️ لم يتم حفظ بياناتك بعد، احفظ الآيدي أولًا.');
         if ((data.points || 0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية لهذا الشحن.');
+        
         db.ref('users/' + currentUserUid).update({ points: data.points - pointsRequired });
-        fetch('/api/notify?message=طلب شحن '+pointsRequired+' نقطة من الآيدي: ' + (data.userId || 'غير محدد'))
+        
+        const botToken = "8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";  
+        const chatId = "6285856969";  
+        const message = `📩 طلب شحن جديد\n💎 الجواهر: ${gems}\n🆔 الآيدي: ${data.userId || 'غير محدد'}`;
+        
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
           .then(() => alert('✅ تم إرسال طلب الشحن'))
           .catch(() => alert('❌ فشل إرسال الطلب'));
       });
