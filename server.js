@@ -58,23 +58,39 @@ app.use(express.static(__dirname));
 
 // ✅ نقطة postback
 app.get("/postback", async (req, res) => {
-  const { ml_sub1: player_id, payout } = req.query;
+  const { transaction_id, program_name, payout, ml_sub1, player_id } = req.query;
 
-  if (!player_id || !payout) {
-    return res.status(400).send("Missing player_id or payout");
+  console.log("📩 Postback received:", req.query);
+
+  if (!ml_sub1 || !payout) {
+    return res.status(400).send("Missing ml_sub1 or payout");
   }
 
   try {
     const db = admin.database();
-    const userRef = db.ref(`users/${player_id}`);
+    const userRef = db.ref(`users/${ml_sub1}`);
     const snapshot = await userRef.child("points").once("value");
     const pointsToAdd = Math.round(parseFloat(payout) * 300);
     const newPoints = (snapshot.val() || 0) + pointsToAdd;
 
-    await userRef.update({ points: newPoints });  
-    console.log(`✅ Added ${pointsToAdd} points to ${player_id} (Total: ${newPoints})`);  
-    res.send("Postback OK");
+    await userRef.update({ points: newPoints });
 
+    console.log(
+      `✅ Added ${pointsToAdd} points to ${ml_sub1} (Total: ${newPoints})`
+    );
+
+    // ✅ تخزين بيانات البوستباك في transactions
+    const txRef = db.ref(`transactions/${transaction_id || "no_id"}`);
+    await txRef.set({
+      transaction_id,
+      program_name,
+      payout,
+      ml_sub1,
+      player_id,
+      timestamp: Date.now(),
+    });
+
+    res.send("Postback OK");
   } catch (error) {
     console.error("❌ Postback Error:", error);
     res.status(500).send("Error processing postback");
