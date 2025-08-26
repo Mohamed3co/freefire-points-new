@@ -1,133 +1,212 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8" />
-<title>نقاط Free Fire</title>
-<style>
-  body { margin:0; font-family:'Tajawal', sans-serif; background:#111; color:#fff; }
-  header { background:#c40000; padding:1em; text-align:center; font-size:1.5em; }
-  nav { display:flex; justify-content:center; gap:1em; background:#222; padding:0.5em; }
-  nav button { background:#c40000; border:none; padding:0.5em 1em; color:#fff; cursor:pointer; border-radius:4px; font-weight:bold; }
-  .section { display:none; padding:1em; max-width:600px; margin:auto; }
-  .active { display:block; }
-  iframe { width:100%; height:80vh; border:none; border-radius:8px; margin-top:1em; }
-</style>
+  <meta charset="UTF-8" />
+  <title>نقاط Free Fire</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Tajawal', sans-serif;
+      background: #111;
+      color: #fff;
+    }
+    header {
+      background: #c40000;
+      padding: 1em;
+      text-align: center;
+      font-size: 1.5em;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+      background: #222;
+      padding: 0.5em;
+    }
+    nav button {
+      background: #c40000;
+      border: none;
+      padding: 0.5em 1em;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .section {
+      display: none;
+      padding: 1em;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .active {
+      display: block;
+    }
+    .offers-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 80vh;
+      border: none;
+      border-radius: 8px;
+      margin-top: 1em;
+    }
+    input, button {
+      font-size: 1em;
+    }
+  </style>
 </head>
 <body>
-<header>🎮 نقاط Free Fire 🎮</header>
-<nav>
-  <button onclick="showSection('home')">الرئيسية</button>
-  <button onclick="showSection('offers')">العروض</button>
-  <button onclick="showSection('account')">حسابي</button>
-  <button onclick="showSection('redeem')">طلب الشحن</button>
-</nav>
+  <header>🎮 نقاط Free Fire 🎮</header>
+  <nav>
+    <button onclick="showSection('home')">الرئيسية</button>
+    <button onclick="showSection('offers')">العروض</button>
+    <button onclick="showSection('account')">حسابي</button>
+    <button onclick="showSection('redeem')">طلب الشحن</button>
+  </nav>
 
-<div id="home" class="section active">
-  <h2>مرحبًا بك!</h2>
-  <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
-</div>
-
-<div id="offers" class="section">
-  <h2>العروض المتاحة</h2>
-  <div style="display:flex; gap:10px;">
-    <iframe id="offerwall-mylead" src=""></iframe>
-    <iframe id="offerwall-adgem" src=""></iframe>
+  <div id="home" class="section active">
+    <h2>مرحبًا بك!</h2>
+    <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
   </div>
-</div>
 
-<div id="account" class="section">
-  <h2>معلومات الحساب</h2>
-  <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
-  <button id="login-btn">تسجيل الدخول بحساب Google</button>
-  <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
-  <p>عدد نقاطك: <span id="user-points">0</span></p>
-  <div>
-    <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
-    <button id="save-id">حفظ الآيدي</button>
+  <div id="offers" class="section">
+    <h2>العروض المتاحة</h2>
+    <div class="offers-container">
+      <div>
+        <h3 style="text-align:center;">MyLead</h3>
+        <iframe id="offerwall-mylead" src=""></iframe>
+      </div>
+      <div>
+        <h3 style="text-align:center;">AdGem</h3>
+        <iframe id="offerwall-adgem" src=""></iframe>
+      </div>
+    </div>
   </div>
-</div>
 
-<div id="redeem" class="section">
-  <h2>طلب شحن الجواهر</h2>
-  <p>✅ اختر كمية الجواهر:</p>
-  <button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
-  <button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
-  <button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
-</div>
+  <div id="account" class="section">
+    <h2>معلومات الحساب</h2>
+    <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
+    <button id="login-btn">تسجيل الدخول بحساب Google</button>
+    <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
+    <p>عدد نقاطك: <span id="user-points">0</span></p>
+    <div>
+      <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
+      <button id="save-id">حفظ الآيدي</button>
+    </div>
+  </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script>
-function showSection(id){document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active')); document.getElementById(id).classList.add('active');}
+  <div id="redeem" class="section">
+    <h2>طلب شحن الجواهر</h2>
+    <p>✅ اختر كمية الجواهر:</p>
+    <button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
+    <button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
+    <button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
+  </div>
 
-const firebaseConfig = {
-  apiKey:"AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
-  authDomain:"freefirerewardsdz-69572.firebaseapp.com",
-  databaseURL:"https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
-  projectId:"freefirerewardsdz-69572",
-  storageBucket:"freefirerewardsdz-69572.appspot.com",
-  messagingSenderId:"145782934523",
-  appId:"1:145782934523:web:76a2f7c4d2e37f94d6595e"
-};
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.database();
-
-const myleadBaseUrl="https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
-const adgemBaseUrl="https://api.adgem.com/v1/wall?appid=31011&playerid="; // ✅ هنا عدلنا فقط
-let currentUserUid=null;
-
-window.addEventListener('load',()=>{
-  auth.onAuthStateChanged(user=>{
-    if(user){
-      currentUserUid=user.uid;
-      document.getElementById('user-info').innerText=`مرحبًا ${user.displayName}`;
-      document.getElementById('login-btn').style.display='none';
-      document.getElementById('logout-btn').style.display='inline-block';
-
-      document.getElementById('offerwall-mylead').src=myleadBaseUrl+"?ml_sub1="+user.uid;
-      document.getElementById('offerwall-adgem').src=adgemBaseUrl+user.uid;
-
-      const userRef=db.ref('users/'+currentUserUid);
-      userRef.once('value').then(snap=>{
-        if(!snap.exists()){userRef.set({points:0, adgemPoints:0, userId:""});}
-        snap.ref.on('value', s=>{const d=s.val()||{}; document.getElementById('user-points').innerText=(d.points||0)+(d.adgemPoints||0);});
-      });
-    } else {
-      document.getElementById('user-info').innerText='لم تقم بتسجيل الدخول بعد.';
-      document.getElementById('login-btn').style.display='inline-block';
-      document.getElementById('logout-btn').style.display='none';
-      document.getElementById('user-points').innerText="0";
-      document.getElementById('user-id').value="";
-      document.getElementById('offerwall-mylead').src="";
-      document.getElementById('offerwall-adgem').src="";
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
     }
-  });
 
-  document.getElementById('login-btn').addEventListener('click',()=>{auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());});
-  document.getElementById('logout-btn').addEventListener('click',()=>{auth.signOut();});
-  document.getElementById('save-id').addEventListener('click',()=>{
-    const id=document.getElementById('user-id').value.trim();
-    if(!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
-    db.ref('users/'+currentUserUid).update({userId:id}).then(()=>alert('✅ تم حفظ الآيدي بنجاح'));
-  });
-});
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
+      authDomain: "freefirerewardsdz-69572.firebaseapp.com",
+      databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
+      projectId: "freefirerewardsdz-69572",
+      storageBucket: "freefirerewardsdz-69572.appspot.com",
+      messagingSenderId: "145782934523",
+      appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
 
-function redeem(pointsRequired,gems){
-  if(!currentUserUid) return alert('سجل الدخول أولاً');
-  db.ref('users/'+currentUserUid).once('value').then(snap=>{
-    const data=snap.val(); if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
-    if((data.points||0)+(data.adgemPoints||0)<pointsRequired) return alert('❌ ليس لديك نقاط كافية لهذا الشحن.');
-    db.ref('users/'+currentUserUid).update({points:(data.points||0)-Math.min(pointsRequired,data.points||0), adgemPoints:(data.adgemPoints||0)-Math.max(0, pointsRequired-(data.points||0))});
-    const botToken="8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
-    const chatId="6285856969";
-    const message=`📩 طلب شحن جديد\n💎 الجواهر: ${gems}\n🆔 الآيدي: ${data.userId||'غير محدد'}`;
-    fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
-      .then(()=>alert('✅ تم إرسال طلب الشحن'))
-      .catch(()=>alert('❌ فشل إرسال الطلب'));
-  });
-}
-</script>
+    const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
+    const adgemBaseUrl = "https://api.adgem.com/v1/wall?appid=31011&playerid=";
+
+    let currentUserUid = null;
+
+    window.addEventListener('load', () => {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUserUid = user.uid;
+          document.getElementById('user-info').innerText = `مرحبًا ${user.displayName}`;
+          document.getElementById('login-btn').style.display = 'none';
+          document.getElementById('logout-btn').style.display = 'inline-block';
+
+          // MyLead
+          document.getElementById('offerwall-mylead').src = myleadBaseUrl + "?ml_sub1=" + user.uid;
+
+          // AdGem
+          document.getElementById('offerwall-adgem').src = adgemBaseUrl + user.uid;
+
+          const userRef = db.ref('users/' + currentUserUid);
+          userRef.once('value').then(snap => {
+            if (!snap.exists()) {
+              userRef.set({ points: 0, userId: "" }).then(() => {
+                document.getElementById('user-points').innerText = "0";
+                document.getElementById('user-id').value = "";
+              });
+            } else {
+              const data = snap.val();
+              document.getElementById('user-points').innerText = data?.points || "0";
+              document.getElementById('user-id').value = data?.userId || "";
+            }
+          });
+        } else {
+          document.getElementById('user-info').innerText = 'لم تقم بتسجيل الدخول بعد.';
+          document.getElementById('login-btn').style.display = 'inline-block';
+          document.getElementById('logout-btn').style.display = 'none';
+          document.getElementById('user-points').innerText = "0";
+          document.getElementById('user-id').value = "";
+          document.getElementById('offerwall-mylead').src = "";
+          document.getElementById('offerwall-adgem').src = "";
+        }
+      });
+
+      document.getElementById('login-btn').addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider);
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        auth.signOut();
+      });
+
+      document.getElementById('save-id').addEventListener('click', () => {
+        const id = document.getElementById('user-id').value.trim();
+        if (!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
+        db.ref('users/' + currentUserUid).update({ userId: id }).then(() => {
+          alert('✅ تم حفظ الآيدي بنجاح');
+        });
+      });
+    });
+
+    function redeem(pointsRequired, gems) {
+      if (!currentUserUid) return alert('سجل الدخول أولاً');
+      db.ref('users/' + currentUserUid).once('value').then(snap => {
+        const data = snap.val();
+        if (!data) return alert('⚠️ لم يتم حفظ بياناتك بعد، احفظ الآيدي أولًا.');
+        if ((data.points || 0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية لهذا الشحن.');
+
+        db.ref('users/' + currentUserUid).update({ points: data.points - pointsRequired });
+
+        const botToken = "8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
+        const chatId = "6285856969";
+        const message = `📩 طلب شحن جديد\n💎 الجواهر: ${gems}\n🆔 الآيدي: ${data.userId || 'غير محدد'}`;
+
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
+          .then(() => alert('✅ تم إرسال طلب الشحن'))
+          .catch(() => alert('❌ فشل إرسال الطلب'));
+      });
+    }
+  </script>
 </body>
 </html>
