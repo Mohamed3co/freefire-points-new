@@ -75,7 +75,7 @@ const auth=firebase.auth();
 const db=firebase.database();
 
 const myleadBaseUrl="https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
-const adgemBaseUrl="https://example-adgem-offerwall.com"; // ضع رابط AdGem هنا
+const adgemBaseUrl="https://api.adgem.com/v1/wall?appid=31011&playerid="; // ✅ هنا عدلنا فقط
 let currentUserUid=null;
 
 window.addEventListener('load',()=>{
@@ -87,7 +87,7 @@ window.addEventListener('load',()=>{
       document.getElementById('logout-btn').style.display='inline-block';
 
       document.getElementById('offerwall-mylead').src=myleadBaseUrl+"?ml_sub1="+user.uid;
-      document.getElementById('offerwall-adgem').src=adgemBaseUrl+"?adgem_sub="+user.uid;
+      document.getElementById('offerwall-adgem').src=adgemBaseUrl+user.uid;
 
       const userRef=db.ref('users/'+currentUserUid);
       userRef.once('value').then(snap=>{
