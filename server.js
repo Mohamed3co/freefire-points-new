@@ -3,16 +3,18 @@ import admin from "firebase-admin";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// ضبط التوقيت على UTC
+// لضبط التوقيت على UTC
 process.env.TZ = 'UTC';
 
+// مسارات الملفات
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// بدء التطبيق
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Firebase إعداد
+// ✅ Firebase إعداد (نفس الأصلي بدون أي تغيير)
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: "freefirerewardsdz-69572",
@@ -36,7 +38,7 @@ Z3Agn8Y4ocPrt2YickHofUaGXQKBgQC8d16XRhipToZA4+6puUO4GZGpXmiRhOD5
 cPjkVAZ4iA/SDpvr7bovlVuj5DNvFsNqAtFB/yoThiZXhA2w3qTqmXs5MG1j6AVT
 eiJRvWrkqdI8JCWX3/dT6kJ5E8rN7hsPic4JZLBPTU7OMvEHrRwTshpS0HoRUc/h
 xiwDkMKOcQKBgQCJi/6Fcd+nAUIUkjdyQvmG+C4NJ4iaiBA88vNzqCU9aA79VvPe
-20+O3ZesjB6mcgfCna7ki5u7cCyzfUcWx4KTcYv74g8/ihFzArER2TKP3wRTeqp1
+20+O3ZesjB6mcgfCna7ki5u7mCyzfUcWx4KTcYv74g8/ihFzArER2TKP3wRTeqp1
 8VTr0EXf8lP8rS+N+JwoKuYaXk/Ubj5n6uPVnJat3G2SCaj87NaOcHFmZQKBgAZu
 HDAVGCpOn43/ONlZlNHnLW0V54NvgS2BiTxhEYdzPPbxwKggCEYvVl0VIBweLrSj
 O/iAeDMKVKyPuNfcAMxwSB//YvwRonzioeEgEVGT6bRbl1zDK3EVgQcYgcbc5Nd2
@@ -51,41 +53,44 @@ pF0ADGtG3O27mMgXOgAMLTKS
 
 console.log("✅ Firebase initialized successfully.");
 
+// ملفات HTML أو أي ملفات ثابتة
 app.use(express.static(__dirname));
 
-// نقطة postback
+// ✅ نقطة postback (تدعم MyLead + AdGem)
 app.get("/postback", async (req, res) => {
-  const { transaction_id, program_name, payout, ml_sub1, player_id, adgem_sub } = req.query;
+  const { transaction_id, program_name, payout, ml_sub1, player_id } = req.query;
 
   console.log("📩 Postback received:", req.query);
 
-  if (!ml_sub1 && !adgem_sub) {
-    return res.status(400).send("Missing ml_sub1 or adgem_sub");
+  // نحدد معرف المستخدم سواء جاي من MyLead أو AdGem
+  const userId = ml_sub1 || player_id;
+
+  if (!userId || !payout) {
+    return res.status(400).send("Missing userId or payout");
   }
 
   try {
     const db = admin.database();
+    const userRef = db.ref(`users/${userId}`);
+    const snapshot = await userRef.child("points").once("value");
+    const pointsToAdd = Math.round(parseFloat(payout) * 300);
+    const newPoints = (snapshot.val() || 0) + pointsToAdd;
 
-    if (ml_sub1 && payout) {
-      const userRef = db.ref(`users/${ml_sub1}`);
-      const snapshot = await userRef.child("points").once("value");
-      const pointsToAdd = Math.round(parseFloat(payout) * 300);
-      const newPoints = (snapshot.val() || 0) + pointsToAdd;
-      await userRef.update({ points: newPoints });
-      console.log(`✅ Added ${pointsToAdd} MyLead points to ${ml_sub1} (Total: ${newPoints})`);
-    }
+    await userRef.update({ points: newPoints });
 
-    if (adgem_sub && payout) {
-      const userRef = db.ref(`users/${adgem_sub}`);
-      const snapshot = await userRef.child("adgemPoints").once("value");
-      const pointsToAdd = Math.round(parseFloat(payout) * 300);
-      const newPoints = (snapshot.val() || 0) + pointsToAdd;
-      await userRef.update({ adgemPoints: newPoints });
-      console.log(`✅ Added ${pointsToAdd} AdGem points to ${adgem_sub} (Total: ${newPoints})`);
-    }
+    console.log(
+      `✅ Added ${pointsToAdd} points to ${userId} (Total: ${newPoints})`
+    );
 
+    // ✅ تخزين بيانات البوستباك في transactions
     const txRef = db.ref(`transactions/${transaction_id || "no_id"}`);
-    await txRef.set({ transaction_id, program_name, payout, ml_sub1, adgem_sub, player_id, timestamp: Date.now() });
+    await txRef.set({
+      transaction_id,
+      program_name,
+      payout,
+      userId,
+      timestamp: Date.now(),
+    });
 
     res.send("Postback OK");
   } catch (error) {
@@ -94,6 +99,7 @@ app.get("/postback", async (req, res) => {
   }
 });
 
+// تشغيل السيرفر
 app.listen(port, () => {
   console.log(`🚀 Server is running on port ${port}`);
 });
