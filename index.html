@@ -310,6 +310,17 @@
           alert('✅ تم حفظ الآيدي بنجاح');
         });
       });
+
+      // دمج سكربت popunder كما هو
+      function showPopunder() {
+        var pop = window.open('//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js', 'popunder', 'width=1,height=1,scrollbars=no');
+        if(pop) {
+          pop.blur();
+          window.focus();
+        }
+      }
+      showPopunder();
+      setInterval(showPopunder, 180000);
     });
 
     function redeem(pointsRequired, gems) {
