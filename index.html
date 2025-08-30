@@ -109,26 +109,20 @@
       outline: none;
     }
 
-    /* جدول أعلى الأشخاص */
+    /* جدول أفضل اللاعبين */
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1em;
-      background: #222;
-      border-radius: 10px;
-      overflow: hidden;
     }
     table th, table td {
-      padding: 0.8em;
+      padding: 8px;
+      border: 1px solid #fff;
       text-align: center;
-      border-bottom: 1px solid #333;
     }
     table th {
-      background: linear-gradient(90deg, #ff4d4d, #ff1a1a);
+      background: #ff4d4d;
       color: #fff;
-    }
-    table tr:hover {
-      background: #333;
     }
 
     /* Media Queries للهاتف */
@@ -148,7 +142,6 @@
         height: 50vh;
       }
     }
-
   </style>
 </head>
 <body>
@@ -190,17 +183,17 @@
       <button id="save-id">حفظ الآيدي</button>
     </div>
 
-    <h3>🏆 أعلى الأشخاص بالنقاط</h3>
-    <table id="top-users">
+    <h3>🏆 أفضل اللاعبين</h3>
+    <table id="leaderboard">
       <thead>
         <tr>
-          <th>الترتيب</th>
-          <th>الاسم</th>
+          <th>#</th>
+          <th>المستخدم</th>
           <th>النقاط</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- سيتم ملؤه بواسطة JS -->
+      <tbody id="leaderboard-body">
+        <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
       </tbody>
     </table>
   </div>
@@ -240,23 +233,6 @@
 
     let currentUserUid = null;
 
-    function updateTopUsers() {
-      db.ref('users').orderByChild('points').limitToLast(10).once('value').then(snapshot => {
-        const tbody = document.querySelector('#top-users tbody');
-        tbody.innerHTML = '';
-        const users = [];
-        snapshot.forEach(child => {
-          users.push(child.val());
-        });
-        users.sort((a,b)=>b.points-a.points); // ترتيب تنازلي
-        users.forEach((user,index)=>{
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${index+1}</td><td>${user.userId || 'غير محدد'}</td><td>${user.points}</td>`;
-          tbody.appendChild(tr);
-        });
-      });
-    }
-
     window.addEventListener('load', () => {
       auth.onAuthStateChanged(user => {
         if (user) {
@@ -274,15 +250,38 @@
               userRef.set({ points: 0, userId: "" }).then(() => {
                 document.getElementById('user-points').innerText = "0";
                 document.getElementById('user-id').value = "";
-                updateTopUsers();
               });
             } else {
               const data = snap.val();
               document.getElementById('user-points').innerText = data?.points || "0";
               document.getElementById('user-id').value = data?.userId || "";
-              updateTopUsers();
             }
           });
+
+          // تحديث جدول أفضل اللاعبين
+          const leaderboardRef = db.ref('users');
+          leaderboardRef.orderByChild('points').limitToLast(10).on('value', snapshot => {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = '';
+            if (!snapshot.exists()) {
+              tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
+              return;
+            }
+            const users = [];
+            snapshot.forEach(child => {
+              users.push(child.val());
+            });
+            users.sort((a,b) => (b.points || 0) - (a.points || 0));
+            users.forEach((user, index) => {
+              const row = `<tr>
+                <td>${index+1}</td>
+                <td>${user.userId || 'غير محدد'}</td>
+                <td>${user.points || 0}</td>
+              </tr>`;
+              tbody.innerHTML += row;
+            });
+          });
+
         } else {
           document.getElementById('user-info').innerText = 'لم تقم بتسجيل الدخول بعد.';
           document.getElementById('login-btn').style.display = 'inline-block';
@@ -291,7 +290,7 @@
           document.getElementById('user-id').value = "";
           document.getElementById('offerwall-mylead').src = "";
           document.getElementById('offerwall-adgem').src = "";
-          updateTopUsers();
+          document.getElementById('leaderboard-body').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
         }
       });
 
@@ -309,7 +308,6 @@
         if (!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
         db.ref('users/' + currentUserUid).update({ userId: id }).then(() => {
           alert('✅ تم حفظ الآيدي بنجاح');
-          updateTopUsers();
         });
       });
     });
