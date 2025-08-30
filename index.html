@@ -142,6 +142,35 @@
         height: 50vh;
       }
     }
+
+    /* نافذة الإعلان */
+    #adModal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+    #adContent {
+      background: #fff;
+      padding: 20px;
+      text-align: center;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 10px;
+      position: relative;
+    }
+    #closeBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -204,6 +233,15 @@
     <button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
     <button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
     <button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
+  </div>
+
+  <!-- نافذة الإعلان -->
+  <div id="adModal">
+    <div id="adContent">
+      <h2>إعلان</h2>
+      <script type='text/javascript' src='//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js'></script>
+      <button id="closeBtn">إغلاق الإعلان</button>
+    </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -310,17 +348,6 @@
           alert('✅ تم حفظ الآيدي بنجاح');
         });
       });
-
-      // دمج سكربت popunder كما هو
-      function showPopunder() {
-        var pop = window.open('//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js', 'popunder', 'width=1,height=1,scrollbars=no');
-        if(pop) {
-          pop.blur();
-          window.focus();
-        }
-      }
-      showPopunder();
-      setInterval(showPopunder, 180000);
     });
 
     function redeem(pointsRequired, gems) {
@@ -341,6 +368,29 @@
           .catch(() => alert('❌ فشل إرسال الطلب'));
       });
     }
+
+    // ================== كود الإعلان ==================
+    const modal = document.getElementById('adModal');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function showAd() {
+      modal.style.display = 'flex';
+      closeBtn.style.display = 'none';
+      
+      setTimeout(() => {
+        closeBtn.style.display = 'inline-block';
+      }, 30000); // 30 ثانية
+    }
+
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    window.addEventListener('load', () => {
+      showAd();
+      setInterval(showAd, 180000); // كل 3 دقائق
+    });
+    // ===============================================
   </script>
 </body>
 </html>
