@@ -109,6 +109,28 @@
       outline: none;
     }
 
+    /* جدول أعلى الأشخاص */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+      background: #222;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    table th, table td {
+      padding: 0.8em;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+    table th {
+      background: linear-gradient(90deg, #ff4d4d, #ff1a1a);
+      color: #fff;
+    }
+    table tr:hover {
+      background: #333;
+    }
+
     /* Media Queries للهاتف */
     @media (max-width: 600px) {
       header {
@@ -167,6 +189,20 @@
       <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
       <button id="save-id">حفظ الآيدي</button>
     </div>
+
+    <h3>🏆 أعلى الأشخاص بالنقاط</h3>
+    <table id="top-users">
+      <thead>
+        <tr>
+          <th>الترتيب</th>
+          <th>الاسم</th>
+          <th>النقاط</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- سيتم ملؤه بواسطة JS -->
+      </tbody>
+    </table>
   </div>
 
   <div id="redeem" class="section">
@@ -204,6 +240,23 @@
 
     let currentUserUid = null;
 
+    function updateTopUsers() {
+      db.ref('users').orderByChild('points').limitToLast(10).once('value').then(snapshot => {
+        const tbody = document.querySelector('#top-users tbody');
+        tbody.innerHTML = '';
+        const users = [];
+        snapshot.forEach(child => {
+          users.push(child.val());
+        });
+        users.sort((a,b)=>b.points-a.points); // ترتيب تنازلي
+        users.forEach((user,index)=>{
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${index+1}</td><td>${user.userId || 'غير محدد'}</td><td>${user.points}</td>`;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
     window.addEventListener('load', () => {
       auth.onAuthStateChanged(user => {
         if (user) {
@@ -212,10 +265,7 @@
           document.getElementById('login-btn').style.display = 'none';
           document.getElementById('logout-btn').style.display = 'inline-block';
 
-          // MyLead
           document.getElementById('offerwall-mylead').src = myleadBaseUrl + "?ml_sub1=" + user.uid;
-
-          // AdGem
           document.getElementById('offerwall-adgem').src = adgemBaseUrl + user.uid;
 
           const userRef = db.ref('users/' + currentUserUid);
@@ -224,11 +274,13 @@
               userRef.set({ points: 0, userId: "" }).then(() => {
                 document.getElementById('user-points').innerText = "0";
                 document.getElementById('user-id').value = "";
+                updateTopUsers();
               });
             } else {
               const data = snap.val();
               document.getElementById('user-points').innerText = data?.points || "0";
               document.getElementById('user-id').value = data?.userId || "";
+              updateTopUsers();
             }
           });
         } else {
@@ -239,6 +291,7 @@
           document.getElementById('user-id').value = "";
           document.getElementById('offerwall-mylead').src = "";
           document.getElementById('offerwall-adgem').src = "";
+          updateTopUsers();
         }
       });
 
@@ -256,6 +309,7 @@
         if (!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
         db.ref('users/' + currentUserUid).update({ userId: id }).then(() => {
           alert('✅ تم حفظ الآيدي بنجاح');
+          updateTopUsers();
         });
       });
     });
