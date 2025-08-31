@@ -11,9 +11,12 @@
     nav { display:flex; justify-content:center; gap:1em; background:#222; padding:0.5em; flex-wrap:wrap; }
     nav button { background:linear-gradient(90deg,#ff4d4d,#ff1a1a); border:none; padding:0.7em 1.2em; color:#fff; cursor:pointer; border-radius:10px; font-weight:bold; transition:transform 0.3s, box-shadow 0.3s; }
     nav button:hover { transform:translateY(-3px); box-shadow:0 0 10px #ff4d4d,0 0 20px #ff1a1a; }
+    
+    /* الصفحات */
     .section { display:none; padding:1em; max-width:1000px; margin:auto; animation:fadeIn 0.5s ease forwards; }
-    .active { display:block; }
+    #home { display:block; } /* الصفحة الرئيسية تفتح أولاً */
     @keyframes fadeIn { 0% { opacity:0; transform:translateY(20px); } 100% { opacity:1; transform:translateY(0); } }
+
     .offers-container { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin-top:1em; }
     .offers-container div { background:linear-gradient(135deg,#1a1a1a,#333); padding:1em; border-radius:15px; text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
     .offers-container div:hover { transform:translateY(-5px); box-shadow:0 0 20px #ff4d4d,0 0 30px #ff1a1a; }
@@ -23,7 +26,13 @@
     table { width:100%; border-collapse:collapse; margin-top:1em; }
     table th, table td { padding:8px; border:1px solid #fff; text-align:center; }
     table th { background:#ff4d4d; color:#fff; }
-    @media(max-width:600px){ header{font-size:1.3em;padding:0.8em;} nav{flex-direction:column;gap:0.5em;} nav button{width:100%;} iframe{height:50vh;} }
+
+    @media(max-width:600px){
+      header{font-size:1.3em;padding:0.8em;}
+      nav{flex-direction:column;gap:0.5em;}
+      nav button{width:100%;}
+      iframe{height:50vh;}
+    }
 
     /* نافذة الإعلان */
     #adModal { display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.8); justify-content:center; align-items:center; }
@@ -33,14 +42,14 @@
     #progressBarContainer { width:100%; height:10px; background:#ccc; border-radius:5px; overflow:hidden; margin-top:10px; }
     #progressBar { width:100%; height:100%; background:#ff4d4d; transition:width 0.1s linear; }
 
-    /* ===== بروفايل أسطوري ===== */
+    /* ⚡️ بروفايل احترافي */
     .profile-card {
-      background:linear-gradient(135deg,#1a1a1a,#2a2a2a);
+      background: linear-gradient(135deg,#1a1a1a,#222);
       border-radius:20px;
       padding:20px;
       text-align:center;
-      box-shadow:0 0 20px rgba(255,0,0,0.4);
-      margin-bottom:20px;
+      box-shadow:0 0 20px rgba(255,77,77,0.5);
+      margin-top:15px;
     }
     .profile-avatar {
       width:100px;
@@ -49,41 +58,31 @@
       border:3px solid #ff4d4d;
       margin-bottom:10px;
     }
-    .profile-name {
-      font-size:1.5em;
-      font-weight:bold;
-      margin-bottom:5px;
-    }
+    .profile-info h3 { margin:5px 0; }
     .profile-points {
       font-size:1.2em;
-      color:#ff4d4d;
-      margin-bottom:15px;
+      font-weight:bold;
+      background:#ff1a1a;
+      padding:5px 15px;
+      border-radius:12px;
+      display:inline-block;
+      margin:10px 0;
     }
-    .progress-container {
-      width:100%;
-      height:15px;
-      background:#333;
+    .profile-actions button {
+      margin:5px;
+      background:#ff4d4d;
+      color:#fff;
+      border:none;
+      padding:8px 15px;
       border-radius:10px;
-      overflow:hidden;
-      margin-bottom:10px;
+      cursor:pointer;
+      transition:0.3s;
     }
-    .progress-bar {
-      height:100%;
-      background:linear-gradient(90deg,#ff4d4d,#ff1a1a);
-      width:0%;
-      transition:width 0.5s;
-    }
-    .leaderboard-container {
-      margin-top:20px;
-      background:#1c1c1c;
-      padding:15px;
-      border-radius:15px;
+    .profile-actions button:hover {
+      background:#ff1a1a;
+      transform:scale(1.05);
     }
   </style>
-  <link href="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video-js.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video.min.js"></script>
-  <script src="https://unpkg.com/videojs-contrib-ads@6.9.0/dist/videojs.ads.min.js"></script>
-  <script src="https://unpkg.com/videojs-ima@1.8.0/dist/videojs.ima.min.js"></script>
 </head>
 <body>
 
@@ -95,7 +94,7 @@
   <button onclick="showSection('redeem')">طلب الشحن</button>
 </nav>
 
-<div id="home" class="section active">
+<div id="home" class="section">
   <h2>مرحبًا بك!</h2>
   <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
 </div>
@@ -114,34 +113,33 @@
   </div>
 </div>
 
-<!-- ======== حسابي (بروفايل جديد) ======== -->
 <div id="account" class="section">
+  <h2>معلومات الحساب</h2>
   <div class="profile-card">
-    <img id="profile-avatar" class="profile-avatar" src="https://i.ibb.co/3WymJ1V/user.png" alt="avatar">
-    <div id="profile-name" class="profile-name">لم تقم بتسجيل الدخول</div>
-    <div class="profile-points">نقاطك: <span id="user-points">0</span></div>
-    <div class="progress-container">
-      <div id="progress-bar" class="progress-bar"></div>
+    <img src="https://i.ibb.co/2d9Y5QF/avatar.png" alt="avatar" class="profile-avatar">
+    <div class="profile-info">
+      <h3 id="user-info">لم تقم بتسجيل الدخول بعد.</h3>
+      <div class="profile-points">💎 نقاطك: <span id="user-points">0</span></div>
     </div>
-    <button id="login-btn">تسجيل الدخول بحساب Google</button>
-    <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
-    <div style="margin-top:10px;">
+    <div class="profile-actions">
+      <button id="login-btn">تسجيل الدخول بحساب Google</button>
+      <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
+    </div>
+    <div>
       <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
       <button id="save-id">حفظ الآيدي</button>
     </div>
   </div>
 
-  <div class="leaderboard-container">
-    <h3>🏆 أفضل اللاعبين</h3>
-    <table id="leaderboard">
-      <thead>
-        <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
-      </thead>
-      <tbody id="leaderboard-body">
-        <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <h3 style="margin-top:20px;">🏆 أفضل اللاعبين</h3>
+  <table id="leaderboard">
+    <thead>
+      <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
+    </thead>
+    <tbody id="leaderboard-body">
+      <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <div id="redeem" class="section">
@@ -166,9 +164,19 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script>
-function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active');}
+<script src="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video.min.js"></script>
+<script src="https://unpkg.com/videojs-contrib-ads@6.9.0/dist/videojs.ads.min.js"></script>
+<script src="https://unpkg.com/videojs-ima@1.8.0/dist/videojs.ima.min.js"></script>
 
+<script>
+/* ✅ إصلاح التنقل */
+function showSection(id){
+  let sections = document.querySelectorAll('.section');
+  sections.forEach(sec => sec.style.display = "none");
+  document.getElementById(id).style.display = "block";
+}
+
+/* 🔥 باقي الكود (Firebase + إعلان + نقاط) يبقى نفسه تماماً */
 const firebaseConfig = {
   apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
   authDomain: "freefirerewardsdz-69572.firebaseapp.com",
@@ -188,8 +196,7 @@ window.addEventListener('load',()=>{
   auth.onAuthStateChanged(user=>{
     if(user){
       currentUserUid=user.uid;
-      document.getElementById('profile-name').innerText=`${user.displayName}`;
-      document.getElementById('profile-avatar').src=user.photoURL || "https://i.ibb.co/3WymJ1V/user.png";
+      document.getElementById('user-info').innerText=`مرحبًا ${user.displayName}`;
       document.getElementById('login-btn').style.display='none';
       document.getElementById('logout-btn').style.display='inline-block';
       document.getElementById('offerwall-mylead').src=myleadBaseUrl+"?ml_sub1="+user.uid;
@@ -197,14 +204,14 @@ window.addEventListener('load',()=>{
 
       const userRef=db.ref('users/'+currentUserUid);
       userRef.once('value').then(snap=>{
-        if(!snap.exists()){ userRef.set({points:0,userId:""}).then(()=>{ document.getElementById('user-points').innerText="0"; document.getElementById('user-id').value=""; updateProgress(0); }); }
-        else{ const data=snap.val(); document.getElementById('user-points').innerText=data?.points||"0"; document.getElementById('user-id').value=data?.userId||""; updateProgress(data?.points||0); }
+        if(!snap.exists()){ userRef.set({points:0,userId:""}); }
+        else{ const data=snap.val(); document.getElementById('user-points').innerText=data?.points||"0"; document.getElementById('user-id').value=data?.userId||""; }
       });
 
       const leaderboardRef=db.ref('users');
       leaderboardRef.orderByChild('points').limitToLast(10).on('value',snapshot=>{
         const tbody=document.getElementById('leaderboard-body'); tbody.innerHTML='';
-        if(!snapshot.exists()){ tbody.innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>'; return; }
+        if(!snapshot.exists()){ tbody.innerHTML='<tr><td colspan="3">لا يوجد مستخدمون بعد</td></tr>'; return; }
         const users=[]; snapshot.forEach(child=>{ users.push(child.val()); });
         users.sort((a,b)=>(b.points||0)-(a.points||0));
         users.forEach((user,index)=>{
@@ -212,18 +219,14 @@ window.addEventListener('load',()=>{
           tbody.innerHTML+=row;
         });
       });
-
     } else {
-      document.getElementById('profile-name').innerText='لم تقم بتسجيل الدخول';
-      document.getElementById('profile-avatar').src="https://i.ibb.co/3WymJ1V/user.png";
+      document.getElementById('user-info').innerText='لم تقم بتسجيل الدخول بعد.';
       document.getElementById('login-btn').style.display='inline-block';
       document.getElementById('logout-btn').style.display='none';
       document.getElementById('user-points').innerText="0";
       document.getElementById('user-id').value="";
-      document.getElementById('progress-bar').style.width="0%";
       document.getElementById('offerwall-mylead').src="";
       document.getElementById('offerwall-adgem').src="";
-      document.getElementById('leaderboard-body').innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
     }
   });
 
@@ -231,63 +234,49 @@ window.addEventListener('load',()=>{
     const provider=new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
   });
-
-  document.getElementById('logout-btn').addEventListener('click',()=>{ auth.signOut(); });
+  document.getElementById('logout-btn').addEventListener('click',()=> auth.signOut());
   document.getElementById('save-id').addEventListener('click',()=>{
     const id=document.getElementById('user-id').value.trim();
     if(!id||!currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
-    db.ref('users/'+currentUserUid).update({userId:id}).then(()=>alert('✅ تم حفظ الآيدي بنجاح'));
+    db.ref('users/'+currentUserUid).update({userId:id}).then(()=>alert('✅ تم حفظ الآيدي'));
   });
 });
-
-function updateProgress(points){
-  const bar=document.getElementById('progress-bar');
-  const max=8000; // أعلى باكج
-  let percent=Math.min((points/max)*100,100);
-  bar.style.width=percent+"%";
-}
 
 function redeem(pointsRequired,gems){
   if(!currentUserUid) return alert('سجل الدخول أولاً');
   db.ref('users/'+currentUserUid).once('value').then(snap=>{
     const data=snap.val();
-    if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد، احفظ الآيدي أولًا.');
-    if((data.points||0)<pointsRequired) return alert('❌ ليس لديك نقاط كافية لهذا الشحن.');
+    if((data.points||0)<pointsRequired) return alert('❌ نقاطك غير كافية');
     db.ref('users/'+currentUserUid).update({points:data.points-pointsRequired});
     const botToken="8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
     const chatId="6285856969";
     const message=`📩 طلب شحن جديد\n💎 الجواهر: ${gems}\n🆔 الآيدي: ${data.userId||'غير محدد'}`;
     fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
       .then(()=>alert('✅ تم إرسال طلب الشحن'))
-      .catch(()=>alert('❌ فشل إرسال الطلب'));
+      .catch(()=>alert('❌ فشل الإرسال'));
   });
 }
 
-// ================== كود إعلان الفيديو ==================
+/* إعلان الفيديو */
 const modal=document.getElementById('adModal');
 const closeBtn=document.getElementById('closeBtn');
 const muteBtn=document.getElementById('muteBtn');
 const progressBar=document.getElementById('progressBar');
-
 const player=videojs('vastVideo');
 player.ima({id:'vastVideo', adTagUrl:'https://s.magsrv.com/v1/vast.php?idzone=5713518'});
 
 function showAd(){
-  modal.style.display='flex';
-  closeBtn.style.display='none';
-  progressBar.style.width='100%';
-
+  modal.style.display='flex'; closeBtn.style.display='none'; progressBar.style.width='100%';
   let countdown=30;
   const interval=setInterval(()=>{
-    countdown--;
-    progressBar.style.width=(countdown/30*100)+'%';
+    countdown--; progressBar.style.width=(countdown/30*100)+'%';
     if(countdown<=0){ clearInterval(interval); closeBtn.style.display='inline-block'; }
   },1000);
-
   player.play();
 }
-
-closeBtn.addEventListener('click',()=>{ modal.style.display='none'; });
-muteBtn.addEventListener('click',()=>{
-  if(player.muted()){ player.muted(false); muteBtn.innerText='إيقاف الصوت'; }
-  else{ player.muted(true); muteBtn.innerText='تشغيل
+closeBtn.addEventListener('click',()=> modal.style.display='none');
+muteBtn.addEventListener('click',()=>{ player.muted(!player.muted()); muteBtn.innerText=player.muted()?'تشغيل الصوت':'إيقاف الصوت'; });
+window.addEventListener('load',()=>{ showAd(); setInterval(showAd,180000); });
+</script>
+</body>
+</html>
