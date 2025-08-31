@@ -32,6 +32,53 @@
     #closeBtn { display:none; }
     #progressBarContainer { width:100%; height:10px; background:#ccc; border-radius:5px; overflow:hidden; margin-top:10px; }
     #progressBar { width:100%; height:100%; background:#ff4d4d; transition:width 0.1s linear; }
+
+    /* ===== بروفايل أسطوري ===== */
+    .profile-card {
+      background:linear-gradient(135deg,#1a1a1a,#2a2a2a);
+      border-radius:20px;
+      padding:20px;
+      text-align:center;
+      box-shadow:0 0 20px rgba(255,0,0,0.4);
+      margin-bottom:20px;
+    }
+    .profile-avatar {
+      width:100px;
+      height:100px;
+      border-radius:50%;
+      border:3px solid #ff4d4d;
+      margin-bottom:10px;
+    }
+    .profile-name {
+      font-size:1.5em;
+      font-weight:bold;
+      margin-bottom:5px;
+    }
+    .profile-points {
+      font-size:1.2em;
+      color:#ff4d4d;
+      margin-bottom:15px;
+    }
+    .progress-container {
+      width:100%;
+      height:15px;
+      background:#333;
+      border-radius:10px;
+      overflow:hidden;
+      margin-bottom:10px;
+    }
+    .progress-bar {
+      height:100%;
+      background:linear-gradient(90deg,#ff4d4d,#ff1a1a);
+      width:0%;
+      transition:width 0.5s;
+    }
+    .leaderboard-container {
+      margin-top:20px;
+      background:#1c1c1c;
+      padding:15px;
+      border-radius:15px;
+    }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video-js.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video.min.js"></script>
@@ -67,25 +114,34 @@
   </div>
 </div>
 
+<!-- ======== حسابي (بروفايل جديد) ======== -->
 <div id="account" class="section">
-  <h2>معلومات الحساب</h2>
-  <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
-  <button id="login-btn">تسجيل الدخول بحساب Google</button>
-  <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
-  <p>عدد نقاطك: <span id="user-points">0</span></p>
-  <div>
-    <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
-    <button id="save-id">حفظ الآيدي</button>
+  <div class="profile-card">
+    <img id="profile-avatar" class="profile-avatar" src="https://i.ibb.co/3WymJ1V/user.png" alt="avatar">
+    <div id="profile-name" class="profile-name">لم تقم بتسجيل الدخول</div>
+    <div class="profile-points">نقاطك: <span id="user-points">0</span></div>
+    <div class="progress-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <button id="login-btn">تسجيل الدخول بحساب Google</button>
+    <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
+    <div style="margin-top:10px;">
+      <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
+      <button id="save-id">حفظ الآيدي</button>
+    </div>
   </div>
-  <h3>🏆 أفضل اللاعبين</h3>
-  <table id="leaderboard">
-    <thead>
-      <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
-    </thead>
-    <tbody id="leaderboard-body">
-      <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
-    </tbody>
-  </table>
+
+  <div class="leaderboard-container">
+    <h3>🏆 أفضل اللاعبين</h3>
+    <table id="leaderboard">
+      <thead>
+        <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div id="redeem" class="section">
@@ -132,7 +188,8 @@ window.addEventListener('load',()=>{
   auth.onAuthStateChanged(user=>{
     if(user){
       currentUserUid=user.uid;
-      document.getElementById('user-info').innerText=`مرحبًا ${user.displayName}`;
+      document.getElementById('profile-name').innerText=`${user.displayName}`;
+      document.getElementById('profile-avatar').src=user.photoURL || "https://i.ibb.co/3WymJ1V/user.png";
       document.getElementById('login-btn').style.display='none';
       document.getElementById('logout-btn').style.display='inline-block';
       document.getElementById('offerwall-mylead').src=myleadBaseUrl+"?ml_sub1="+user.uid;
@@ -140,8 +197,8 @@ window.addEventListener('load',()=>{
 
       const userRef=db.ref('users/'+currentUserUid);
       userRef.once('value').then(snap=>{
-        if(!snap.exists()){ userRef.set({points:0,userId:""}).then(()=>{ document.getElementById('user-points').innerText="0"; document.getElementById('user-id').value=""; }); }
-        else{ const data=snap.val(); document.getElementById('user-points').innerText=data?.points||"0"; document.getElementById('user-id').value=data?.userId||""; }
+        if(!snap.exists()){ userRef.set({points:0,userId:""}).then(()=>{ document.getElementById('user-points').innerText="0"; document.getElementById('user-id').value=""; updateProgress(0); }); }
+        else{ const data=snap.val(); document.getElementById('user-points').innerText=data?.points||"0"; document.getElementById('user-id').value=data?.userId||""; updateProgress(data?.points||0); }
       });
 
       const leaderboardRef=db.ref('users');
@@ -157,11 +214,13 @@ window.addEventListener('load',()=>{
       });
 
     } else {
-      document.getElementById('user-info').innerText='لم تقم بتسجيل الدخول بعد.';
+      document.getElementById('profile-name').innerText='لم تقم بتسجيل الدخول';
+      document.getElementById('profile-avatar').src="https://i.ibb.co/3WymJ1V/user.png";
       document.getElementById('login-btn').style.display='inline-block';
       document.getElementById('logout-btn').style.display='none';
       document.getElementById('user-points').innerText="0";
       document.getElementById('user-id').value="";
+      document.getElementById('progress-bar').style.width="0%";
       document.getElementById('offerwall-mylead').src="";
       document.getElementById('offerwall-adgem').src="";
       document.getElementById('leaderboard-body').innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
@@ -180,6 +239,13 @@ window.addEventListener('load',()=>{
     db.ref('users/'+currentUserUid).update({userId:id}).then(()=>alert('✅ تم حفظ الآيدي بنجاح'));
   });
 });
+
+function updateProgress(points){
+  const bar=document.getElementById('progress-bar');
+  const max=8000; // أعلى باكج
+  let percent=Math.min((points/max)*100,100);
+  bar.style.width=percent+"%";
+}
 
 function redeem(pointsRequired,gems){
   if(!currentUserUid) return alert('سجل الدخول أولاً');
@@ -224,13 +290,4 @@ function showAd(){
 closeBtn.addEventListener('click',()=>{ modal.style.display='none'; });
 muteBtn.addEventListener('click',()=>{
   if(player.muted()){ player.muted(false); muteBtn.innerText='إيقاف الصوت'; }
-  else{ player.muted(true); muteBtn.innerText='تشغيل الصوت'; }
-});
-
-window.addEventListener('load',()=>{
-  showAd();
-  setInterval(showAd,180000);
-});
-</script>
-</body>
-  </html>
+  else{ player.muted(true); muteBtn.innerText='تشغيل
