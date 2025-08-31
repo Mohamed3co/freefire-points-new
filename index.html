@@ -24,30 +24,12 @@
     table th, table td { padding:8px; border:1px solid #fff; text-align:center; }
     table th { background:#ff4d4d; color:#fff; }
     @media(max-width:600px){ header{font-size:1.3em;padding:0.8em;} nav{flex-direction:column;gap:0.5em;} nav button{width:100%;} iframe{height:50vh;} }
-
-    /* نافذة الإعلان */
-    #adModal { display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.8); justify-content:center; align-items:center; }
-    #adContent { background:#fff; color:#000; padding:20px; text-align:center; width:80%; max-width:600px; border-radius:10px; position:relative; }
-    #closeBtn, #muteBtn { margin-top:10px; padding:10px 20px; cursor:pointer; }
-    #closeBtn { display:none; }
-    #progressBarContainer { width:100%; height:10px; background:#ccc; border-radius:5px; overflow:hidden; margin-top:10px; }
-    #progressBar { width:100%; height:100%; background:#ff4d4d; transition:width 0.1s linear; }
-
-    /* 🎨 تحسين صفحة الحساب */
-    .profile-card { background:linear-gradient(135deg,#1a1a1a,#2a2a2a); border-radius:15px; padding:20px; box-shadow:0 0 15px rgba(255,77,77,0.3); margin-bottom:20px; text-align:center; }
-    .profile-card h2 { margin-bottom:10px; }
-    .profile-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:10px 0; }
-    .profile-actions button { flex:1; min-width:120px; }
-    .points-box { background:#222; padding:15px; border-radius:12px; margin-top:15px; text-align:center; box-shadow:0 0 10px rgba(255,77,77,0.4); }
-    .points-box span { font-size:1.5em; font-weight:bold; color:#ff4d4d; }
-    .id-box { margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
-    .id-box input { flex:1; min-width:200px; }
-    .leaderboard-container { margin-top:20px; background:#1c1c1c; padding:15px; border-radius:12px; }
   </style>
-  <link href="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video-js.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video.min.js"></script>
-  <script src="https://unpkg.com/videojs-contrib-ads@6.9.0/dist/videojs.ads.min.js"></script>
-  <script src="https://unpkg.com/videojs-ima@1.8.0/dist/videojs.ima.min.js"></script>
+
+  <!-- ✅ كود AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1566555811591369"
+     crossorigin="anonymous"></script>
+
 </head>
 <body>
 
@@ -78,37 +60,26 @@
   </div>
 </div>
 
-<!-- 🔥 الحساب الجديد -->
 <div id="account" class="section">
-  <div class="profile-card">
-    <h2>👤 ملفك الشخصي</h2>
-    <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
-    <div class="profile-actions">
-      <button id="login-btn">تسجيل الدخول بحساب Google</button>
-      <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
-    </div>
-    <div class="points-box">
-      نقاطك الحالية: <span id="user-points">0</span>
-    </div>
-    <div class="id-box">
-      <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
-      <button id="save-id">💾 حفظ الآيدي</button>
-    </div>
+  <h2>معلومات الحساب</h2>
+  <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
+  <button id="login-btn">تسجيل الدخول بحساب Google</button>
+  <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
+  <p>عدد نقاطك: <span id="user-points">0</span></p>
+  <div>
+    <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
+    <button id="save-id">حفظ الآيدي</button>
   </div>
-
-  <div class="leaderboard-container">
-    <h3>🏆 أفضل اللاعبين</h3>
-    <table id="leaderboard">
-      <thead>
-        <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
-      </thead>
-      <tbody id="leaderboard-body">
-        <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <h3>🏆 أفضل اللاعبين</h3>
+  <table id="leaderboard">
+    <thead>
+      <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
+    </thead>
+    <tbody id="leaderboard-body">
+      <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
+    </tbody>
+  </table>
 </div>
-<!-- 🔥 نهاية الحساب -->
 
 <div id="redeem" class="section">
   <h2>طلب شحن الجواهر</h2>
@@ -116,17 +87,6 @@
   <button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
   <button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
   <button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
-</div>
-
-<!-- نافذة الإعلان -->
-<div id="adModal">
-  <div id="adContent">
-    <h2>إعلان فيديو</h2>
-    <video id="vastVideo" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="300" data-setup='{}'></video>
-    <div id="progressBarContainer"><div id="progressBar"></div></div>
-    <button id="muteBtn">إيقاف الصوت</button>
-    <button id="closeBtn">إغلاق الإعلان</button>
-  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -218,41 +178,6 @@ function redeem(pointsRequired,gems){
       .catch(()=>alert('❌ فشل إرسال الطلب'));
   });
 }
-
-// ================== كود إعلان الفيديو ==================
-const modal=document.getElementById('adModal');
-const closeBtn=document.getElementById('closeBtn');
-const muteBtn=document.getElementById('muteBtn');
-const progressBar=document.getElementById('progressBar');
-
-const player=videojs('vastVideo');
-player.ima({id:'vastVideo', adTagUrl:'https://s.magsrv.com/v1/vast.php?idzone=5713518'});
-
-function showAd(){
-  modal.style.display='flex';
-  closeBtn.style.display='none';
-  progressBar.style.width='100%';
-
-  let countdown=30;
-  const interval=setInterval(()=>{
-    countdown--;
-    progressBar.style.width=(countdown/30*100)+'%';
-    if(countdown<=0){ clearInterval(interval); closeBtn.style.display='inline-block'; }
-  },1000);
-
-  player.play();
-}
-
-closeBtn.addEventListener('click',()=>{ modal.style.display='none'; });
-muteBtn.addEventListener('click',()=>{
-  if(player.muted()){ player.muted(false); muteBtn.innerText='إيقاف الصوت'; }
-  else{ player.muted(true); muteBtn.innerText='تشغيل الصوت'; }
-});
-
-window.addEventListener('load',()=>{
-  showAd();
-  setInterval(showAd,180000);
-});
 </script>
 </body>
 </html>
