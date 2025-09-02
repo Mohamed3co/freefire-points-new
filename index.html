@@ -1,125 +1,171 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8" />
-<title>نقاط Free Fire</title>
+<meta charset="UTF-8">
+<title>حسابي - Free Fire</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body { margin:0; font-family:'Tajawal', sans-serif; background:#111; color:#fff; overflow-x:hidden; }
-header { background:linear-gradient(90deg,#c40000,#ff4d4d); padding:1em; text-align:center; font-size:1.5em; font-weight:bold; letter-spacing:1px; animation:headerGlow 2s infinite alternate; }
-@keyframes headerGlow { 0% { text-shadow:0 0 5px #ff4d4d,0 0 10px #ff1a1a; } 100% { text-shadow:0 0 15px #ff4d4d,0 0 25px #ff1a1a; } }
+body {
+  margin:0; font-family:'Tajawal', sans-serif; background:#111; color:#fff;
+}
 
-/* تصميم أزرار nav الجديد (مثل الأزرار القديمة تحت الفيديو) */
-nav { display:flex; justify-content:center; gap:1em; flex-wrap:wrap; margin:1em 0; }
-nav button { padding:1em 2em; border-radius:15px; font-weight:bold; font-size:1.1em; cursor:pointer; transition:transform 0.3s, box-shadow 0.3s; }
-nav button:nth-child(1) { background:linear-gradient(90deg,#ff4d4d,#ff1a1a); color:#fff; box-shadow:0 0 20px #ff4d4d,0 0 40px #ff1a1a; }
-nav button:nth-child(2) { background:linear-gradient(90deg,#33ccff,#3366ff); color:#fff; box-shadow:0 0 20px #33ccff,0 0 40px #3366ff; }
-nav button:nth-child(3) { background:linear-gradient(90deg,#33ff77,#00cc44); color:#fff; box-shadow:0 0 20px #33ff77,0 0 40px #00cc44; }
-nav button:nth-child(4) { background:linear-gradient(90deg,#ffcc33,#ff9900); color:#fff; box-shadow:0 0 20px #ffcc33,0 0 40px #ff9900; }
-nav button:hover { transform:translateY(-5px) scale(1.05); }
-nav button:nth-child(1):hover { box-shadow:0 0 30px #ff4d4d,0 0 60px #ff1a1a; }
-nav button:nth-child(2):hover { box-shadow:0 0 30px #33ccff,0 0 60px #3366ff; }
-nav button:nth-child(3):hover { box-shadow:0 0 30px #33ff77,0 0 60px #00cc44; }
-nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
+/* عنوان القسم */
+#account h1 {
+  text-align:center;
+  font-size:2.5em;
+  color:#ff4d4d;
+  text-shadow:0 0 15px #ff1a1a,0 0 30px #ff4d4d;
+  margin-bottom:30px;
+}
 
-.section { display:none; padding:1em; max-width:1000px; margin:auto; animation:fadeIn 0.5s ease forwards; }
-.active { display:block; }
-@keyframes fadeIn { 0% { opacity:0; transform:translateY(20px); } 100% { opacity:1; transform:translateY(0); } }
+/* صندوق المستخدم */
+.user-box {
+  display:flex;
+  align-items:center;
+  gap:20px;
+  background:linear-gradient(135deg,#222,#333);
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 0 30px rgba(255,0,0,0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.user-box:hover {
+  transform: scale(1.03);
+  box-shadow:0 0 50px rgba(255,0,0,0.6);
+}
+.user-box img {
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  border:3px solid #ff4d4d;
+  box-shadow:0 0 20px rgba(255,77,77,0.6);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.user-box img:hover {
+  transform: scale(1.1);
+  box-shadow:0 0 35px rgba(255,77,77,0.8);
+}
+.user-info {
+  display:flex; flex-direction:column; gap:5px;
+}
+.user-info span {
+  font-size:1.2em;
+  color:#fff;
+}
+.user-info .points {
+  background:linear-gradient(90deg,#ff4d4d,#ff1a1a);
+  padding:5px 10px;
+  border-radius:10px;
+  display:inline-block;
+  box-shadow:0 0 10px rgba(255,0,0,0.5);
+}
 
-.video-container { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin-top:1em; border-radius:15px; box-shadow:0 0 30px #ff4d4d,0 0 50px #ff1a1a; }
-.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; transition:transform 0.3s; }
-.video-container iframe:hover { transform:scale(1.02); }
+/* حقل حفظ الآيدي */
+#user-id {
+  width:60%;
+  padding:10px;
+  border-radius:15px;
+  border:none;
+  margin-top:10px;
+  font-size:1em;
+}
+#save-id {
+  padding:10px 20px;
+  border:none;
+  border-radius:15px;
+  background:linear-gradient(90deg,#ff4d4d,#ff1a1a);
+  color:#fff;
+  cursor:pointer;
+  font-weight:bold;
+  margin-left:10px;
+  box-shadow:0 0 15px rgba(255,77,77,0.6);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+#save-id:hover {
+  transform: scale(1.05);
+  box-shadow:0 0 25px rgba(255,77,77,0.8);
+}
 
-#home h1 { text-align:center; font-size:2.5em; color:#ff4d4d; text-shadow:0 0 10px #ff1a1a,0 0 20px #ff4d4d; margin-top:1em; animation:glow 2s infinite alternate; }
-#home p { text-align:center; font-size:1.2em; color:#fff; margin-top:0.5em; margin-bottom:1.5em; }
-@keyframes glow { 0% { text-shadow:0 0 5px #ff4d4d,0 0 10px #ff1a1a; } 100% { text-shadow:0 0 15px #ff4d4d,0 0 25px #ff1a1a; } }
+/* Leaderboard */
+#leaderboard {
+  width:100%;
+  border-collapse: separate;
+  border-spacing:0 10px;
+  margin-top:30px;
+}
+#leaderboard th, #leaderboard td {
+  padding:10px;
+  text-align:center;
+}
+#leaderboard tbody tr {
+  background:linear-gradient(135deg,#222,#333);
+  border-radius:15px;
+  box-shadow:0 0 20px rgba(255,255,255,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+#leaderboard tbody tr:hover {
+  transform: scale(1.02);
+  box-shadow:0 0 35px rgba(255,77,77,0.6);
+}
 
+/* Responsive */
 @media(max-width:600px){
-  header{font-size:1.3em;padding:0.8em;} 
-  nav{flex-direction:column;gap:0.5em;} 
-  nav button{width:100%;} 
-  iframe{height:50vh;} 
-  #home h1 { font-size:2em; } 
-  #home p { font-size:1em; }
+  #account h1 { font-size:2em; }
+  .user-box { flex-direction:column; text-align:center; }
+  #user-id { width:100%; margin-bottom:10px; }
 }
 </style>
 </head>
 <body>
 
-<header>🎮 نقاط Free Fire 🎮</header>
+<div id="account">
+  <h1>🎮 حسابي - Free Fire 🎮</h1>
 
-<nav>
-<button onclick="showSection('home')">الرئيسية</button>
-<button onclick="showSection('offers')">العروض</button>
-<button onclick="showSection('account')">حسابي</button>
-<button onclick="showSection('redeem')">طلب الشحن</button>
-</nav>
-
-<div id="home" class="section active">
-  <h1>🎮 نقاط Free Fire 🎮</h1>
-  <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
-  <div class="video-container">
-    <iframe src="https://www.youtube.com/embed/9Hl8H3RfvrU" title="شرح موقع" allowfullscreen></iframe>
+  <div class="user-box">
+    <img src="avatar.png" alt="Avatar">
+    <div class="user-info">
+      <span id="user-name">لم تقم بتسجيل الدخول بعد</span>
+      <span class="points">نقاطك: <span id="user-points">0</span></span>
+      <div>
+        <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
+        <button id="save-id">حفظ الآيدي</button>
+      </div>
+      <button id="login-btn">تسجيل الدخول بحساب Google</button>
+      <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
+    </div>
   </div>
-</div>
 
-<div id="offers" class="section">
-<h2>العروض المتاحة</h2>
-<div class="offers-container">
-<div>
-<h3>MyLead</h3>
-<iframe id="offerwall-mylead" src=""></iframe>
-</div>
-<div>
-<h3>AdGem</h3>
-<iframe id="offerwall-adgem" src=""></iframe>
-</div>
-</div>
-</div>
+  <h2 style="margin-top:40px; text-align:center; color:#ff4d4d;">🏆 أفضل اللاعبين</h2>
+  <table id="leaderboard">
+    <thead>
+      <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
+    </thead>
+    <tbody id="leaderboard-body">
+      <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
+    </tbody>
+  </table>
 
-<div id="account" class="section">
-<h2>معلومات الحساب</h2>
-<div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
-<button id="login-btn">تسجيل الدخول بحساب Google</button>
-<button id="logout-btn" style="display:none;">تسجيل الخروج</button>
-<p>عدد نقاطك: <span id="user-points">0</span></p>
-<div>
-<input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
-<button id="save-id">حفظ الآيدي</button>
-</div>
-<h3>🏆 أفضل اللاعبين</h3>
-<table id="leaderboard">
-<thead><tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr></thead>
-<tbody id="leaderboard-body">
-<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
-</tbody>
-</table>
-</div>
+  <div id="redeem" style="margin-top:40px;">
+    <h2 style="text-align:center; color:#ff4d4d;">💎 طلب شحن الجواهر</h2>
+    <div id="enter-id-redeem">
+      <p>أدخل الآيدي أولاً:</p>
+      <input type="text" id="redeem-user-id" placeholder="آيدي Free Fire">
+      <button id="save-redeem-id">✅ حفظ الآيدي</button>
+    </div>
+    <div id="redeem-options" style="display:none; margin-top:10px;">
+      <p>اختر كمية الجواهر:</p>
+      <button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
+      <button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
+      <button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
+    </div>
+  </div>
 
-<div id="redeem" class="section">
-<h2>طلب شحن الجواهر</h2>
-<div id="enter-id-redeem">
-<p>أدخل الآيدي أولاً:</p>
-<input type="text" id="redeem-user-id" placeholder="آيدي Free Fire">
-<button id="save-redeem-id">✅ حفظ الآيدي</button>
-</div>
-<div id="redeem-options" style="display:none;">
-<p>اختر كمية الجواهر:</p>
-<button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
-<button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
-<button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
-</div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-function showSection(id){
-    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
 const firebaseConfig = {
     apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
     authDomain: "freefirerewardsdz-69572.firebaseapp.com",
@@ -132,19 +178,40 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth();
 const db=firebase.database();
-const myleadBaseUrl="https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
-const adgemBaseUrl="https://api.adgem.com/v1/wall?appid=31011&playerid=";
 let currentUserUid=null;
 
+// عرض Leaderboard
+function updateLeaderboard(){
+    const leaderboardRef=db.ref('users');
+    leaderboardRef.orderByChild('points').limitToLast(10).on('value',snapshot=>{
+        const tbody=document.getElementById('leaderboard-body');
+        tbody.innerHTML='';
+        if(!snapshot.exists()){ 
+            tbody.innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
+            return;
+        }
+        const users=[];
+        snapshot.forEach(child=>{ users.push(child.val()); });
+        users.sort((a,b)=>(b.points||0)-(a.points||0));
+        users.forEach((user,index)=>{
+            const row=`<tr>
+                <td>${index+1}</td>
+                <td>${user.userId||'غير محدد'}</td>
+                <td>${user.points||0}</td>
+            </tr>`;
+            tbody.innerHTML+=row;
+        });
+    });
+}
+
+// تسجيل الدخول والخروج وحفظ آيدي
 window.addEventListener('load',()=>{
     auth.onAuthStateChanged(user=>{
         if(user){
             currentUserUid=user.uid;
-            document.getElementById('user-info').innerText=`مرحبًا ${user.displayName}`;
+            document.getElementById('user-name').innerText=`مرحبًا ${user.displayName}`;
             document.getElementById('login-btn').style.display='none';
             document.getElementById('logout-btn').style.display='inline-block';
-            document.getElementById('offerwall-mylead').src=myleadBaseUrl+"?ml_sub1="+user.uid;
-            document.getElementById('offerwall-adgem').src=adgemBaseUrl+user.uid;
 
             const userRef=db.ref('users/'+currentUserUid);
             userRef.once('value').then(snap=>{
@@ -160,29 +227,15 @@ window.addEventListener('load',()=>{
                 }
             });
 
-            const leaderboardRef=db.ref('users');
-            leaderboardRef.orderByChild('points').limitToLast(10).on('value',snapshot=>{
-                const tbody=document.getElementById('leaderboard-body'); tbody.innerHTML='';
-                if(!snapshot.exists()){ 
-                    tbody.innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>'; 
-                    return; 
-                }
-                const users=[]; snapshot.forEach(child=>{ users.push(child.val()); });
-                users.sort((a,b)=>(b.points||0)-(a.points||0));
-                users.forEach((user,index)=>{
-                    const row=`<tr><td>${index+1}</td><td>${user.userId||'غير محدد'}</td><td>${user.points||0}</td></tr>`;
-                    tbody.innerHTML+=row;
-                });
-            });
+            updateLeaderboard();
 
         } else {
-            document.getElementById('user-info').innerText='لم تقم بتسجيل الدخول بعد.';
+            currentUserUid=null;
+            document.getElementById('user-name').innerText='لم تقم بتسجيل الدخول بعد';
             document.getElementById('login-btn').style.display='inline-block';
             document.getElementById('logout-btn').style.display='none';
             document.getElementById('user-points').innerText="0";
             document.getElementById('user-id').value="";
-            document.getElementById('offerwall-mylead').src="";
-            document.getElementById('offerwall-adgem').src="";
             document.getElementById('leaderboard-body').innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
         }
     });
@@ -198,6 +251,7 @@ window.addEventListener('load',()=>{
         const id=document.getElementById('user-id').value.trim();
         if(!id||!currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
         db.ref('users/'+currentUserUid).update({userId:id}).then(()=>alert('✅ تم حفظ الآيدي بنجاح'));
+        updateLeaderboard();
     });
 
     document.getElementById('save-redeem-id').addEventListener('click',()=>{
@@ -211,6 +265,7 @@ window.addEventListener('load',()=>{
 
 });
 
+// دالة شحن الجواهر + إشعار التليجرام
 function redeem(pointsRequired,gems){
     if(!currentUserUid) return alert('سجل الدخول أولاً');
     db.ref('users/'+currentUserUid).once('value').then(snap=>{
