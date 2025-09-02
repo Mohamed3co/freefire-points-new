@@ -23,13 +23,42 @@
     table { width:100%; border-collapse:collapse; margin-top:1em; }
     table th, table td { padding:8px; border:1px solid #fff; text-align:center; }
     table th { background:#ff4d4d; color:#fff; }
+    /* ====================== فيديو responsive ====================== */
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      margin: 20px auto;
+      max-width: 800px;
+    }
+    .video-container iframe {
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    }
+    /* ====================== صفحة حسابي ====================== */
+    .account-wrapper { max-width:900px; margin:20px auto; padding:20px; background:#1a1a1a; border-radius:12px; }
+    .profile-section { display:flex; align-items:center; gap:20px; margin-bottom:20px; }
+    .avatar { width:100px; height:100px; border-radius:50%; border:3px solid #4CAF50; }
+    .username-id { display:flex; flex-direction:column; }
+    .username { font-size:24px; font-weight:bold; color:#fff; }
+    .user-id { font-size:16px; color:#ccc; display:flex; align-items:center; gap:5px; }
+    .info-cards { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px; }
+    .card { flex:1; min-width:150px; background:#222; padding:15px; border-radius:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+    .card h3 { margin:0 0 10px 0; font-size:18px; color:#4CAF50; }
+    .card p { font-size:20px; font-weight:bold; }
+    .leaderboard { margin-top:20px; }
+    .leaderboard h2 { margin-bottom:15px; color:#4CAF50; }
+    .leaderboard-list { display:flex; flex-direction:column; gap:10px; }
+    .leaderboard-item { background:#222; padding:10px 15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 5px rgba(0,0,0,0.3); }
+    .no-leader { font-style:italic; color:#999; }
     @media(max-width:600px){ header{font-size:1.3em;padding:0.8em;} nav{flex-direction:column;gap:0.5em;} nav button{width:100%;} iframe{height:50vh;} }
   </style>
-
-  <!-- ✅ كود AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1566555811591369"
      crossorigin="anonymous"></script>
-
 </head>
 <body>
 
@@ -41,11 +70,16 @@
   <button onclick="showSection('redeem')">طلب الشحن</button>
 </nav>
 
+<!-- ===== الصفحة الرئيسية ===== -->
 <div id="home" class="section active">
   <h2>مرحبًا بك!</h2>
   <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
+  <div class="video-container">
+    <iframe src="https://www.youtube.com/embed/9Hl8H3RfvrU" title="شرح موقع" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
 </div>
 
+<!-- ===== العروض ===== -->
 <div id="offers" class="section">
   <h2>العروض المتاحة</h2>
   <div class="offers-container">
@@ -60,40 +94,49 @@
   </div>
 </div>
 
+<!-- ===== حسابي ===== -->
 <div id="account" class="section">
-  <h2>معلومات الحساب</h2>
-  <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
-  <button id="login-btn">تسجيل الدخول بحساب Google</button>
-  <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
-  <p>عدد نقاطك: <span id="user-points">0</span></p>
-  <div>
-    <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
-    <button id="save-id">حفظ الآيدي</button>
+  <div class="account-wrapper">
+    <div class="profile-section">
+      <img src="https://i.postimg.cc/HWSVzwcV/avataaars.png" alt="Avatar" class="avatar">
+      <div class="username-id">
+        <div class="username" id="display-name">اسم المستخدم</div>
+        <div class="user-id"><span>ID:</span> <span id="display-id">12345</span></div>
+      </div>
+    </div>
+
+    <div class="info-cards">
+      <div class="card"><h3>النقاط</h3><p id="user-points">0</p></div>
+      <div class="card"><h3>الرصيد</h3><p id="user-balance">0</p></div>
+      <div class="card"><h3>الإنجازات</h3><p id="user-achievements">0/0</p></div>
+    </div>
+
+    <div class="leaderboard">
+      <h2>المتصدرون</h2>
+      <div class="leaderboard-list" id="leaderboard-body">
+        <div class="no-leader">لا يوجد مستخدمون بعد</div>
+      </div>
+    </div>
   </div>
-  <h3>🏆 أفضل اللاعبين</h3>
-  <table id="leaderboard">
-    <thead>
-      <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
-    </thead>
-    <tbody id="leaderboard-body">
-      <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
-    </tbody>
-  </table>
 </div>
 
+<!-- ===== طلب الشحن ===== -->
 <div id="redeem" class="section">
   <h2>طلب شحن الجواهر</h2>
   <p>✅ اختر كمية الجواهر:</p>
   <button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
   <button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
-  <button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
+<button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active');}
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); 
+  document.getElementById(id).classList.add('active');
+}
 
 const firebaseConfig = {
   apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
@@ -105,7 +148,8 @@ const firebaseConfig = {
   appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
 };
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(); const db=firebase.database();
+const auth=firebase.auth(); 
+const db=firebase.database();
 const myleadBaseUrl="https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
 const adgemBaseUrl="https://api.adgem.com/v1/wall?appid=31011&playerid=";
 let currentUserUid=null;
@@ -114,52 +158,59 @@ window.addEventListener('load',()=>{
   auth.onAuthStateChanged(user=>{
     if(user){
       currentUserUid=user.uid;
-      document.getElementById('user-info').innerText=`مرحبًا ${user.displayName}`;
-      document.getElementById('login-btn').style.display='none';
-      document.getElementById('logout-btn').style.display='inline-block';
+      document.getElementById('display-name').innerText=user.displayName;
+      document.getElementById('login-btn')?.style.display='none';
+      document.getElementById('logout-btn')?.style.display='inline-block';
       document.getElementById('offerwall-mylead').src=myleadBaseUrl+"?ml_sub1="+user.uid;
       document.getElementById('offerwall-adgem').src=adgemBaseUrl+user.uid;
 
       const userRef=db.ref('users/'+currentUserUid);
       userRef.once('value').then(snap=>{
-        if(!snap.exists()){ userRef.set({points:0,userId:""}).then(()=>{ document.getElementById('user-points').innerText="0"; document.getElementById('user-id').value=""; }); }
-        else{ const data=snap.val(); document.getElementById('user-points').innerText=data?.points||"0"; document.getElementById('user-id').value=data?.userId||""; }
+        if(!snap.exists()){ 
+          userRef.set({points:0,userId:"",balance:0,achievements:"0/0"}).then(()=>{
+            document.getElementById('user-points').innerText="0";
+            document.getElementById('display-id').innerText="12345";
+            document.getElementById('user-balance').innerText="0";
+            document.getElementById('user-achievements').innerText="0/0";
+          }); 
+        }
+        else{ 
+          const data=snap.val(); 
+          document.getElementById('user-points').innerText=data?.points||"0";
+          document.getElementById('display-id').innerText=data?.userId||"12345";
+          document.getElementById('user-balance').innerText=data?.balance||"0";
+          document.getElementById('user-achievements').innerText=data?.achievements||"0/0";
+        }
       });
 
       const leaderboardRef=db.ref('users');
       leaderboardRef.orderByChild('points').limitToLast(10).on('value',snapshot=>{
-        const tbody=document.getElementById('leaderboard-body'); tbody.innerHTML='';
-        if(!snapshot.exists()){ tbody.innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>'; return; }
+        const leaderboard=document.getElementById('leaderboard-body'); 
+        leaderboard.innerHTML='';
+        if(!snapshot.exists()){ 
+          leaderboard.innerHTML='<div class="no-leader">لا يوجد مستخدمون بعد</div>'; 
+          return; 
+        }
         const users=[]; snapshot.forEach(child=>{ users.push(child.val()); });
         users.sort((a,b)=>(b.points||0)-(a.points||0));
         users.forEach((user,index)=>{
-          const row=`<tr><td>${index+1}</td><td>${user.userId||'غير محدد'}</td><td>${user.points||0}</td></tr>`;
-          tbody.innerHTML+=row;
+          const div=document.createElement('div');
+          div.classList.add('leaderboard-item');
+          div.innerHTML=`<span>${index+1}. ${user.userId||'غير محدد'}</span><span>${user.points||0} نقاط</span>`;
+          leaderboard.appendChild(div);
         });
       });
 
     } else {
-      document.getElementById('user-info').innerText='لم تقم بتسجيل الدخول بعد.';
-      document.getElementById('login-btn').style.display='inline-block';
-      document.getElementById('logout-btn').style.display='none';
+      document.getElementById('display-name').innerText='اسم المستخدم';
+      document.getElementById('display-id').innerText='12345';
       document.getElementById('user-points').innerText="0";
-      document.getElementById('user-id').value="";
+      document.getElementById('user-balance').innerText="0";
+      document.getElementById('user-achievements').innerText="0/0";
       document.getElementById('offerwall-mylead').src="";
       document.getElementById('offerwall-adgem').src="";
-      document.getElementById('leaderboard-body').innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
+      document.getElementById('leaderboard-body').innerHTML='<div class="no-leader">لا يوجد مستخدمون بعد</div>';
     }
-  });
-
-  document.getElementById('login-btn').addEventListener('click',()=>{
-    const provider=new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  });
-
-  document.getElementById('logout-btn').addEventListener('click',()=>{ auth.signOut(); });
-  document.getElementById('save-id').addEventListener('click',()=>{
-    const id=document.getElementById('user-id').value.trim();
-    if(!id||!currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
-    db.ref('users/'+currentUserUid).update({userId:id}).then(()=>alert('✅ تم حفظ الآيدي بنجاح'));
   });
 });
 
@@ -167,7 +218,7 @@ function redeem(pointsRequired,gems){
   if(!currentUserUid) return alert('سجل الدخول أولاً');
   db.ref('users/'+currentUserUid).once('value').then(snap=>{
     const data=snap.val();
-    if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد، احفظ الآيدي أولًا.');
+    if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد.');
     if((data.points||0)<pointsRequired) return alert('❌ ليس لديك نقاط كافية لهذا الشحن.');
     db.ref('users/'+currentUserUid).update({points:data.points-pointsRequired});
     const botToken="8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
@@ -180,4 +231,4 @@ function redeem(pointsRequired,gems){
 }
 </script>
 </body>
-</html>
+</html> -
