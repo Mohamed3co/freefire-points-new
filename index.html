@@ -23,9 +23,6 @@
     table { width:100%; border-collapse:collapse; margin-top:1em; }
     table th, table td { padding:8px; border:1px solid #fff; text-align:center; }
     table th { background:#ff4d4d; color:#fff; }
-    /* فيديو responsive */
-    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top:10px; }
-    .video-container iframe { position: absolute; top:0; left:0; width:100%; height:100%; border-radius:10px; }
     @media(max-width:600px){ header{font-size:1.3em;padding:0.8em;} nav{flex-direction:column;gap:0.5em;} nav button{width:100%;} iframe{height:50vh;} }
   </style>
 
@@ -44,79 +41,58 @@
   <button onclick="showSection('redeem')">طلب الشحن</button>
 </nav>
 
-<!-- 🏠 الصفحة الرئيسية -->
 <div id="home" class="section active">
   <h2>مرحبًا بك!</h2>
   <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
+  
+  <!-- فيديو مع عنوان -->
   <div class="video-container">
-    <iframe src="https://www.youtube.com/embed/9Hl8H3RfvrU" title="شرح موقع" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <h3 style="text-align:center; margin-bottom:10px;">🎥 فيديو شرح استخدام الموقع</h3>
+    <iframe
+      src="https://www.youtube.com/embed/9Hl8H3RfvrU"
+      title="شرح موقع"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
   </div>
 </div>
 
-<!-- 💰 العروض -->
 <div id="offers" class="section">
   <h2>العروض المتاحة</h2>
   <div class="offers-container">
     <div>
-      <h3>MyLead</h3>
+      <h3 style="text-align:center;">MyLead</h3>
       <iframe id="offerwall-mylead" src=""></iframe>
     </div>
     <div>
-      <h3>AdGem</h3>
+      <h3 style="text-align:center;">AdGem</h3>
       <iframe id="offerwall-adgem" src=""></iframe>
     </div>
   </div>
 </div>
 
-<!-- 👤 حسابي -->
 <div id="account" class="section">
   <h2>معلومات الحساب</h2>
-  <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
-    <img src="https://i.postimg.cc/HWSVzwcV/avataaars.png" alt="Avatar" style="width:80px; height:80px; border-radius:50%; border:2px solid #ff4d4d;">
-    <div>
-      <div id="user-info" style="font-size:1.2em; font-weight:bold;">لم تقم بتسجيل الدخول بعد.</div>
-      <div style="font-size:0.9em; color:#ccc;">آيدي: <span id="user-id-display">غير محدد</span></div>
-    </div>
-  </div>
-  <button id="login-btn" style="margin-right:10px;">تسجيل الدخول بحساب Google</button>
+  <div id="user-info">لم تقم بتسجيل الدخول بعد.</div>
+  <button id="login-btn">تسجيل الدخول بحساب Google</button>
   <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
-
-  <div style="display:flex; gap:20px; margin-top:15px; flex-wrap:wrap;">
-    <div style="background:#222; padding:10px 20px; border-radius:10px; text-align:center;">
-      <h4>نقاطك</h4>
-      <p id="user-points" style="font-size:1.2em;">0</p>
-    </div>
-    <div style="background:#222; padding:10px 20px; border-radius:10px; text-align:center;">
-      <h4>الرصيد</h4>
-      <p id="user-balance" style="font-size:1.2em;">0</p>
-    </div>
-    <div style="background:#222; padding:10px 20px; border-radius:10px; text-align:center;">
-      <h4>الإنجازات</h4>
-      <p id="user-achievements" style="font-size:1.2em;">0/0</p>
-    </div>
-  </div>
-
-  <div style="margin-top:15px;">
-    <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire" style="padding:5px 10px;">
+  <p>عدد نقاطك: <span id="user-points">0</span></p>
+  <div>
+    <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
     <button id="save-id">حفظ الآيدي</button>
   </div>
-
-  <h3 style="margin-top:25px;">🏆 أفضل اللاعبين</h3>
-  <table id="leaderboard" style="width:100%; border-collapse:collapse;">
+  <h3>🏆 أفضل اللاعبين</h3>
+  <table id="leaderboard">
     <thead>
-      <tr style="background:#ff4d4d; color:#fff;">
-        <th>#</th>
-        <th>المستخدم</th>
-        <th>النقاط</th>
-      </tr>
+      <tr><th>#</th><th>المستخدم</th><th>النقاط</th></tr>
     </thead>
     <tbody id="leaderboard-body">
-      <tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>
+      <!-- الجدول سيعرض أي مستخدم موجود فقط -->
     </tbody>
   </table>
 </div>
 
-<!-- 💎 طلب الشحن -->
 <div id="redeem" class="section">
   <h2>طلب شحن الجواهر</h2>
   <p>✅ اختر كمية الجواهر:</p>
@@ -129,7 +105,10 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active');}
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
 const firebaseConfig = {
   apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
@@ -141,7 +120,8 @@ const firebaseConfig = {
   appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
 };
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(); const db=firebase.database();
+const auth=firebase.auth(); 
+const db=firebase.database();
 const myleadBaseUrl="https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
 const adgemBaseUrl="https://api.adgem.com/v1/wall?appid=31011&playerid=";
 let currentUserUid=null;
@@ -158,20 +138,30 @@ window.addEventListener('load',()=>{
 
       const userRef=db.ref('users/'+currentUserUid);
       userRef.once('value').then(snap=>{
-        if(!snap.exists()){ userRef.set({points:0,userId:""}).then(()=>{ document.getElementById('user-points').innerText="0"; document.getElementById('user-id').value=""; }); }
-        else{ const data=snap.val(); document.getElementById('user-points').innerText=data?.points||"0"; document.getElementById('user-id').value=data?.userId||""; document.getElementById('user-id-display').innerText=data?.userId||"غير محدد"; }
+        if(!snap.exists()){ 
+          userRef.set({points:0,userId:""}).then(()=>{
+            document.getElementById('user-points').innerText="0"; 
+            document.getElementById('user-id').value=""; 
+          });
+        } else { 
+          const data=snap.val(); 
+          document.getElementById('user-points').innerText=data?.points||"0"; 
+          document.getElementById('user-id').value=data?.userId||""; 
+        }
       });
 
       const leaderboardRef=db.ref('users');
       leaderboardRef.orderByChild('points').limitToLast(10).on('value',snapshot=>{
-        const tbody=document.getElementById('leaderboard-body'); tbody.innerHTML='';
-        if(!snapshot.exists()){ tbody.innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>'; return; }
-        const users=[]; snapshot.forEach(child=>{ users.push(child.val()); });
+        const tbody=document.getElementById('leaderboard-body'); 
+        tbody.innerHTML='';
+        const users=[]; 
+        snapshot.forEach(child=>{ users.push(child.val()); });
         users.sort((a,b)=>(b.points||0)-(a.points||0));
         users.forEach((user,index)=>{
           const row=`<tr><td>${index+1}</td><td>${user.userId||'غير محدد'}</td><td>${user.points||0}</td></tr>`;
           tbody.innerHTML+=row;
         });
+        // لا نضيف أي رسالة "لا يوجد مستخدمون"
       });
 
     } else {
@@ -180,10 +170,9 @@ window.addEventListener('load',()=>{
       document.getElementById('logout-btn').style.display='none';
       document.getElementById('user-points').innerText="0";
       document.getElementById('user-id').value="";
-      document.getElementById('user-id-display').innerText="غير محدد";
       document.getElementById('offerwall-mylead').src="";
       document.getElementById('offerwall-adgem').src="";
-      document.getElementById('leaderboard-body').innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
+      document.getElementById('leaderboard-body').innerHTML='';
     }
   });
 
@@ -196,10 +185,7 @@ window.addEventListener('load',()=>{
   document.getElementById('save-id').addEventListener('click',()=>{
     const id=document.getElementById('user-id').value.trim();
     if(!id||!currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
-    db.ref('users/'+currentUserUid).update({userId:id}).then(()=>{
-      alert('✅ تم حفظ الآيدي بنجاح');
-      document.getElementById('user-id-display').innerText=id;
-    });
+    db.ref('users/'+currentUserUid).update({userId:id}).then(()=>alert('✅ تم حفظ الآيدي بنجاح'));
   });
 });
 
