@@ -937,15 +937,33 @@
         
         // دالة الشحن
         function redeem(pointsRequired, gameKey, option, gameId){
-            if(!currentUserUid) return alert('⚠️ سجل الدخول أولاً');
-            
-            db.ref('users/' + currentUserUid).once('value').then(snapshot => {
-                const data = snapshot.val();
-                if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
-                if((data.points || 0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية لهذا الشحن.');
+    if(!currentUserUid) return alert('⚠️ سجل الدخول أولاً');
+    
+    db.ref('users/' + currentUserUid).once('value').then(snapshot => {
+        const data = snapshot.val();
+        if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
+        if((data.points || 0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية لإتمام العملية');
 
-                db.ref('users/' + currentUserUid).update({points: data.points - pointsRequired});
+        // خصم النقاط
+        db.ref('users/' + currentUserUid).update({
+            points: (data.points || 0) - pointsRequired
+        });
 
+        // تسجيل طلب الشحن
+        const requestRef = db.ref('redeemRequests').push();
+        requestRef.set({
+            userId: currentUserUid,
+            game: gameKey,
+            option: option,
+            gameId: gameId,
+            date: new Date().toISOString(),
+            status: "قيد المراجعة"
+        });
+
+        alert('✅ تم إرسال طلب الشحن، سيتم تنفيذه قريباً');
+        hideGameOptions();
+    });
+        }
                 const gameNames = {
                     freefire: "Free Fire",
                     pubg: "PUBG Mobile",
