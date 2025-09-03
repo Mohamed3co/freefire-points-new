@@ -290,8 +290,8 @@ function redeem(pointsRequired, gameKey, option){
       const message = `📩 طلب شحن جديد\n🎮 اللعبة: ${gameNames[gameKey]}\n🔹 الكمية: ${quantity} ${unit}\n🆔 الآيدي: ${data.userId || 'غير محدد'}\n💰 النقاط المستخدمة: ${pointsRequired}`;
         
         // إرسال للـ Telegram
-        const telegramBotToken = "PUT_YOUR_BOT_TOKEN_HERE"; // ضع توكن البوت هنا
-        const telegramChatId = "PUT_YOUR_CHAT_ID_HERE";     // ضع شات آيدي هنا
+        const telegramBotToken =8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo
+        const telegramChatId =6285856969  // ضع شات آيدي هنا
         fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
             method:"POST",
             headers: { "Content-Type":"application/json" },
