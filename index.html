@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>نقاط Free Fire</title>
+    <title>نقاط الألعاب</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1566555811591369" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -463,7 +463,7 @@
             </div>
             
             <!-- صور الألعاب -->
-            <div class="games-container">
+            <div id="games-list" class="games-container">
                 <div class="game-card" onclick="showGameOptions('freefire')">
                     <img src="https://via.placeholder.com/150/ff4d4d/ffffff?text=Free+Fire" alt="Free Fire">
                     <p>Free Fire</p>
@@ -498,11 +498,8 @@
             <div id="game-options" class="game-options">
                 <h3 id="game-title" style="margin-bottom:20px;"></h3>
                 
-                <!-- حقل إدخال الآيدي الإضافي -->
-                <div id="additional-id-input" style="text-align:center; margin: 15px 0; display: none;">
-                    <div class="input-group">
-                        <input type="text" id="additional-game-id" class="input-field" placeholder="أدخل آيدي اللعبة مرة أخرى">
-                    </div>
+                <div class="input-group">
+                    <input type="text" id="game-id-input" class="input-field" placeholder="أدخل آيدي اللعبة">
                 </div>
                 
                 <div id="options-buttons" class="option-buttons"></div>
@@ -535,7 +532,7 @@
         const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
         const adgemBaseUrl = "https://api.adgem.com/v1/wall?appid=31011&playerid=";
         let currentUserUid = null;
-        let currentGameId = "";
+        let currentGameKey = "";
 
         function updateLeaderboard(){
             const leaderboardRef = db.ref('users');
@@ -618,15 +615,7 @@
 
         // عرض خيارات الشحن عند الضغط على صورة اللعبة
         function showGameOptions(gameKey){
-            // طلب إدخال الآيدي أولاً
-            const gameId = document.getElementById('redeem-user-id').value.trim();
-            if (!gameId) {
-                alert('⚠️ يرجى إدخال آيدي اللعبة أولاً ثم الضغط على حفظ الآيدي');
-                return;
-            }
-            
-            currentGameId = gameId;
-            const game = gameData[gameKey];
+            currentGameKey = gameKey;
             const titleMap = {
                 freefire: "Free Fire",
                 pubg: "PUBG Mobile",
@@ -637,9 +626,14 @@
                 clash: "Clash of Clans"
             };
             
+            // إخفاء قائمة الألعاب وإظهار خيارات الشحن
+            document.getElementById('games-list').style.display = 'none';
+            document.getElementById('game-options').style.display = 'block';
+            
             const optionsContainer = document.getElementById('options-buttons');
             optionsContainer.innerHTML = "";
             
+            const game = gameData[gameKey];
             game.forEach(option => {
                 let pointsRequired = option.points;
                 const btn = document.createElement('button');
@@ -655,52 +649,26 @@
                 btn.innerText = `${quantity} ${unit} - ${pointsRequired} نقطة`;
                 btn.className = 'option-btn';
                 btn.onclick = () => {
-                    // طلب إدخال الآيدي مرة أخرى للتأكيد
-                    document.getElementById('additional-id-input').style.display = 'block';
-                    document.getElementById('additional-game-id').value = '';
-                    
-                    // عند النقر على زر التأكيد
-                    const confirmRedeem = () => {
-                        const additionalId = document.getElementById('additional-game-id').value.trim();
-                        if (additionalId !== currentGameId) {
-                            alert('⚠️ آيدي اللعبة غير متطابق! يرجى إدخال نفس الآيدي');
-                            return;
-                        }
-                        
-                        redeem(pointsRequired, gameKey, option, currentGameId);
-                        document.getElementById('additional-id-input').style.display = 'none';
-                    };
-                    
-                    // إضافة زر التأكيد
-                    const confirmButton = document.createElement('button');
-                    confirmButton.innerText = '✅ تأكيد الطلب';
-                    confirmButton.className = 'btn btn-primary';
-                    confirmButton.onclick = confirmRedeem;
-                    
-                    // إزالة أي أزرار تأكيد سابقة
-                    const existingConfirm = document.getElementById('confirm-redeem-button');
-                    if (existingConfirm) {
-                        existingConfirm.remove();
+                    const gameId = document.getElementById('game-id-input').value.trim();
+                    if (!gameId) {
+                        alert('⚠️ يرجى إدخال آيدي اللعبة أولاً');
+                        return;
                     }
-                    confirmButton.id = 'confirm-redeem-button';
                     
-                    optionsContainer.appendChild(confirmButton);
+                    redeem(pointsRequired, gameKey, option, gameId);
                 };
                 
                 optionsContainer.appendChild(btn);
             });
 
             document.getElementById('game-title').innerText = "🎮 شحن " + titleMap[gameKey];
-            document.getElementById('game-options').style.display = "block";
         }
 
         function hideGameOptions(){
-            document.getElementById('game-options').style.display = "none";
-            document.getElementById('additional-id-input').style.display = "none";
-            const confirmButton = document.getElementById('confirm-redeem-button');
-            if (confirmButton) {
-                confirmButton.remove();
-            }
+            // إخفاء خيارات الشحن وإظهار قائمة الألعاب
+            document.getElementById('game-options').style.display = 'none';
+            document.getElementById('games-list').style.display = 'flex';
+            document.getElementById('game-id-input').value = '';
         }
 
         // دالة شحن الجواهر/النقاط مع إشعار مبسط للتليجرام
@@ -740,11 +708,11 @@
                 const chatId = "6285856969";
 
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
-                  .then(() => alert('✅ تم إرسال طلب الشحن بنجاح'))
+                  .then(() => {
+                      alert('✅ تم إرسال طلب الشحن بنجاح');
+                      hideGameOptions();
+                  })
                   .catch(() => alert('❌ فشل إرسال طلب الشحن'));
-                  
-                // إخفاء خيارات اللعبة بعد الطلب
-                hideGameOptions();
             });
         }
 
@@ -807,4 +775,4 @@
         });
     </script>
 </body>
-  </html>
+</html>
