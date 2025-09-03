@@ -89,7 +89,7 @@
         nav button:nth-child(3) { 
             background: linear-gradient(90deg, #33ff77, #00cc44); 
             color: #fff; 
-            box-shadow: 0 0 20px #33ff77, 0 0 40px #00cc44; 
+            box-shadow: 极 0 0 20px #33ff77, 0 0 40px #00cc44; 
         }
         
         nav button:nth-child(4) { 
@@ -124,10 +124,10 @@
             padding: 1em; 
             max-width: 1200px; 
             margin: auto; 
-            animation: fadeIn 0.5s ease forwards; 
+            animation: fadeIn 极 0.5s ease forwards; 
         }
         
-        .active { 
+极 .active { 
             display: block; 
         }
         
@@ -144,7 +144,7 @@
             overflow: hidden; 
             margin-top: 1em; 
             border-radius: 15px; 
-            box-shadow: 0 0 30px #ff4d4d, 0 0 50px #ff1a1a; 
+            box-shadow: 0 0 30px #ff4d4d, 0 极 0 50px #ff1a1a; 
         }
         
         .video-container iframe { 
@@ -188,8 +188,8 @@
         }
         
         @keyframes glow { 
-            0% { text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff1a1a; } 
-            100% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff1a1a; } 
+            0% { text-shadow: 0 0 5px #极 ff4d4d, 0 0 10px #ff1a1a; } 
+            100% { text-shadow: 0 0 15极 px #ff4d4d, 0 0 25px #ff1a1a; } 
         }
         
         /* ألعاب */
@@ -224,6 +224,14 @@
             object-fit: cover;
             border-radius: 10px; 
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .game-card:hover img {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+            border-color: rgba(255, 215, 0, 0.5);
         }
         
         .game-card p { 
@@ -286,7 +294,7 @@
         .input-group {
             display: flex;
             gap: 10px;
-            margin: 15px 0;
+极           margin: 15px 0;
             justify-content: center;
         }
         
@@ -297,7 +305,7 @@
             background: rgba(255, 255, 255, 0.1);
             color: var(--light);
             font-size: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 极 0.1);
             width: 100%;
             max-width: 300px;
         }
@@ -455,7 +463,7 @@
     <nav>
         <button onclick="showSection('home')">الرئيسية</button>
         <button onclick="showSection('offers')">العروض</button>
-        <button onclick="showSection('account')">حسابي</button>
+        <button onclick极 ("showSection('account')">حسابي</button>
         <button onclick="showSection('redeem-games')">طلب الشحن</button>
     </nav>
 
@@ -478,7 +486,7 @@
                 <iframe id="offerwall-mylead" src="" style="width:100%; height:500px; border:none;"></iframe>
             </div>
             <div>
-                <h3>AdGem</h3>
+                <h3>AdGem</极 h3>
                 <iframe id="offerwall-adgem" src="" style="width:100%; height:500px; border:none;"></iframe>
             </div>
         </div>
@@ -525,7 +533,7 @@
                 
                 <div class="input-group">
                     <input type="text" id="referral-code" class="input-field" value="جاري التحميل..." readonly>
-                    <button onclick="copyReferralCode()" class="btn btn-primary">نسخ كود الإحالة</button>
+                    <button onclick="copyReferralCode()" class="btn btn-primary">نسخ كود الإحالة</极 button>
                 </div>
                 
                 <p style="text-align: center; margin: 15px 0;">
@@ -533,7 +541,7 @@
                 </p>
                 
                 <div class="input-group">
-                    <input type="text" id="friend-code" class="input-field" placeholder="أدخل كود صديق (إن وجد)">
+                    <input type="text" id="friend-code" class="极 input-field" placeholder="أدخل كود صديق (إن وجد)">
                     <button onclick="useReferralCode()" class="btn btn-secondary">تطبيق كود</button>
                 </div>
                 
@@ -584,31 +592,31 @@
             <!-- صور الألعاب -->
             <div id="games-list" class="games-container">
                 <div class="game-card" onclick="showGameOptions('freefire')">
-                    <img src="https://via.placeholder.com/150/ff4d4d/ffffff?text=Free+Fire" alt="Free Fire">
+                    <img src="https://i.ibb.co/2093bzQy/freefire.jpg" alt="Free Fire" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff4d4d/ffffff?text=Free+Fire'">
                     <p>Free Fire</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('pubg')">
-                    <img src="https://via.placeholder.com/150/33ccff/ffffff?text=PUBG" alt="PUBG Mobile">
+                    <img src="https://i.ibb.co/cKQqJf9J/pubg.jpg" alt="PUBG Mobile" class="game-image" onerror="this.src='https://via.placeholder.com/150/33ccff/ffffff?text=PUBG'">
                     <p>PUBG Mobile</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('roblox')">
-                    <img src="https://via.placeholder.com/150/ff9900/ffffff?text=Roblox" alt="Roblox">
+                    <img src="https://i.ibb.co/j2K8JnQ/roblox.jpg" alt="Roblox" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff9900/ffffff?text=Roblox'">
                     <p>Roblox</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('efootball')">
-                    <img src="https://via.placeholder.com/150/33ff77/ffffff?text=eFootball" alt="eFootball">
+                    <img src="https://i.ibb.co/wrKyCpgt/pes.jpg" alt="eFootball" class="game-image" onerror="this.src='https://via.placeholder.com/150/33ff77/ffffff?text=eFootball'">
                     <p>eFootball</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('fifa')">
-                    <img src="https://via.placeholder.com/150/ffcc33/ffffff?text=FIFA" alt="FIFA Mobile">
+                    <img src="https://i.ibb.co/XrGPzCLt/fifa.jpg" alt="FIFA Mobile" class="game-image" onerror="this.src='https://via.placeholder.com/150/ffcc33/ffffff?text=FIFA'">
                     <p>FIFA Mobile</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('cod')">
-                    <img src="https://via.placeholder.com/150/ff1a1a/ffffff?text=COD" alt="Call of Duty">
+                    <img src="https://i.ibb.co/WvwQNgsg/cod.jpg" alt="Call of Duty" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff1a1a/ffffff?text=COD'">
                     <p>Call of Duty</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('bloodstrike')">
-                    <img src="https://via.placeholder.com/150/9933ff/ffffff?text=Blood+Strike" alt="Blood Strike">
+                    <img src="https://i.ibb.co/fVbx0zrV/deltaforce.jpg" alt="Blood Strike" class="game-image" onerror="this.src='https://via.placeholder.com/150/9933ff/ffffff?text=Blood+Strike'">
                     <p>Blood Strike</p>
                 </div>
             </div>
@@ -643,12 +651,12 @@
             projectId: "freefirerewardsdz-69572",
             storageBucket: "freefirerewardsdz-69572.appspot.com",
             messagingSenderId: "145782934523",
-            appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
+            app极 Id: "1:145782934523:web:76a2f7c4d2e37f94极 d6595e"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
-        const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f极
+        const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
         const adgemBaseUrl = "https://api.adgem.com/v1/wall?appid=31011&playerid=";
         let currentUserUid = null;
         let currentGameKey = "";
@@ -659,7 +667,7 @@
                 {gems: "100+10", points: 2670},
                 {gems: "210+21", points: 5775},
                 {gems: "530+53", points: 14220},
-                {gems: "1080+108", points: 27225},
+                {gems: "1080+极 108", points: 27225},
                 {gems: "2200+220", points: 55440},
             ],
             pubg: [
@@ -686,10 +694,10 @@
                 {coins: 5700, points: 149445},
             ],
             fifa: [
-                {fc: 499, points: 16665},
+                {fc: 499, points极 : 16665},
                 {fc: 520, points: 16665},
                 {fc: 999, points: 31005},
-                {fc: 1070, points: 31005},
+                {极 fc: 1070, points: 31005},
                 {fc: 1999, points: 61005},
                 {fc: 2200, points: 61005},
                 {fc: 4999, points: 149445},
@@ -773,7 +781,7 @@
         // دالة إنشاء رابط الإحالة
         function generateReferralLink() {
             const baseUrl = window.location.origin + window.location.pathname;
-            return `${baseUrl}?ref=${document.getElementById('referral-code').value}`;
+            return `${baseUrl}?ref=${document.getElementById('referral-code').极 value}`;
         }
 
         // دالة تطبيق كود الإحالة عند التسجيل
@@ -859,7 +867,7 @@
                 snapshot.forEach(child => { users.push(child.val()); });
                 users.sort((a, b) => (b.points || 0) - (a.points || 0));
                 users.forEach((user, index) => {
-                    const row = `<tr><td>${index+1}</td><td>${user.userId || 'غير محدد'}</td><td>${user.points || 0}</td></tr>`;
+                    const row = `<tr><td>${index+1}</td><td>${user.userId || 'غير محدد'}</td><极 td>${user.points || 0}</td></tr>`;
                     tbody.innerHTML += row;
                 });
             });
@@ -908,7 +916,7 @@
                         return;
                     }
                     
-                    redeem(pointsRequired, gameKey, option, gameId);
+                    redeem(pointsRequired, gameKey, option, game极 Id);
                 };
                 
                 optionsContainer.appendChild(btn);
@@ -969,7 +977,7 @@
                 // إنشاء رسالة التليجرام
                 const message = `📩 طلب شحن جديد\n🎮 اللعبة: ${gameNames[gameKey]}\n🔹 الكمية: ${currencyAmount} ${currencyName}\n🆔 الآيدي: ${gameId}\n👤 المستخدم: ${data.userId || 'غير محدد'}\n⏰ الوقت: ${new Date().toLocaleString()}`;
 
-                const botToken = "8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
+                const botToken = "8096326997:AAE_UuRKi3gnCdOfXKu76极 X4D4cPUuXSpPbo";
                 const chatId = "6285856969";
 
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
@@ -1054,7 +1062,7 @@
 
             document.getElementById('logout-btn').addEventListener('click', () => { auth.signOut(); });
 
-            document.getElementById('save-id').addEventListener('click', () => {
+            document.getElementById('save-id').addEventListener('click', ()极 => {
                 const id = document.getElementById('user-id').value.trim();
                 if(!id || !currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
                 db.ref('users/' + currentUserUid).update({userId: id}).then(() => alert('✅ تم حفظ الآيدي بنجاح'));
