@@ -45,7 +45,7 @@
         
         @keyframes headerGlow { 
             0% { text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff1a1a; } 
-            100% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff1a1a; } 
+            100% { text-shadow: 0 极 15px #ff4d4d, 0 0 25px #ff1a1a; } 
         }
         
         /* Nav Buttons */
@@ -109,7 +109,7 @@
         }
         
         nav button:nth-child(4):hover { 
-            box-shadow: 0 极 30px #ffcc33, 0 0 60px #ff9900; 
+            box-shadow: 0 0 30px #ffcc33, 0 0 60px #ff9900; 
         }
         
         /* Sections */
@@ -138,7 +138,7 @@
             overflow: hidden; 
             margin-top: 1em; 
             border-radius: 15px; 
-            box-shadow: 0 0 30px #ff4d4d, 极 0 50px #ff1a1a; 
+            box-shadow: 0 0 30px #ff4d4d, 0 0 50px #ff1a1a; 
         }
         
         .video-container iframe { 
@@ -178,12 +178,12 @@
             color: #ffcc33; 
             text-shadow: 0 0 5px #ff9900; 
             margin-bottom: 10px; 
-            font-size: 极.2em; 
+            font-size: 1.2em; 
         }
         
         @keyframes glow { 
             0% { text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff1a1a; } 
-            100% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff1a1a; } 
+            100% { text-shadow: 0 0 15px #极4d4d, 0 0 25px #ff1a1a; } 
         }
         
         /* ألعاب */
@@ -263,7 +263,7 @@
         
         .points-display {
             text-align: center;
-            font-size: 1.5em;
+            font-size: 极.5em;
             margin: 15px 0;
             color: var(--accent);
             font-weight: bold;
@@ -285,7 +285,7 @@
             font-size: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 300px;
+           极 max-width: 300px;
         }
         
         .btn {
@@ -341,7 +341,7 @@
             color: var(--light);
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 极.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -403,8 +403,8 @@
         <h1>🎮 نقاط الألعاب 🎮</h1>
         <p>اكسب النقاط من خلال إكمال العروض وشحن جميع الألعاب مجانًا 🎁</p>
         <h3 class="video-title">📹 فيديو شرح استخدام الموقع</h3>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/9Hl8H3RfvrU" title="شرح موقع" allowfullscreen></iframe>
+        <div class极video-container">
+            <iframe src="https://www.youtube.com/embed/9Hl8极3RfvrU" title="شرح موقع" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -439,7 +439,7 @@
             
             <div class="input-group">
                 <button id="login-btn" class="btn btn-primary">تسجيل الدخول بحساب Google</button>
-                <button id="logout-btn" class="btn btn-secondary" style="display:none;">تسجيل الخروج</button>
+                <button id极logout-btn" class="btn btn-secondary" style="display:none;">تسجيل الخروج</button>
             </div>
             
             <div class="input-group">
@@ -493,7 +493,7 @@
                     <p>FIFA Mobile</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('cod')">
-                    <img src="极://via.placeholder.com/150/ff1a1a/ffffff?text=COD" alt="Call of Duty">
+                    <img src="https://via.placeholder.com/150/ff1a1a/ffffff?text=COD" alt="Call of Duty">
                     <p>Call of Duty</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('clash')">
@@ -518,7 +518,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic极/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script>
         function showSection(id){
             document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -532,12 +532,12 @@
             projectId: "freefirerewardsdz-69572",
             storageBucket: "freefirerewardsdz-69572.appspot.com",
             messagingSenderId: "145782934523",
-            appId: "1:145782934523:web:76a2f7c4d2e37f94极6595e"
+            appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
-        const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
+        const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64极3-11f0-aa29-8a5fb7be40ea";
         const adgemBaseUrl = "https://api.adgem.com/v1/wall?appid=31011&playerid=";
         let currentUserUid = null;
         let currentGameKey = "";
@@ -566,7 +566,7 @@
             freefire: [
                 {gems: 100, points: 1575},
                 {gems: 210, points: 3135},
-                {gems: 530, points: 7845},
+                {gems: 530, points极 7845},
                 {gems: 1080, points: 15765},
                 {gems: 2200, points: 31545},
             ],
@@ -678,7 +678,7 @@
             const currencyNames = {
                 gems: "جوهرة",
                 uc: "UC",
-                robux: "روبوكس",
+                rob极: "روبوكس",
                 coins: "عملة",
                 fc: "FC",
                 cp: "CP",
@@ -744,11 +744,11 @@
                     document.getElementById('login-btn').style.display = 'none';
                     document.getElementById('logout-btn').style.display = 'inline-block';
                     document.getElementById('offerwall-mylead').src = myleadBaseUrl + "?ml_sub1=" + user.uid;
-                    document.getElementById('offerwall-adgem').src = adgem极Url + user.uid;
+                    document.getElementById('offerwall-adgem').src = adgemBaseUrl + user.uid;
 
                     const userRef = db.ref('users/' + currentUserUid);
                     userRef.once('value').then(snap => {
-                        if(!snap.exists()){
+                        if(!极nap.exists()){
                             userRef.set({points: 0, userId: ""}).then(() => {
                                 document.getElementById('user-points').innerText = "0";
                                 document.getElementById('user-id').value = "";
@@ -790,4 +790,4 @@
     </script>
     <script type='text/javascript' src='//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js'></script>
 </body>
-</html>
+    </html>
