@@ -2,10 +2,10 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>نقاط Free Fire</title>
+<title>نقاط الألعاب</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- إضافة AdSense كما طلبوا -->
+<!-- AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1566555811591369"
      crossorigin="anonymous"></script>
 
@@ -48,6 +48,10 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
 
 .avatar { width:100px; height:100px; border-radius:50%; margin:auto; display:block; box-shadow:0 0 20px #33ccff; }
 
+/* Games */
+.games-container { display:flex; flex-wrap:wrap; gap:1em; justify-content:center; margin-top:20px; }
+.game-card { cursor:pointer; text-align:center; }
+
 /* Responsive */
 @media(max-width:600px){
   header{font-size:1.3em;padding:0.8em;} 
@@ -62,26 +66,26 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
 </head>
 <body>
 
-<header>🎮 نقاط Free Fire 🎮</header>
+<header>🎮 نقاط الألعاب 🎮</header>
 
 <nav>
 <button onclick="showSection('home')">الرئيسية</button>
 <button onclick="showSection('offers')">العروض</button>
 <button onclick="showSection('account')">حسابي</button>
-<button onclick="showSection('redeem')">طلب الشحن</button>
+<button onclick="showSection('redeem-games')">طلب الشحن</button>
 </nav>
 
-<!-- قسم الرئيسية -->
+<!-- الرئيسية -->
 <div id="home" class="section active">
-  <h1>🎮 نقاط Free Fire 🎮</h1>
-  <p>اكسب النقاط من خلال إكمال العروض وشحن جواهر Free Fire مجانًا 🎁</p>
+  <h1>🎮 نقاط الألعاب 🎮</h1>
+  <p>اكسب النقاط من خلال إكمال العروض وشحن الألعاب مجانًا 🎁</p>
   <h3 class="video-title">📹 فيديو شرح استخدام الموقع</h3>
   <div class="video-container">
-    <iframe src="https://www.youtube.com/embed/9Hl8H3RfvrU" title="شرح موقع" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/9Hl8H3RfvrU" title="شرح الموقع" allowfullscreen></iframe>
   </div>
 </div>
 
-<!-- قسم العروض -->
+<!-- العروض -->
 <div id="offers" class="section">
   <h2 style="text-align:center; color:#33ccff; text-shadow:0 0 10px #33ccff;">العروض المتاحة</h2>
   <div class="offers-container">
@@ -96,16 +100,16 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
   </div>
 </div>
 
-<!-- قسم الحسابي -->
+<!-- حسابي -->
 <div id="account" class="section">
-  <h1 style="text-align:center; color:#ff4d4d; text-shadow:0 0 10px #ff1a1a;">🎮 حسابي - Free Fire 🎮</h1>
+  <h1 style="text-align:center; color:#ff4d4d; text-shadow:0 0 10px #ff1a1a;">🎮 حسابي 🎮</h1>
   <img src="avatar.png" alt="Avatar" class="avatar">
   <div id="user-info" style="text-align:center; margin:10px 0;">لم تقم بتسجيل الدخول بعد.</div>
   <button id="login-btn">تسجيل الدخول بحساب Google</button>
   <button id="logout-btn" style="display:none;">تسجيل الخروج</button>
   <p style="text-align:center;">عدد نقاطك: <span id="user-points">0</span></p>
   <div style="text-align:center; margin-top:10px;">
-    <input type="text" id="user-id" placeholder="أدخل آيدي Free Fire">
+    <input type="text" id="user-id" placeholder="أدخل آيدي حسابك">
     <button id="save-id">حفظ الآيدي</button>
   </div>
   <h3 style="text-align:center; margin-top:20px;">🏆 أفضل اللاعبين</h3>
@@ -117,31 +121,60 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
   </table>
 </div>
 
-<!-- قسم طلب الشحن -->
-<div id="redeem" class="section">
-  <h2 style="text-align:center; color:#ffcc33;">طلب شحن الجواهر</h2>
-  <div id="enter-id-redeem" style="text-align:center;">
-    <p>أدخل الآيدي أولاً:</p>
-    <input type="text" id="redeem-user-id" placeholder="آيدي Free Fire">
-    <button id="save-redeem-id">✅ حفظ الآيدي</button>
+<!-- قسم طلب الشحن لكل لعبة -->
+<div id="redeem-games" class="section">
+  <h2 style="text-align:center; color:#ffcc33;">طلب شحن الألعاب</h2>
+  <div class="games-container">
+    <div class="game-card" onclick="showGameOptions('freefire')">
+      <img src="images/freefire.png" alt="Free Fire" style="width:150px; border-radius:10px; box-shadow:0 0 20px #ff4d4d;">
+      <p>Free Fire</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('pubg')">
+      <img src="images/pubg.png" alt="PUBG Mobile" style="width:150px; border-radius:10px; box-shadow:0 0 20px #33ccff;">
+      <p>PUBG Mobile</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('roblox')">
+      <img src="images/roblox.png" alt="Roblox" style="width:150px; border-radius:10px; box-shadow:0 0 20px #ff9900;">
+      <p>Roblox</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('efootball')">
+      <img src="images/efootball.png" alt="eFootball" style="width:150px; border-radius:10px; box-shadow:0 0 20px #33ff77;">
+      <p>eFootball</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('fifa')">
+      <img src="images/fifa.png" alt="FIFA Mobile" style="width:150px; border-radius:10px; box-shadow:0 0 20px #ffcc33;">
+      <p>FIFA Mobile</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('cod')">
+      <img src="images/cod.png" alt="Call of Duty" style="width:150px; border-radius:10px; box-shadow:0 0 20px #ff1a1a;">
+      <p>Call of Duty</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('clash')">
+      <img src="images/clash.png" alt="Clash of Clans" style="width:150px; border-radius:10px; box-shadow:0 0 20px #9933ff;">
+      <p>Clash of Clans</p>
+    </div>
   </div>
-  <div id="redeem-options" style="display:none; text-align:center; margin-top:10px;">
-    <p>اختر كمية الجواهر:</p>
-    <button onclick="redeem(1500,100)">✅ 100 جوهرة - 1500 نقطة</button>
-    <button onclick="redeem(3500,200)">✅ 200 جوهرة - 3500 نقطة</button>
-    <button onclick="redeem(8000,500)">✅ 500 جوهرة - 8000 نقطة</button>
+
+  <div id="game-options" style="display:none; text-align:center; margin-top:20px;">
+    <h3 id="game-title" style="margin-bottom:10px;"></h3>
+    <div id="options-buttons" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;"></div>
+    <button onclick="hideGameOptions()" style="margin-top:20px; padding:0.8em 1.5em; border-radius:10px; cursor:pointer; background:#ff4d4d; color:#fff;">🔙 رجوع</button>
   </div>
 </div>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
+// التنقل بين الأقسام
 function showSection(id){
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 }
 
+// إعداد Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
     authDomain: "freefirerewardsdz-69572.firebaseapp.com",
@@ -149,113 +182,218 @@ const firebaseConfig = {
     projectId: "freefirerewardsdz-69572",
     storageBucket: "freefirerewardsdz-69572.appspot.com",
     messagingSenderId: "145782934523",
-    appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
+    appId: "1:145782934523:web:76a2f7c4d2e37f94d659:6595e"
 };
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.database();
-const myleadBaseUrl="https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
-const adgemBaseUrl="https://api.adgem.com/v1/wall?appid=31011&playerid=";
-let currentUserUid=null;
+const auth = firebase.auth();
+const db = firebase.database();
 
-function updateLeaderboard(){
-    const leaderboardRef=db.ref('users');
-    leaderboardRef.orderByChild('points').limitToLast(10).on('value',snapshot=>{
-        const tbody=document.getElementById('leaderboard-body'); tbody.innerHTML='';
-        if(!snapshot.exists()){ 
-            tbody.innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>'; 
-            return; 
-        }
-        const users=[]; snapshot.forEach(child=>{ users.push(child.val()); });
-        users.sort((a,b)=>(b.points||0)-(a.points||0));
-        users.forEach((user,index)=>{
-            const row=`<tr><td>${index+1}</td><td>${user.userId||'غير محدد'}</td><td>${user.points||0}</td></tr>`;
-            tbody.innerHTML+=row;
+let currentUserUid = null;
+
+// تسجيل الدخول
+const loginBtn = document.getElementById('login-btn');
+const logoutBtn = document.getElementById('logout-btn');
+loginBtn.onclick = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+    .then(result => {
+        currentUserUid = result.user.uid;
+        document.getElementById('user-info').innerText = `مرحبًا، ${result.user.displayName}`;
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        db.ref('users/'+currentUserUid).once('value').then(snap=>{
+            if(!snap.exists()){
+                db.ref('users/'+currentUserUid).set({points:0,userId:""});
+            }
+            updatePoints();
+            updateLeaderboard();
         });
+    }).catch(err => alert(err.message));
+};
+
+// تسجيل الخروج
+logoutBtn.onclick = () => {
+    auth.signOut().then(()=>{
+        currentUserUid = null;
+        document.getElementById('user-info').innerText = 'لم تقم بتسجيل الدخول بعد.';
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+        document.getElementById('user-points').innerText = '0';
+    });
+};
+
+// حفظ آيدي المستخدم
+document.getElementById('save-id').onclick = () => {
+    const userId = document.getElementById('user-id').value.trim();
+    if(!currentUserUid) return alert('سجل الدخول أولاً');
+    db.ref('users/'+currentUserUid).update({userId});
+    alert('تم حفظ الآيدي بنجاح');
+};
+
+// تحديث نقاط المستخدم
+function updatePoints(){
+    if(!currentUserUid) return;
+    db.ref('users/'+currentUserUid+'/points').once('value').then(snap=>{
+        document.getElementById('user-points').innerText = snap.val() || 0;
     });
 }
 
-window.addEventListener('load',()=>{
-    auth.onAuthStateChanged(user=>{
-        if(user){
-            currentUserUid=user.uid;
-            document.getElementById('user-info').innerText=`مرحبًا ${user.displayName}`;
-            document.getElementById('login-btn').style.display='none';
-            document.getElementById('logout-btn').style.display='inline-block';
-            document.getElementById('offerwall-mylead').src=myleadBaseUrl+"?ml_sub1="+user.uid;
-            document.getElementById('offerwall-adgem').src=adgemBaseUrl+user.uid;
+// تحديث لوحة المتصدرين
+function updateLeaderboard(){
+    db.ref('users').orderByChild('points').limitToLast(10).once('value').then(snap=>{
+        const tbody = document.getElementById('leaderboard-body');
+        tbody.innerHTML = '';
+        const users = [];
+        snap.forEach(s=>{
+            users.push({name: s.val().userId || 'غير محدد', points: s.val().points || 0});
+        });
+        users.sort((a,b)=>b.points-a.points);
+        users.forEach((u,i)=>{
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${i+1}</td><td>${u.name}</td><td>${u.points}</td>`;
+            tbody.appendChild(tr);
+        });
+        if(users.length===0) tbody.innerHTML = '<tr><td colspan="3" style="padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
+    });
+}
 
-            const userRef=db.ref('users/'+currentUserUid);
-            userRef.once('value').then(snap=>{
-                if(!snap.exists()){
-                    userRef.set({points:0,userId:""}).then(()=>{
-                        document.getElementById('user-points').innerText="0";
-                        document.getElementById('user-id').value="";
-                    });
-                } else {
-                    const data=snap.val();
-                    document.getElementById('user-points').innerText=data?.points||"0";
-                    document.getElementById('user-id').value=data?.userId||"";
-                }
-            });
+// بيانات الشحن لكل لعبة
+const gameData = {
+  freefire: [
+    {price:1.05, gems:100, points:1575},
+    {price:2.09, gems:210, points:3135},
+    {price:5.23, gems:530, points:7845},
+    {price:10.51, gems:1080, points:15765},
+    {price:21.03, gems:2200, points:31545},
+  ],
+  pubg: [
+    {price:0.99, uc:60, points:1485},
+    {price:1.99, uc:120, points:2985},
+    {price:4.99, uc:300, points:7485},
+    {price:9.99, uc:600, points:14985},
+    {price:19.99, uc:1200, points:29985},
+  ],
+  roblox: [
+    {price:5, robux:400, points:7500},
+    {price:10, robux:800, points:15000},
+    {price:20, robux:1600, points:30000},
+    {price:50, robux:4000, points:75000},
+    {price:100, robux:8000, points:150000},
+  ],
+  efootball: [
+    {price:4.49, coins:550, points:6735},
+    {price:7.18, coins:750, points:10770},
+    {price:8.97, coins:1040, points:13455},
+    {price:17.95, coins:2130, points:26925},
+    {price:26.92, coins:3250, points:40380},
+    {price:44.87, coins:5700, points:67305},
+    {price:89.74, coins:12800, points:134610},
+  ],
+  fifa: [
+    {price:0.39, fc:40, points:585},
+    {price:1.19, fc:120, points:1785},
+    {price:2.99, fc:300, points:4485},
+    {price:5.99, fc:600, points:8985},
+    {price:11.99, fc:1200, points:17985},
+    {price:29.99, fc:3000, points:44985},
+    {price:59.99, fc:6000, points:89985},
+    {price:99.99, fc:12000, points:149985},
+  ],
+  cod: [
+    {price:0.99, cp:80, points:1485},
+    {price:2.49, cp:200, points:3735},
+    {price:6.49, cp:500, points:9735},
+    {price:14.99, cp:1200, points:22485},
+    {price:34.99, cp:2800, points:52485},
+    {price:69.99, cp:5600, points:104985},
+    {price:99.99, cp:8000, points:149985},
+  ],
+  clash: [
+    {price:5, gems_clash:500, points:7500},
+    {price:10, gems_clash:1200, points:15000},
+    {price:20, gems_clash:2500, points:30000},
+    {price:50, gems_clash:6500, points:75000},
+    {price:100, gems_clash:14000, points:150000},
+  ],
+};
 
-            updateLeaderboard();
-
-        } else {
-            currentUserUid=null;
-            document.getElementById('user-info').innerText='لم تقم بتسجيل الدخول بعد';
-            document.getElementById('login-btn').style.display='inline-block';
-            document.getElementById('logout-btn').style.display='none';
-            document.getElementById('user-points').innerText="0";
-            document.getElementById('user-id').value="";
-            document.getElementById('leaderboard-body').innerHTML='<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
-        }
+// عرض خيارات الشحن
+function showGameOptions(gameKey){
+    const game = gameData[gameKey];
+    const titleMap = {
+        freefire:"Free Fire", pubg:"PUBG Mobile", roblox:"Roblox",
+        efootball:"eFootball", fifa:"FIFA Mobile", cod:"Call of Duty",
+        clash:"Clash of Clans"
+    };
+    
+    const optionsContainer = document.getElementById('options-buttons');
+    optionsContainer.innerHTML = "";
+    
+    game.forEach(option => {
+        const btn = document.createElement('button');
+        const quantity = option.gems||option.uc||option.robux||option.coins||option.fc||option.cp||option.gems_clash;
+        const unit = option.gems ? "جوهرة" :
+                     option.uc ? "UC" :
+                     option.robux ? "روبوكس" :
+                     option.coins ? "عملة" :
+                     option.fc ? "FC" :
+                     option.cp ? "CP" :
+                     option.gems_clash ? "جوهرة" : "";
+        btn.innerText = `${quantity} ${unit} - ${option.points} نقطة`;
+        btn.style.padding = "0.8em 1.2em";
+        btn.style.margin = "5px";
+        btn.style.borderRadius = "10px";
+        btn.style.cursor = "pointer";
+        btn.style.background = "#ff4d4d";
+        btn.style.color = "#fff";
+        btn.onclick = () => redeem(option.points, gameKey, option);
+        optionsContainer.appendChild(btn);
     });
 
-    document.getElementById('login-btn').addEventListener('click',()=>{
-        const provider=new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider);
-    });
+    document.getElementById('game-title').innerText = "🎮 شحن " + titleMap[gameKey];
+    document.getElementById('game-options').style.display = "block";
+}
 
-    document.getElementById('logout-btn').addEventListener('click',()=>{ auth.signOut(); });
+function hideGameOptions(){
+    document.getElementById('game-options').style.display = "none";
+}
 
-    document.getElementById('save-id').addEventListener('click',()=>{
-        const id=document.getElementById('user-id').value.trim();
-        if(!id||!currentUserUid) return alert('تأكد من تسجيل الدخول وكتابة الآيدي');
-        db.ref('users/'+currentUserUid).update({userId:id}).then(()=>alert('✅ تم حفظ الآيدي بنجاح'));
-        updateLeaderboard();
-    });
-
-    document.getElementById('save-redeem-id').addEventListener('click',()=>{
-        const redeemId=document.getElementById('redeem-user-id').value.trim();
-        if(!redeemId) return alert('⚠️ أدخل الآيدي أولاً');
-        if(!currentUserUid) return alert('⚠️ سجل الدخول أولاً');
-        db.ref('users/'+currentUserUid).update({userId:redeemId});
-        document.getElementById('enter-id-redeem').style.display='none';
-        document.getElementById('redeem-options').style.display='block';
-    });
-
-});
-
-// دالة شحن الجواهر + إشعار التليجرام
-function redeem(pointsRequired,gems){
-    if(!currentUserUid) return alert('سجل الدخول أولاً');
+// دالة الشحن مع التليجرام
+function redeem(pointsRequired, gameKey, option){
+    if(!currentUserUid) return alert('⚠️ سجل الدخول أولاً');
     db.ref('users/'+currentUserUid).once('value').then(snap=>{
-        const data=snap.val();
+        const data = snap.val();
         if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
-        if((data.points||0)<pointsRequired) return alert('❌ ليس لديك نقاط كافية لهذا الشحن.');
-        db.ref('users/'+currentUserUid).update({points:data.points-pointsRequired});
+        if((data.points||0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية.');
 
-        // إشعار التليجرام
-        const botToken="8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
-        const chatId="6285856969";
-        const message=`📩 طلب شحن جديد\n💎 الجواهر: ${gems}\n🆔 الآيدي: ${data.userId||'غير محدد'}`;
+        db.ref('users/'+currentUserUid).update({points: data.points - pointsRequired});
+        updatePoints();
+
+        const gameNames = {
+            freefire:"Free Fire", pubg:"PUBG Mobile", roblox:"Roblox",
+            efootball:"eFootball", fifa:"FIFA Mobile", cod:"Call of Duty",
+            clash:"Clash of Clans"
+        };
+        const quantity = option.gems||option.uc||option.robux||option.coins||option.fc||option.cp||option.gems_clash;
+        const unit = option.gems ? "جوهرة" :
+                     option.uc ? "UC" :
+                     option.robux ? "روبوكس" :
+                     option.coins ? "عملة" :
+                     option.fc ? "FC" :
+                     option.cp ? "CP" :
+                     option.gems_clash ? "جوهرة" : "";
+
+        const message = `📩 طلب شحن جديد\n🎮 اللعبة: ${gameNames[gameKey]}\n🔹 الكمية: ${quantity} ${unit}\n🆔 الآيدي: ${data.userId || 'غير محدد'}`;
+
+        const botToken = "8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
+        const chatId = "6285856969";
+
         fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
-          .then(()=>alert('✅ تم إرسال طلب الشحن'))
-          .catch(()=>alert('❌ فشل إرسال الطلب'));
+          .then(() => alert('✅ تم إرسال طلب الشحن بنجاح'))
+          .catch(() => alert('❌ فشل إرسال طلب الشحن'));
     });
 }
 </script>
-     <script type='text/javascript' src='//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js'></script>
+
 </body>
 </html>
