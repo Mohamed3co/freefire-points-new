@@ -31,6 +31,7 @@
             color: var(--light);
             min-height: 100vh;
             background-attachment: fixed;
+            padding-bottom: 20px;
         }
         
         /* Header */
@@ -42,6 +43,8 @@
             font-weight: bold; 
             letter-spacing: 1px; 
             animation: headerGlow 2s infinite alternate; 
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
         
         @keyframes headerGlow { 
@@ -67,6 +70,8 @@
             cursor: pointer; 
             transition: transform 0.3s, box-shadow 0.3s; 
             border: none;
+            position: relative;
+            overflow: hidden;
         }
         
         nav button:nth-child(1) { 
@@ -117,7 +122,7 @@
         .section { 
             display: none; 
             padding: 1em; 
-            max-width: 1000px; 
+            max-width: 1200px; 
             margin: auto; 
             animation: fadeIn 0.5s ease forwards; 
         }
@@ -191,32 +196,40 @@
         .games-container { 
             display: flex; 
             flex-wrap: wrap; 
-            gap: 1em; 
+            gap: 1.5em; 
             justify-content: center; 
             margin-top: 20px; 
         }
         
         .game-card { 
             cursor: pointer; 
-            transition: transform 0.3s; 
+            transition: transform 0.3s, box-shadow 0.3s; 
             text-align: center; 
+            background: rgba(30, 30, 50, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 160px;
         }
         
         .game-card:hover { 
-            transform: scale(1.05); 
+            transform: scale(1.08) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            background: rgba(40, 40, 60, 0.8);
         }
         
         .game-card img { 
-            width: 150px; 
-            height: 150px;
+            width: 130px; 
+            height: 130px;
             object-fit: cover;
             border-radius: 10px; 
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
         
         .game-card p { 
-            margin-top: 5px; 
+            margin-top: 10px; 
             font-weight: bold;
+            color: white;
         }
         
         /* قسم الحسابي المحسن */
@@ -329,14 +342,14 @@
         .option-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
             margin: 20px 0;
         }
         
         .option-btn {
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 15px;
+            border-radius: 12px;
             border: none;
             background: linear-gradient(135deg, var(--primary), #ff1a1a);
             color: var(--light);
@@ -347,31 +360,34 @@
             flex-direction: column;
             align-items: center;
             min-width: 180px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .option-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
         }
         
         .coins-amount {
-            font-size: 1.2em;
+            font-size: 1.3em;
             font-weight: bold;
             margin-bottom: 5px;
         }
         
         .points-cost {
-            font-size: 0.9em;
+            font-size: 1em;
             opacity: 0.9;
         }
         
         .back-btn {
             background: linear-gradient(135deg, var(--gray), #555);
             margin-top: 20px;
+            padding: 12px 25px;
         }
         
         .back-btn:hover {
             box-shadow: 0 5px 15px rgba(136, 136, 136, 0.4);
+            transform: translateY(-3px);
         }
         
         /* Responsive */
@@ -383,9 +399,11 @@
             #home h1 { font-size: 2em; } 
             #home p { font-size: 1em; }
             #home h3.video-title { font-size: 1em; }
-            .game-card img { width: 120px; height: 120px; }
+            .game-card { width: 140px; }
+            .game-card img { width: 110px; height: 110px; }
             .input-group { flex-direction: column; }
             .option-btn { min-width: 150px; }
+            .account-card { padding: 20px; }
         }
     </style>
 </head>
@@ -497,9 +515,9 @@
                     <img src="https://via.placeholder.com/150/ff1a1a/ffffff?text=COD" alt="Call of Duty">
                     <p>Call of Duty</p>
                 </div>
-                <div class="game-card" onclick="showGameOptions('clash')">
-                    <img src="https://via.placeholder.com/150/9933ff/ffffff?text=Clash" alt="Clash of Clans">
-                    <p>Clash of Clans</p>
+                <div class="game-card" onclick="showGameOptions('bloodstrike')">
+                    <img src="https://via.placeholder.com/150/9933ff/ffffff?text=Blood+Strike" alt="Blood Strike">
+                    <p>Blood Strike</p>
                 </div>
             </div>
             
@@ -562,63 +580,66 @@
             });
         }
 
-        // بيانات الشحن لكل لعبة
+        // بيانات الشحن لكل لعبة (محدثة)
         const gameData = {
             freefire: [
-                {gems: 100, points: 1575},
-                {gems: 210, points: 3135},
-                {gems: 530, points: 7845},
-                {gems: 1080, points: 15765},
-                {gems: 2200, points: 31545},
+                {gems: "100+10", points: 2670},
+                {gems: "210+21", points: 5775},
+                {gems: "530+53", points: 14220},
+                {gems: "1080+108", points: 27225},
+                {gems: "2200+220", points: 55440},
             ],
             pubg: [
-                {uc: 60, points: 1485},
-                {uc: 120, points: 2985},
-                {uc: 300, points: 7485},
-                {uc: 600, points: 14985},
-                {uc: 1200, points: 29985},
+                {uc: 60, points: 3780},
+                {uc: 325, points: 14775},
+                {uc: 660, points: 28335},
+                {uc: 1800, points: 68340},
+                {uc: 3850, points: 135555},
+                {uc: 8100, points: 271005},
             ],
             roblox: [
-                {robux: 400, points: 7500},
-                {robux: 800, points: 15000},
-                {robux: 1600, points: 30000},
-                {robux: 4000, points: 75000},
-                {robux: 8000, points: 150000},
+                {robux: 400, points: 15450},
+                {robux: 800, points: 27660},
+                {robux: 1700, points: 55440},
+                {robux: 4500, points: 133215},
+                {robux: 10000, points: 268890},
             ],
             efootball: [
-                {coins: 550, points: 6735},
-                {coins: 750, points: 10770},
-                {coins: 1040, points: 13455},
-                {coins: 2130, points: 26925},
-                {coins: 3250, points: 40380},
-                {coins: 5700, points: 67305},
-                {coins: 12800, points: 134610},
+                {coins: 550, points: 16665},
+                {coins: 750, points: 24330},
+                {coins: 1040, points: 32220},
+                {coins: 2130, points: 61005},
+                {coins: 3250, points: 88785},
+                {coins: 5700, points: 149445},
             ],
             fifa: [
-                {fc: 40, points: 585},
-                {fc: 120, points: 1785},
-                {fc: 300, points: 4485},
-                {fc: 600, points: 8985},
-                {fc: 1200, points: 17985},
-                {fc: 3000, points: 44985},
-                {fc: 6000, points: 89985},
-                {fc: 12000, points: 149985},
+                {fc: 499, points: 16665},
+                {fc: 520, points: 16665},
+                {fc: 999, points: 31005},
+                {fc: 1070, points: 31005},
+                {fc: 1999, points: 61005},
+                {fc: 2200, points: 61005},
+                {fc: 4999, points: 149445},
+                {fc: 5750, points: 149445},
+                {fc: 9999, points: 294450},
+                {fc: 12000, points: 294450},
             ],
             cod: [
-                {cp: 80, points: 1485},
-                {cp: 200, points: 3735},
-                {cp: 500, points: 9735},
-                {cp: 1200, points: 22485},
-                {cp: 2800, points: 52485},
-                {cp: 5600, points: 104985},
-                {cp: 8000, points: 149985},
+                {cp: 420, points: 15450},
+                {cp: 880, points: 30555},
+                {cp: 2400, points: 75450},
+                {cp: 5000, points: 148005},
+                {cp: 10800, points: 294330},
             ],
-            clash: [
-                {gems_clash: 500, points: 7500},
-                {gems_clash: 1200, points: 15000},
-                {gems_clash: 2500, points: 30000},
-                {gems_clash: 6500, points: 75000},
-                {gems_clash: 14000, points: 150000},
+            bloodstrike: [
+                {gold: 105, points: 3105},
+                {gold: 320, points: 8340},
+                {gold: 540, points: 13215},
+                {gold: 1100, points: 25440},
+                {gold: 2260, points: 47670},
+                {gold: 5800, points: 115440},
+                {pass: "Elite Pass", points: 10995},
+                {pass: "Premium Pass", points: 22215},
             ],
         };
 
@@ -632,7 +653,7 @@
                 efootball: "eFootball",
                 fifa: "FIFA Mobile",
                 cod: "Call of Duty",
-                clash: "Clash of Clans"
+                bloodstrike: "Blood Strike"
             };
             
             // إخفاء قائمة الألعاب وإظهار خيارات الشحن
@@ -683,7 +704,8 @@
                 coins: "عملة",
                 fc: "FC",
                 cp: "CP",
-                gems_clash: "جوهرة"
+                gold: "ذهب",
+                pass: "باس"
             };
             
             return currencyNames[currencyType] || "عنصر";
@@ -714,7 +736,7 @@
                     efootball: "eFootball",
                     fifa: "FIFA Mobile",
                     cod: "Call of Duty",
-                    clash: "Clash of Clans"
+                    bloodstrike: "Blood Strike"
                 };
 
                 // تحديد نوع العملة وكميتها
@@ -723,7 +745,7 @@
                 let currencyName = getCurrencyName(currencyType);
 
                 // إنشاء رسالة التليجرام
-                const message = `📩 طلب شحن جديد\n🎮 اللعبة: ${gameNames[gameKey]}\n🔹 الكمية: ${currencyAmount} ${currencyName}\n🆔 الآيدي: ${gameId}\n👤 المستخدم: ${data.userId || 'غير محدد'}`;
+                const message = `📩 طلب شحن جديد\n🎮 اللعبة: ${gameNames[gameKey]}\n🔹 الكمية: ${currencyAmount} ${currencyName}\n🆔 الآيدي: ${gameId}\n👤 المستخدم: ${data.userId || 'غير محدد'}\n⏰ الوقت: ${new Date().toLocaleString()}`;
 
                 const botToken = "8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
                 const chatId = "6285856969";
