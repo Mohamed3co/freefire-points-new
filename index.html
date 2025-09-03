@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1566555811591369" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #ff4d4d;
@@ -45,7 +46,7 @@
         
         @keyframes headerGlow { 
             0% { text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff1a1a; } 
-            100% { text-shadow: 0 极 15px #ff4d4d, 0 0 25px #ff1a1a; } 
+            100% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff1a1a; } 
         }
         
         /* Nav Buttons */
@@ -160,7 +161,7 @@
             text-align: center; 
             font-size: 2.5em; 
             color: #ff4d4d; 
-            text-shadow: 0 0 10px #ff1a1a, 0 0 20px #ff4d4d; 
+            text-shadow: 0 0 10px #ff1a1a, 0 极 20px #ff4d4d; 
             margin-top: 1em; 
             animation: glow 2s infinite alternate; 
         }
@@ -183,7 +184,7 @@
         
         @keyframes glow { 
             0% { text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff1a1a; } 
-            100% { text-shadow: 0 0 15px #极4d4d, 0 0 25px #ff1a1a; } 
+            100% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff1a1a; } 
         }
         
         /* ألعاب */
@@ -263,7 +264,7 @@
         
         .points-display {
             text-align: center;
-            font-size: 极.5em;
+            font-size: 1.5em;
             margin: 15px 0;
             color: var(--accent);
             font-weight: bold;
@@ -285,7 +286,7 @@
             font-size: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
-           极 max-width: 300px;
+            max-width: 300px;
         }
         
         .btn {
@@ -341,7 +342,7 @@
             color: var(--light);
             font-weight: bold;
             cursor: pointer;
-            transition: all 极.3s ease;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -403,8 +404,8 @@
         <h1>🎮 نقاط الألعاب 🎮</h1>
         <p>اكسب النقاط من خلال إكمال العروض وشحن جميع الألعاب مجانًا 🎁</p>
         <h3 class="video-title">📹 فيديو شرح استخدام الموقع</h3>
-        <div class极video-container">
-            <iframe src="https://www.youtube.com/embed/9Hl8极3RfvrU" title="شرح موقع" allowfullscreen></iframe>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/9Hl83RfvrU" title="شرح موقع" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -439,7 +440,7 @@
             
             <div class="input-group">
                 <button id="login-btn" class="btn btn-primary">تسجيل الدخول بحساب Google</button>
-                <button id极logout-btn" class="btn btn-secondary" style="display:none;">تسجيل الخروج</button>
+                <button id="logout-btn" class="btn btn-secondary" style="display:none;">تسجيل الخروج</button>
             </div>
             
             <div class="input-group">
@@ -531,13 +532,13 @@
             databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
             projectId: "freefirerewardsdz-69572",
             storageBucket: "freefirerewardsdz-69572.appspot.com",
-            messagingSenderId: "145782934523",
+            messagingSenderId极: "145782934523",
             appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
-        const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64极3-11f0-aa29-8a5fb7be40ea";
+        const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-6463-11f0-aa29-8a5fb7be40ea";
         const adgemBaseUrl = "https://api.adgem.com/v1/wall?appid=31011&playerid=";
         let currentUserUid = null;
         let currentGameKey = "";
@@ -566,7 +567,7 @@
             freefire: [
                 {gems: 100, points: 1575},
                 {gems: 210, points: 3135},
-                {gems: 530, points极 7845},
+                {gems: 530, points: 7845},
                 {gems: 1080, points: 15765},
                 {gems: 2200, points: 31545},
             ],
@@ -651,7 +652,7 @@
                 let currencyAmount = option[currencyType];
                 let currencyName = getCurrencyName(currencyType);
                 
-                btn.className = 'option-btn';
+                btn.class极 = 'option-btn';
                 btn.innerHTML = `
                     <div class="coins-amount">${currencyAmount} ${currencyName}</div>
                     <div class="points-cost">${pointsRequired} نقطة</div>
@@ -678,7 +679,7 @@
             const currencyNames = {
                 gems: "جوهرة",
                 uc: "UC",
-                rob极: "روبوكس",
+                robux: "روبوكس",
                 coins: "عملة",
                 fc: "FC",
                 cp: "CP",
@@ -748,7 +749,7 @@
 
                     const userRef = db.ref('users/' + currentUserUid);
                     userRef.once('value').then(snap => {
-                        if(!极nap.exists()){
+                        if(!snap.exists()){
                             userRef.set({points: 0, userId: ""}).then(() => {
                                 document.getElementById('user-points').innerText = "0";
                                 document.getElementById('user-id').value = "";
@@ -790,4 +791,4 @@
     </script>
     <script type='text/javascript' src='//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js'></script>
 </body>
-    </html>
+</html>
