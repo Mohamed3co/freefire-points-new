@@ -109,7 +109,7 @@
         }
         
         nav button:nth-child(4):hover { 
-            box-shadow: 0 0 30px #ffcc33, 0 0 60px #ff9900; 
+            box-shadow: 0 极 30px #ffcc33, 0 0 60px #ff9900; 
         }
         
         /* Sections */
@@ -138,7 +138,7 @@
             overflow: hidden; 
             margin-top: 1em; 
             border-radius: 15px; 
-            box-shadow: 0 0 30px #ff4d4d, 0 0 50px #ff1a1a; 
+            box-shadow: 0 0 30px #ff4d4d, 极 0 50px #ff1a1a; 
         }
         
         .video-container iframe { 
@@ -178,7 +178,7 @@
             color: #ffcc33; 
             text-shadow: 0 0 5px #ff9900; 
             margin-bottom: 10px; 
-            font-size: 1.2em; 
+            font-size: 极.2em; 
         }
         
         @keyframes glow { 
@@ -342,6 +342,10 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 180px;
         }
         
         .option-btn:hover {
@@ -349,8 +353,20 @@
             box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
         }
         
+        .coins-amount {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .points-cost {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
         .back-btn {
             background: linear-gradient(135deg, var(--gray), #555);
+            margin-top: 20px;
         }
         
         .back-btn:hover {
@@ -368,6 +384,7 @@
             #home h3.video-title { font-size: 1em; }
             .game-card img { width: 120px; height: 120px; }
             .input-group { flex-direction: column; }
+            .option-btn { min-width: 150px; }
         }
     </style>
 </head>
@@ -453,15 +470,6 @@
         <div class="account-card">
             <h2 style="text-align:center; color:#ffcc33;">طلب شحن الألعاب</h2>
             
-            <!-- إدخال الآيدي -->
-            <div id="enter-id-redeem" style="text-align:center; margin: 20px 0;">
-                <h3 style="margin-bottom: 15px;">أدخل آيدي اللعبة أولاً:</h3>
-                <div class="input-group">
-                    <input type="text" id="redeem-user-id" class="input-field" placeholder="آيدي اللعبة">
-                    <button id="save-redeem-id" class="btn btn-primary">✅ حفظ الآيدي</button>
-                </div>
-            </div>
-            
             <!-- صور الألعاب -->
             <div id="games-list" class="games-container">
                 <div class="game-card" onclick="showGameOptions('freefire')">
@@ -485,7 +493,7 @@
                     <p>FIFA Mobile</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('cod')">
-                    <img src="https://via.placeholder.com/150/ff1a1a/ffffff?text=COD" alt="Call of Duty">
+                    <img src="极://via.placeholder.com/150/ff1a1a/ffffff?text=COD" alt="Call of Duty">
                     <p>Call of Duty</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('clash')">
@@ -503,14 +511,14 @@
                 </div>
                 
                 <div id="options-buttons" class="option-buttons"></div>
-                <button onclick="hideGameOptions()" class="btn back-btn">🔙 رجوع</button>
+                <button onclick="hideGameOptions()" class="btn back-btn">🔙 رجوع إلى قائمة الألعاب</button>
             </div>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic极/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script>
         function showSection(id){
             document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -524,7 +532,7 @@
             projectId: "freefirerewardsdz-69572",
             storageBucket: "freefirerewardsdz-69572.appspot.com",
             messagingSenderId: "145782934523",
-            appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
+            appId: "1:145782934523:web:76a2f7c4d2e37f94极6595e"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -556,60 +564,60 @@
         // بيانات الشحن لكل لعبة
         const gameData = {
             freefire: [
-                {price: 1.05, gems: 100, points: 1575},
-                {price: 2.09, gems: 210, points: 3135},
-                {price: 5.23, gems: 530, points: 7845},
-                {price: 10.51, gems: 1080, points: 15765},
-                {price: 21.03, gems: 2200, points: 31545},
+                {gems: 100, points: 1575},
+                {gems: 210, points: 3135},
+                {gems: 530, points: 7845},
+                {gems: 1080, points: 15765},
+                {gems: 2200, points: 31545},
             ],
             pubg: [
-                {price: 0.99, uc: 60, points: 1485},
-                {price: 1.99, uc: 120, points: 2985},
-                {price: 4.99, uc: 300, points: 7485},
-                {price: 9.99, uc: 600, points: 14985},
-                {price: 19.99, uc: 1200, points: 29985},
+                {uc: 60, points: 1485},
+                {uc: 120, points: 2985},
+                {uc: 300, points: 7485},
+                {uc: 600, points: 14985},
+                {uc: 1200, points: 29985},
             ],
             roblox: [
-                {price: 5, robux: 400, points: 7500},
-                {price: 10, robux: 800, points: 15000},
-                {price: 20, robux: 1600, points: 30000},
-                {price: 50, robux: 4000, points: 75000},
-                {price: 100, robux: 8000, points: 150000},
+                {robux: 400, points: 7500},
+                {robux: 800, points: 15000},
+                {robux: 1600, points: 30000},
+                {robux: 4000, points: 75000},
+                {robux: 8000, points: 150000},
             ],
             efootball: [
-                {price: 4.49, coins: 550, points: 6735},
-                {price: 7.18, coins: 750, points: 10770},
-                {price: 8.97, coins: 1040, points: 13455},
-                {price: 17.95, coins: 2130, points: 26925},
-                {price: 26.92, coins: 3250, points: 40380},
-                {price: 44.87, coins: 5700, points: 67305},
-                {price: 89.74, coins: 12800, points: 134610},
+                {coins: 550, points: 6735},
+                {coins: 750, points: 10770},
+                {coins: 1040, points: 13455},
+                {coins: 2130, points: 26925},
+                {coins: 3250, points: 40380},
+                {coins: 5700, points: 67305},
+                {coins: 12800, points: 134610},
             ],
             fifa: [
-                {price: 0.39, fc: 40, points: 585},
-                {price: 1.19, fc: 120, points: 1785},
-                {price: 2.99, fc: 300, points: 4485},
-                {price: 5.99, fc: 600, points: 8985},
-                {price: 11.99, fc: 1200, points: 17985},
-                {price: 29.99, fc: 3000, points: 44985},
-                {price: 59.99, fc: 6000, points: 89985},
-                {price: 99.99, fc: 12000, points: 149985},
+                {fc: 40, points: 585},
+                {fc: 120, points: 1785},
+                {fc: 300, points: 4485},
+                {fc: 600, points: 8985},
+                {fc: 1200, points: 17985},
+                {fc: 3000, points: 44985},
+                {fc: 6000, points: 89985},
+                {fc: 12000, points: 149985},
             ],
             cod: [
-                {price: 0.99, cp: 80, points: 1485},
-                {price: 2.49, cp: 200, points: 3735},
-                {price: 6.49, cp: 500, points: 9735},
-                {price: 14.99, cp: 1200, points: 22485},
-                {price: 34.99, cp: 2800, points: 52485},
-                {price: 69.99, cp: 5600, points: 104985},
-                {price: 99.99, cp: 8000, points: 149985},
+                {cp: 80, points: 1485},
+                {cp: 200, points: 3735},
+                {cp: 500, points: 9735},
+                {cp: 1200, points: 22485},
+                {cp: 2800, points: 52485},
+                {cp: 5600, points: 104985},
+                {cp: 8000, points: 149985},
             ],
             clash: [
-                {price: 5, gems_clash: 500, points: 7500},
-                {price: 10, gems_clash: 1200, points: 15000},
-                {price: 20, gems_clash: 2500, points: 30000},
-                {price: 50, gems_clash: 6500, points: 75000},
-                {price: 100, gems_clash: 14000, points: 150000},
+                {gems_clash: 500, points: 7500},
+                {gems_clash: 1200, points: 15000},
+                {gems_clash: 2500, points: 30000},
+                {gems_clash: 6500, points: 75000},
+                {gems_clash: 14000, points: 150000},
             ],
         };
 
@@ -637,17 +645,18 @@
             game.forEach(option => {
                 let pointsRequired = option.points;
                 const btn = document.createElement('button');
-                let quantity = option.gems || option.uc || option.robux || option.coins || option.fc || option.cp || option.gems_clash;
-                let unit = option.gems ? "جوهرة" :
-                           option.uc ? "UC" :
-                           option.robux ? "روبوكس" :
-                           option.coins ? "عملة" :
-                           option.fc ? "FC" :
-                           option.cp ? "CP" :
-                           option.gems_clash ? "جوهرة" : "";
-
-                btn.innerText = `${quantity} ${unit} - ${pointsRequired} نقطة`;
+                
+                // تحديد نوع العملة وكميتها
+                let currencyType = Object.keys(option).find(key => key !== 'points');
+                let currencyAmount = option[currencyType];
+                let currencyName = getCurrencyName(currencyType);
+                
                 btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <div class="coins-amount">${currencyAmount} ${currencyName}</div>
+                    <div class="points-cost">${pointsRequired} نقطة</div>
+                `;
+                
                 btn.onclick = () => {
                     const gameId = document.getElementById('game-id-input').value.trim();
                     if (!gameId) {
@@ -662,6 +671,21 @@
             });
 
             document.getElementById('game-title').innerText = "🎮 شحن " + titleMap[gameKey];
+        }
+
+        // الحصول على اسم العملة بالعربية
+        function getCurrencyName(currencyType) {
+            const currencyNames = {
+                gems: "جوهرة",
+                uc: "UC",
+                robux: "روبوكس",
+                coins: "عملة",
+                fc: "FC",
+                cp: "CP",
+                gems_clash: "جوهرة"
+            };
+            
+            return currencyNames[currencyType] || "عنصر";
         }
 
         function hideGameOptions(){
@@ -692,17 +716,13 @@
                     clash: "Clash of Clans"
                 };
 
-                const quantity = option.gems || option.uc || option.robux || option.coins || option.fc || option.cp || option.gems_clash;
-                const unit = option.gems ? "جوهرة" :
-                             option.uc ? "UC" :
-                             option.robux ? "روبوكس" :
-                             option.coins ? "عملة" :
-                             option.fc ? "FC" :
-                             option.cp ? "CP" :
-                             option.gems_clash ? "جوهرة" : "";
+                // تحديد نوع العملة وكميتها
+                let currencyType = Object.keys(option).find(key => key !== 'points');
+                let currencyAmount = option[currencyType];
+                let currencyName = getCurrencyName(currencyType);
 
                 // إنشاء رسالة التليجرام
-                const message = `📩 طلب شحن جديد\n🎮 اللعبة: ${gameNames[gameKey]}\n🔹 الكمية: ${quantity} ${unit}\n🆔 الآيدي: ${gameId}\n👤 المستخدم: ${data.userId || 'غير محدد'}`;
+                const message = `📩 طلب شحن جديد\n🎮 اللعبة: ${gameNames[gameKey]}\n🔹 الكمية: ${currencyAmount} ${currencyName}\n🆔 الآيدي: ${gameId}\n👤 المستخدم: ${data.userId || 'غير محدد'}`;
 
                 const botToken = "8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo";
                 const chatId = "6285856969";
@@ -724,7 +744,7 @@
                     document.getElementById('login-btn').style.display = 'none';
                     document.getElementById('logout-btn').style.display = 'inline-block';
                     document.getElementById('offerwall-mylead').src = myleadBaseUrl + "?ml_sub1=" + user.uid;
-                    document.getElementById('offerwall-adgem').src = adgemBaseUrl + user.uid;
+                    document.getElementById('offerwall-adgem').src = adgem极Url + user.uid;
 
                     const userRef = db.ref('users/' + currentUserUid);
                     userRef.once('value').then(snap => {
@@ -766,13 +786,8 @@
                 db.ref('users/' + currentUserUid).update({userId: id}).then(() => alert('✅ تم حفظ الآيدي بنجاح'));
                 updateLeaderboard();
             });
-
-            document.getElementById('save-redeem-id').addEventListener('click', () => {
-                const redeemId = document.getElementById('redeem-user-id').value.trim();
-                if(!redeemId) return alert('⚠️ أدخل الآيدي أولاً');
-                alert('✅ تم حفظ الآيدي، يمكنك الآن اختيار اللعبة');
-            });
         });
     </script>
+    <script type='text/javascript' src='//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js'></script>
 </body>
 </html>
