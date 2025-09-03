@@ -529,7 +529,7 @@
                 </div>
                 
                 <p style="text-align: center; margin: 15px 0;">
-                    💰 شارك هذا الكود مع أصدقائك لتحصل على <strong>500 نقطة</strong> لكل صديق يسجل!
+                    💰 شارك هذا الكود مع أصدقائك لتحصل على <strong>200 نقطة</strong> لكل صديق يسجل و<strong>100 نقطة</strong> لصديقك!
                 </p>
                 
                 <div class="input-group">
@@ -648,7 +648,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
-        const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea";
+        const myleadBaseUrl = "https://reward-me.eu/3cdf5a64-64d3-11f极
         const adgemBaseUrl = "https://api.adgem.com/v1/wall?appid=31011&playerid=";
         let currentUserUid = null;
         let currentGameKey = "";
@@ -752,7 +752,7 @@
             }
             
             const link = generateReferralLink();
-            const text = `انضم إلى موقع نقاط الألعاب واحصل على مكافآت رائعة! استخدم كود الإحالة: ${document.getElementById('referral-code').value}`;
+            const text = `انضم إلى موقع نقاط الألعاب واحصل على 100 نقطة مجانية! استخدم كود الإحالة: ${document.getElementById('referral-code').value}`;
             
             let url;
             switch(platform) {
@@ -784,17 +784,17 @@
                     if (snapshot.exists()) {
                         const referrerId = Object.keys(snapshot.val())[0];
                         
-                        // منح المكافآت
+                        // منح المكافآت (200 نقطة للمحيل، 100 نقطة للمحال)
                         rewardReferral(referrerId, newUserId);
                     }
                 });
         }
 
-        // دالة مكافأة الإحالة
+        // دالة مكافأة الإحالة (200 للمحيل، 100 للمحال)
         function rewardReferral(referrerId, referredUserId) {
-            // منح 500 نقطة للمُحيل
+            // منح 200 نقطة للمُحيل
             db.ref('users/' + referrerId).transaction(user => {
-                user.points = (user.points || 0) + 500;
+                user.points = (user.points || 0) + 200;
                 user.referralCount = (user.referralCount || 0) + 1;
                 user.referrals = user.referrals || [];
                 user.referrals.push({
@@ -805,15 +805,15 @@
                 return user;
             });
             
-            // منح 300 نقطة للمُحال
+            // منح 100 نقطة للمُحال
             db.ref('users/' + referredUserId).transaction(user => {
-                user.points = (user.points || 0) + 300;
+                user.points = (user.points || 0) + 100;
                 user.referredBy = referrerId;
                 return user;
             });
             
             // إرسال إشعار للمُحيل
-            sendNotification(referrerId, 'تهانينا! لقد كسبت 500 نقطة لإحالتك صديقًا جديدًا');
+            sendNotification(referrerId, 'تهانينا! لقد كسبت 200 نقطة لإحالتك صديقًا جديدًا');
         }
 
         // دالة إرسال الإشعارات
@@ -830,7 +830,7 @@
                 const userData = snapshot.val();
                 if (userData) {
                     document.getElementById('referral-count').textContent = userData.referralCount || 0;
-                    document.getElementById('referral-points').textContent = (userData.referralCount || 0) * 500;
+                    document.getElementById('referral-points').textContent = (userData.referralCount || 0) * 200;
                     
                     // تحديث قائمة الإحالات
                     const referralsList = document.getElementById('referrals-list');
@@ -1007,12 +1007,12 @@
                             const storedRefCode = localStorage.getItem('referralCode');
                             
                             userRef.set({
-                                points: 0, 
+                                points: storedRefCode ? 100 : 0, // 100 نقطة إذا استخدم كود إحالة
                                 userId: "",
                                 referralCode: referralCode,
                                 referredBy: storedRefCode || null
                             }).then(() => {
-                                document.getElementById('user-points').innerText = "0";
+                                document.getElementById('user-points').innerText = storedRefCode ? "100" : "0";
                                 document.getElementById('user-id').value = "";
                                 document.getElementById('referral-code').value = referralCode;
                                 
@@ -1062,6 +1062,5 @@
             });
         });
     </script>
-    <script type='text/javascript' src='//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js'></script>
 </body>
-</html>
+    </html>
