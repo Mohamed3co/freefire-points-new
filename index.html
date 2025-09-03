@@ -83,17 +83,17 @@
         nav button:nth-child(2) { 
             background: linear-gradient(90deg, #33ccff, #3366ff); 
             color: #fff; 
-            box-shadow: 极 0 0 20px #33ccff, 0 0 40px #3366ff; 
+            box-shadow: 0 0 20px #33ccff, 0 0 40px #3366ff; 
         }
         
         nav button:nth-child(3) { 
             background: linear-gradient(90deg, #33ff77, #00cc44); 
             color: #fff; 
-            box-shadow: 0 0 20px #33极 ff77, 0 0 40px #00cc44; 
+            box-shadow: 0 0 20px #33ff77, 0 0 40px #00cc44; 
         }
         
         nav button:nth-child(4) { 
-            background: linear-gradient(90deg, #ffcc33, #极 ff9900); 
+            background: linear-gradient(90deg, #ffcc33, #ff9900); 
             color: #fff; 
             box-shadow: 0 0 20px #ffcc33, 0 0 40px #ff9900; 
         }
@@ -131,7 +131,7 @@
             display: block; 
         }
         
-        @keyframes fade极 In { 
+        @keyframes fadeIn { 
             0% { opacity: 0; transform: translateY(20px); } 
             100% { opacity: 1; transform: translateY(0); } 
         }
@@ -140,7 +140,7 @@
         .video-container { 
             position: relative; 
             padding-bottom: 56.25%; 
-极           height: 0; 
+            height: 0; 
             overflow: hidden; 
             margin-top: 1em; 
             border-radius: 15px; 
@@ -164,8 +164,8 @@
         /* Titles */
         #home h1 { 
             text-align: center; 
-            font-size: 2.5极 em; 
-            color: #ff4d4极 d; 
+            font-size: 2.5em; 
+            color: #ff4d4d; 
             text-shadow: 0 0 10px #ff1a1a, 0 0 20px #ff4d4d; 
             margin-top: 1em; 
             animation: glow 2s infinite alternate; 
@@ -209,7 +209,7 @@
             border-radius: 15px;
             padding: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            width极 : 160px;
+            width: 160px;
         }
         
         .game-card:hover { 
@@ -223,7 +223,7 @@
             height: 130px;
             object-fit: cover;
             border-radius: 10px; 
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            box-shadow: 0  0 20px rgba(255, 255, 255, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
@@ -337,7 +337,7 @@
         
         .btn-secondary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 极 5px 15px rgba(51, 204, 255, 0.4);
+            box-shadow: 0 5px 15px rgba(51, 204, 255, 0.4);
         }
         
         /* خيارات الشحن */
@@ -352,7 +352,7 @@
             flex-wrap: wrap;
             gap: 15px;
             justify-content: center;
-            margin: 20极 px 0;
+            margin: 20px 0;
         }
         
         .option-btn {
@@ -409,7 +409,7 @@
         .stat-box {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding极 : 15px;
+            padding: 15px;
             min-width: 120px;
         }
         
@@ -473,7 +473,7 @@
         <p>اكسب النقاط من خلال إكمال العروض وشحن جميع الألعاب مجانًا 🎁</p>
         <h3 class="video-title">📹 فيديو شرح استخدام الموقع</h3>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/9H极 l83RfvrU" title="شرح موقع" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/9Hl83RfvrU" title="شرح موقع" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -495,7 +495,7 @@
     <!-- قسم الحسابي -->
     <div id="account" class="section">
         <div class="account-card">
-            <div class极 ="account-header">
+            <div class="account-header">
                 <h1><i class="fas fa-crown"></i> حسابي</h1>
             </div>
             
@@ -551,7 +551,7 @@
                         <button onclick="shareOnSocialMedia('whatsapp')" class="social-btn" style="background: #25D366;">
                             <i class="fab fa-whatsapp"></i> واتساب
                         </button>
-                        <button onclick="shareOnSocialMedia('telegram')极" class="social-btn" style="background: #0088CC;">
+                        <button onclick="shareOnSocialMedia('telegram')" class="social-btn" style="background: #0088CC;">
                             <i class="fab fa-telegram"></i> تليجرام
                         </button>
                         <button onclick="shareOnSocialMedia('facebook')" class="social-btn" style="background: #3b5998;">
@@ -592,7 +592,7 @@
             <!-- صور الألعاب -->
             <div id="games-list" class="games-container">
                 <div class="game-card" onclick="showGameOptions('freefire')">
-                    <img src="https://i.ibb.co/2093bzQy/freefire.jpg" alt="Free Fire" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff4d4d/ffffff?text=Free+Fire'">
+                    <img src="https://i.ibb.co/2093bzQ/freefire.jpg" alt="Free Fire" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff4d4d/ffffff?text=Free+Fire'">
                     <p>Free Fire</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('pubg')">
@@ -600,7 +600,7 @@
                     <p>PUBG Mobile</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('roblox')">
-                    <img src="https://i.ibb.co/j2极 K8JnQ/roblox.jpg" alt="Roblox" class="game-image" onerror="this.src='极 https://via.placeholder.com/150/ff9900/ffffff?text=Roblox'">
+                    <img src="https://i.ibb.co/j2K8JnQ/roblox.jpg" alt="Roblox" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff9900/ffffff?text=Roblox'">
                     <p>Roblox</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('efootball')">
@@ -683,7 +683,7 @@
             ],
             roblox: [
                 {robux: 400, points: 15450},
-                {robux: 800, points极 : 27660},
+                {robux: 800, points: 27660},
                 {robux: 1700, points: 55440},
                 {robux: 4500, points: 133215},
                 {robux: 10000, points: 268890},
