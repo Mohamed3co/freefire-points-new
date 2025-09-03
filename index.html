@@ -161,7 +161,7 @@
             text-align: center; 
             font-size: 2.5em; 
             color: #ff4d4d; 
-            text-shadow: 0 0 10px #ff1a1a, 0 极 20px #ff4d4d; 
+            text-shadow: 0 0 10px #ff1a1a, 0 0 20px #ff4d4d; 
             margin-top: 1em; 
             animation: glow 2s infinite alternate; 
         }
@@ -532,7 +532,7 @@
             databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com",
             projectId: "freefirerewardsdz-69572",
             storageBucket: "freefirerewardsdz-69572.appspot.com",
-            messagingSenderId极: "145782934523",
+            messagingSenderId: "145782934523",
             appId: "1:145782934523:web:76a2f7c4d2e37f94d6595e"
         };
         firebase.initializeApp(firebaseConfig);
@@ -652,7 +652,7 @@
                 let currencyAmount = option[currencyType];
                 let currencyName = getCurrencyName(currencyType);
                 
-                btn.class极 = 'option-btn';
+                btn.className = 'option-btn';
                 btn.innerHTML = `
                     <div class="coins-amount">${currencyAmount} ${currencyName}</div>
                     <div class="points-cost">${pointsRequired} نقطة</div>
