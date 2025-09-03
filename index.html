@@ -11,12 +11,8 @@
 
 <style>
 body { margin:0; font-family:'Tajawal', sans-serif; background:#111; color:#fff; overflow-x:hidden; }
-
-/* Header */
 header { background:linear-gradient(90deg,#c40000,#ff4d4d); padding:1em; text-align:center; font-size:1.5em; font-weight:bold; letter-spacing:1px; animation:headerGlow 2s infinite alternate; }
 @keyframes headerGlow { 0% { text-shadow:0 0 5px #ff4d4d,0 0 10px #ff1a1a; } 100% { text-shadow:0 0 15px #ff4d4d,0 0 25px #ff1a1a; } }
-
-/* Nav Buttons */
 nav { display:flex; justify-content:center; gap:1em; flex-wrap:wrap; margin:1em 0; }
 nav button { padding:1em 2em; border-radius:15px; font-weight:bold; font-size:1.1em; cursor:pointer; transition:transform 0.3s, box-shadow 0.3s; }
 nav button:nth-child(1) { background:linear-gradient(90deg,#ff4d4d,#ff1a1a); color:#fff; box-shadow:0 0 20px #ff4d4d,0 0 40px #ff1a1a; }
@@ -28,36 +24,20 @@ nav button:nth-child(1):hover { box-shadow:0 0 30px #ff4d4d,0 0 60px #ff1a1a; }
 nav button:nth-child(2):hover { box-shadow:0 0 30px #33ccff,0 0 60px #3366ff; }
 nav button:nth-child(3):hover { box-shadow:0 0 30px #33ff77,0 0 60px #00cc44; }
 nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
-
-/* Sections */
 .section { display:none; padding:1em; max-width:1000px; margin:auto; animation:fadeIn 0.5s ease forwards; }
 .active { display:block; }
 @keyframes fadeIn { 0% { opacity:0; transform:translateY(20px); } 100% { opacity:1; transform:translateY(0); } }
-
-/* Video */
 .video-container { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin-top:1em; border-radius:15px; box-shadow:0 0 30px #ff4d4d,0 0 50px #ff1a1a; }
 .video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; transition:transform 0.3s; }
 .video-container iframe:hover { transform:scale(1.02); }
-
-/* Titles */
 #home h1 { text-align:center; font-size:2.5em; color:#ff4d4d; text-shadow:0 0 10px #ff1a1a,0 0 20px #ff4d4d; margin-top:1em; animation:glow 2s infinite alternate; }
 #home p { text-align:center; font-size:1.2em; color:#fff; margin-top:0.5em; margin-bottom:1em; }
 #home h3.video-title { text-align:center; color:#ffcc33; text-shadow:0 0 5px #ff9900; margin-bottom:10px; font-size:1.2em; }
-
 @keyframes glow { 0% { text-shadow:0 0 5px #ff4d4d,0 0 10px #ff1a1a; } 100% { text-shadow:0 0 15px #ff4d4d,0 0 25px #ff1a1a; } }
-
 .avatar { width:100px; height:100px; border-radius:50%; margin:auto; display:block; box-shadow:0 0 20px #33ccff; }
-
-/* Games */
 .games-container { display:flex; flex-wrap:wrap; gap:1em; justify-content:center; margin-top:20px; }
-.game-card { cursor:pointer; text-align:center; position:relative; }
-
-/* Game options on side */
-#game-options { position:fixed; top:50%; right:10px; transform:translateY(-50%); background:#222; padding:1em; border-radius:15px; box-shadow:0 0 30px #ff4d4d; display:none; max-width:250px; }
-
-#options-buttons { display:flex; flex-direction:column; gap:10px; }
-
-/* Responsive */
+.game-card { cursor:pointer; text-align:center; }
+.options-buttons { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:10px; }
 @media(max-width:600px){
   header{font-size:1.3em;padding:0.8em;} 
   nav{flex-direction:column;gap:0.5em;} 
@@ -66,7 +46,6 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
   #home h1 { font-size:2em; } 
   #home p { font-size:1em; }
   #home h3.video-title { font-size:1em; }
-  #game-options { position:static; transform:none; max-width:100%; margin-top:20px; }
 }
 </style>
 </head>
@@ -91,7 +70,7 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
 </div>
 
 <div id="offers" class="section">
-  <h2 style="text-align:center; color:#33ccff;">العروض المتاحة</h2>
+  <h2 style="text-align:center; color:#33ccff; text-shadow:0 0 10px #33ccff;">العروض المتاحة</h2>
   <div class="offers-container">
     <div>
       <h3>MyLead</h3>
@@ -105,7 +84,7 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
 </div>
 
 <div id="account" class="section">
-  <h1 style="text-align:center; color:#ff4d4d;">🎮 حسابي 🎮</h1>
+  <h1 style="text-align:center; color:#ff4d4d; text-shadow:0 0 10px #ff1a1a;">🎮 حسابي 🎮</h1>
   <img src="avatar.png" alt="Avatar" class="avatar">
   <div id="user-info" style="text-align:center; margin:10px 0;">لم تقم بتسجيل الدخول بعد.</div>
   <button id="login-btn">تسجيل الدخول بحساب Google</button>
@@ -139,14 +118,29 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
       <img src="images/roblox.png" alt="Roblox" style="width:150px; border-radius:10px; box-shadow:0 0 20px #ff9900;">
       <p>Roblox</p>
     </div>
-    <!-- باقي الألعاب كما في السابق -->
+    <div class="game-card" onclick="showGameOptions('efootball')">
+      <img src="images/efootball.png" alt="eFootball" style="width:150px; border-radius:10px; box-shadow:0 0 20px #33ff77;">
+      <p>eFootball</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('fifa')">
+      <img src="images/fifa.png" alt="FIFA Mobile" style="width:150px; border-radius:10px; box-shadow:0 0 20px #ffcc33;">
+      <p>FIFA Mobile</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('cod')">
+      <img src="images/cod.png" alt="Call of Duty" style="width:150px; border-radius:10px; box-shadow:0 0 20px #ff1a1a;">
+      <p>Call of Duty</p>
+    </div>
+    <div class="game-card" onclick="showGameOptions('clash')">
+      <img src="images/clash.png" alt="Clash of Clans" style="width:150px; border-radius:10px; box-shadow:0 0 20px #9933ff;">
+      <p>Clash of Clans</p>
+    </div>
   </div>
-</div>
 
-<div id="game-options">
-  <h3 id="game-title"></h3>
-  <div id="options-buttons"></div>
-  <button onclick="hideGameOptions()" style="margin-top:10px; padding:0.8em 1.5em; border-radius:10px; cursor:pointer; background:#ff4d4d; color:#fff;">🔙 رجوع</button>
+  <div id="game-options" style="display:none; text-align:center; margin-top:20px;">
+    <h3 id="game-title" style="margin-bottom:10px;"></h3>
+    <div id="options-buttons" class="options-buttons"></div>
+    <button onclick="hideGameOptions()" style="margin-top:20px; padding:0.8em 1.5em; border-radius:10px; cursor:pointer; background:#ff4d4d; color:#fff;">🔙 رجوع</button>
+  </div>
 </div>
 
 <!-- Firebase -->
@@ -155,12 +149,13 @@ nav button:nth-child(4):hover { box-shadow:0 0 30px #ffcc33,0 0 60px #ff9900; }
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
+// التنقل بين الأقسام
 function showSection(id){
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 }
 
-// Firebase Config
+// Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyBSocmPYyRrVPFQIlk8UkHWxvPNIe1B1-A",
     authDomain: "freefirerewardsdz-69572.firebaseapp.com",
@@ -178,19 +173,16 @@ let currentUserUid = null;
 // تسجيل الدخول
 document.getElementById('login-btn').onclick = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then(result => {
+    auth.signInWithPopup(provider).then(result=>{
         currentUserUid = result.user.uid;
         document.getElementById('user-info').innerText = `مرحبًا، ${result.user.displayName}`;
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline-block';
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('logout-btn').style.display = 'inline-block';
         db.ref('users/'+currentUserUid).once('value').then(snap=>{
-            if(!snap.exists()){
-                db.ref('users/'+currentUserUid).set({points:0,userId:""});
-            }
-            updatePoints();
-            updateLeaderboard();
+            if(!snap.exists()) db.ref('users/'+currentUserUid).set({points:0,userId:""});
+            updatePoints(); updateLeaderboard();
         });
-    }).catch(err => alert(err.message));
+    }).catch(err=>alert(err.message));
 };
 
 // تسجيل الخروج
@@ -198,13 +190,13 @@ document.getElementById('logout-btn').onclick = () => {
     auth.signOut().then(()=>{
         currentUserUid = null;
         document.getElementById('user-info').innerText = 'لم تقم بتسجيل الدخول بعد.';
-        loginBtn.style.display = 'inline-block';
-        logoutBtn.style.display = 'none';
+        document.getElementById('login-btn').style.display = 'inline-block';
+        document.getElementById('logout-btn').style.display = 'none';
         document.getElementById('user-points').innerText = '0';
     });
 };
 
-// حفظ آيدي المستخدم
+// حفظ الإيدز
 document.getElementById('save-id').onclick = () => {
     const userId = document.getElementById('user-id').value.trim();
     if(!currentUserUid) return alert('سجل الدخول أولاً');
@@ -220,91 +212,80 @@ function updatePoints(){
     });
 }
 
-// تحديث المتصدرين
+// لوحة المتصدرين
 function updateLeaderboard(){
     db.ref('users').orderByChild('points').limitToLast(10).once('value').then(snap=>{
-        const tbody = document.getElementById('leaderboard-body');
-        tbody.innerHTML = '';
+        const tbody = document.getElementById('leaderboard-body'); tbody.innerHTML = '';
         const users = [];
-        snap.forEach(s=>{
-            users.push({name: s.val().userId || 'غير محدد', points: s.val().points || 0});
-        });
+        snap.forEach(s=>{ users.push({name:s.val().userId||'غير محدد',points:s.val().points||0}); });
         users.sort((a,b)=>b.points-a.points);
-        users.forEach((u,i)=>{
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${i+1}</td><td>${u.name}</td><td>${u.points}</td>`;
-            tbody.appendChild(tr);
-        });
-        if(users.length===0) tbody.innerHTML = '<tr><td colspan="3" style="padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
+        users.forEach((u,i)=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${i+1}</td><td>${u.name}</td><td>${u.points}</td>`; tbody.appendChild(tr); });
+        if(users.length===0) tbody.innerHTML='<tr><td colspan="3" style="padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
     });
 }
 
-// بيانات الألعاب (كما في كودك السابق)
+// بيانات الشحن
 const gameData = {
-  freefire: [
-    {price:1.05, gems:100, points:1575},
-    {price:2.09, gems:210, points:3135}
-  ],
-  pubg: [
-    {price:0.99, uc:60, points:1485},
-    {price:1.99, uc:120, points:2985}
-  ],
-  roblox: [
-    {price:5, robux:400, points:7500},
-    {price:10, robux:800, points:15000}
-  ]
+  freefire:[{price:1.05,gems:100,points:1575},{price:2.09,gems:210,points:3135}],
+  pubg:[{price:0.99,uc:60,points:1485},{price:1.99,uc:120,points:2985}],
+  roblox:[{price:5,robux:400,points:7500},{price:10,robux:800,points:15000}]
 };
 
-// عرض خيارات الشحن
+// عرض خيارات الشحن بشكل أفقي
 function showGameOptions(gameKey){
-    const game = gameData[gameKey];
-    const titleMap = { freefire:"Free Fire", pubg:"PUBG Mobile", roblox:"Roblox" };
-    const optionsContainer = document.getElementById('options-buttons');
-    optionsContainer.innerHTML = "";
-    game.forEach(option => {
-        const btn = document.createElement('button');
-        const quantity = option.gems||option.uc||option.robux;
-        const unit = option.gems ? "جوهرة" : option.uc ? "UC" : option.robux ? "روبوكس" : "";
-        btn.innerText = `${quantity} ${unit} - ${option.points} نقطة`;
-        btn.onclick = () => redeem(option.points, gameKey, option);
+    const game = gameData[gameKey]; 
+    const titleMap={freefire:"Free Fire",pubg:"PUBG Mobile",roblox:"Roblox"};
+    const optionsContainer=document.getElementById('options-buttons'); optionsContainer.innerHTML="";
+    game.forEach(option=>{
+        const btn=document.createElement('button');
+        let text = '';
+        if(option.gems) text = `${option.gems} جواهر - $${option.price}`;
+        if(option.uc) text = `${option.uc} UC - $${option.price}`;
+        if(option.robux) text = `${option.robux} روبوكس - $${option.price}`;
+        btn.innerText = text;
+        btn.style.padding = '0.8em 1.5em';
+        btn.style.borderRadius = '10px';
+        btn.style.cursor = 'pointer';
+        btn.style.background = '#ffcc33';
+        btn.style.color = '#000';
+        btn.onclick = () => {
+            if(!currentUserUid) return alert('سجل الدخول أولاً');
+            const addPoints = option.points || 0;
+            db.ref('users/'+currentUserUid+'/points').transaction(current=>{
+                return (current||0)+addPoints;
+            },()=>{
+                alert(`تم شحن ${text} وإضافة ${addPoints} نقطة`);
+                updatePoints();
+                updateLeaderboard();
+            });
+        };
         optionsContainer.appendChild(btn);
     });
-    document.getElementById('game-title').innerText = "🎮 شحن " + titleMap[gameKey];
-    document.getElementById('game-options').style.display = "block";
+    document.getElementById('game-title').innerText = titleMap[gameKey] || 'لعبة';
+    document.getElementById('game-options').style.display='block';
 }
-function hideGameOptions(){ document.getElementById('game-options').style.display = "none"; }
 
-// دالة الشحن مع Telegram
-function redeem(pointsRequired, gameKey, option){
-    if(!currentUserUid) return alert('⚠️ سجل الدخول أولاً');
-    db.ref('users/'+currentUserUid).once('value').then(snap=>{
-        const data = snap.val();
-        if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
-        if((data.points||0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية.');
-        db.ref('users/'+currentUserUid).update({points: data.points - pointsRequired});
-        updatePoints();
+function hideGameOptions(){
+    document.getElementById('game-options').style.display='none';
+}
 
-        const gameNames = { freefire:"Free Fire", pubg:"PUBG Mobile", roblox:"Roblox" };
-        const quantity = option.gems||option.uc||option.robux;
-        const unit = option.gems ? "جوهرة" : option.uc ? "UC" : option.robux ? "روبوكس" : "";
-      const message = `📩 طلب شحن جديد\n🎮 اللعبة: ${gameNames[gameKey]}\n🔹 الكمية: ${quantity} ${unit}\n🆔 الآيدي: ${data.userId || 'غير محدد'}\n💰 النقاط المستخدمة: ${pointsRequired}`;
-        
-        // إرسال للـ Telegram
-        const telegramBotToken =8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo
-        const telegramChatId =6285856969  // ضع شات آيدي هنا
-        fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-            method:"POST",
-            headers: { "Content-Type":"application/json" },
-            body: JSON.stringify({ chat_id:telegramChatId, text:message })
-        }).then(res=>res.json()).then(data=>{
-            alert('✅ تم إرسال طلبك بنجاح!');
-            hideGameOptions();
-        }).catch(err=>{
-            alert('❌ حدث خطأ أثناء إرسال الطلب.');
-            console.error(err);
-        });
+// إشعارات تلغرام
+function sendTelegramNotification(message){
+    const chatId = 6285856969
+    const botToken = 8096326997:AAE_UuRKi3gnCdOfXKu76X4D4cPUuXSpPbo
+    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chat_id:chatId,text:message})
     });
 }
+
+// مثال إرسال إشعار عند تسجيل الدخول
+auth.onAuthStateChanged(user=>{
+    if(user){
+        sendTelegramNotification(`تم تسجيل الدخول بواسطة: ${user.displayName}`);
+    }
+});
 </script>
 
 </body>
