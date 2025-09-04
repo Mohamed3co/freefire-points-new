@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>نقاط الألعاب</title>
+    <title>نقاط الألعاب - نظام الإحالة</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1566555811591369" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,7 +34,6 @@
             padding-bottom: 20px;
         }
         
-        /* Header */
         header { 
             background: linear-gradient(90deg, #c40000, #ff4d4d); 
             padding: 1em; 
@@ -52,7 +51,6 @@
             100% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff1a1a; } 
         }
         
-        /* Nav Buttons */
         nav { 
             display: flex; 
             justify-content: center; 
@@ -98,6 +96,12 @@
             box-shadow: 0 0 20px #ffcc33, 0 0 40px #ff9900; 
         }
         
+        nav button:nth-child(5) { 
+            background: linear-gradient(90deg, #9933ff, #6600cc); 
+            color: #fff; 
+            box-shadow: 0 0 20px #9933ff, 0 0 40px #6600cc; 
+        }
+        
         nav button:hover { 
             transform: translateY(-5px) scale(1.05); 
         }
@@ -118,7 +122,10 @@
             box-shadow: 0 0 30px #ffcc33, 0 0 60px #ff9900; 
         }
         
-        /* Sections */
+        nav button:nth-child(5):hover { 
+            box-shadow: 0 0 30px #9933ff, 0 0 60px #6600cc; 
+        }
+        
         .section { 
             display: none; 
             padding: 1em; 
@@ -136,7 +143,6 @@
             100% { opacity: 1; transform: translateY(0); } 
         }
         
-        /* Video */
         .video-container { 
             position: relative; 
             padding-bottom: 56.25%; 
@@ -161,7 +167,6 @@
             transform: scale(1.02); 
         }
         
-        /* Titles */
         #home h1 { 
             text-align: center; 
             font-size: 2.5em; 
@@ -192,7 +197,6 @@
             100% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff1a1a; } 
         }
         
-        /* ألعاب */
         .games-container { 
             display: flex; 
             flex-wrap: wrap; 
@@ -240,7 +244,6 @@
             color: white;
         }
         
-        /* قسم الحسابي المحسن */
         .account-card {
             background: linear-gradient(135deg, rgba(30, 30, 50, 0.9) 0%, rgba(20, 20, 40, 0.9) 100%);
             border-radius: 20px;
@@ -340,7 +343,6 @@
             box-shadow: 0 5px 15px rgba(51, 204, 255, 0.4);
         }
         
-        /* خيارات الشحن */
         .game-options {
             text-align: center;
             margin-top: 20px;
@@ -398,25 +400,25 @@
             transform: translateY(-3px);
         }
         
-        /* قسم الإحالة */
         .referral-stats {
-            display: flex;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
             margin: 20px 0;
-            text-align: center;
         }
         
-        .stat-box {
+        .stat-card {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 15px;
-            min-width: 120px;
+            text-align: center;
         }
         
         .stat-number {
             font-size: 2em;
-            color: #33ff77;
+            color: var(--accent);
             font-weight: bold;
+            margin: 5px 0;
         }
         
         .social-buttons {
@@ -438,7 +440,6 @@
             gap: 5px;
         }
         
-        /* Offer Containers */
         .offer-container {
             background: rgba(30, 30, 50, 0.8);
             border-radius: 15px;
@@ -548,7 +549,144 @@
             display: inline-block;
         }
         
-        /* Responsive */
+        /* أنماط جديدة لنظام الإحالة */
+        .referral-link-container {
+            background: rgba(30, 30, 50, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid var(--secondary);
+        }
+        
+        .referral-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .referral-link input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 10px 0 0 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .referral-link button {
+            padding: 12px 20px;
+            border-radius: 0 10px 10px 0;
+            border: none;
+            background: var(--secondary);
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .referral-link button:hover {
+            background: #2aa3cc;
+        }
+        
+        .social-share {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .share-btn {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .share-btn.whatsapp { background: #25D366; }
+        .share-btn.telegram { background: #0088CC; }
+        .share-btn.facebook { background: #3b5998; }
+        .share-btn.link { background: var(--accent); }
+        
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .referral-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(30, 30, 50, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .referral-table th, .referral-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .referral-table th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--accent);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        .modal-content {
+            background-color: rgba(30, 30, 50, 0.95);
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(51, 204, 255, 0.5);
+            border: 2px solid var(--secondary);
+        }
+        
+        .close {
+            color: #aaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: white;
+        }
+        
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .status-completed {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
         @media (max-width: 600px) {
             header { font-size: 1.3em; padding: 0.8em; } 
             nav { flex-direction: column; gap: 0.5em; } 
@@ -562,10 +700,15 @@
             .input-group { flex-direction: column; }
             .option-btn { min-width: 150px; }
             .account-card { padding: 20px; }
-            .referral-stats { flex-direction: column; gap: 10px; }
             .social-buttons { flex-wrap: wrap; }
             .offer-header { flex-direction: column; text-align: center; }
             .offer-logo { margin: 0 0 15px 0; }
+            .referral-stats { grid-template-columns: 1fr 1fr; }
+            .social-share { flex-wrap: wrap; }
+            .share-btn { flex: 1; min-width: 120px; }
+            .referral-link { flex-direction: column; }
+            .referral-link input { border-radius: 10px; margin-bottom: 10px; }
+            .referral-link button { border-radius: 10px; width: 100%; }
         }
     </style>
 </head>
@@ -577,6 +720,7 @@
         <button onclick="showSection('offers')">العروض</button>
         <button onclick="showSection('account')">حسابي</button>
         <button onclick="showSection('redeem-games')">طلب الشحن</button>
+        <button onclick="showSection('referral')">الإحالة</button>
     </nav>
 
     <!-- قسم الرئيسية -->
@@ -688,56 +832,6 @@
                 <button id="save-id" class="btn btn-primary">حفظ الآيدي</button>
             </div>
             
-            <!-- قسم الإحالة -->
-            <div class="account-card">
-                <h3 style="text-align: center; color: #ffcc33;">📊 إحالاتي وأرباحي</h3>
-                
-                <div class="referral-stats">
-                    <div class="stat-box">
-                        <div class="stat-number" id="referral-count">0</div>
-                        <div>عدد الإحالات</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="referral-points">0</div>
-                        <div>النقاط المكتسبة</div>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <input type="text" id="referral-code" class="input-field" value="جاري التحميل..." readonly>
-                    <button onclick="copyReferralCode()" class="btn btn-primary">نسخ كود الإحالة</button>
-                </div>
-                
-                <p style="text-align: center; margin: 15px 0;">
-                    💰 شارك هذا الكود مع أصدقائك لتحصل على <strong>200 نقطة</strong> لكل صديق يسجل و<strong>100 نقطة</strong> لصديقك!
-                </p>
-                
-                <div class="input-group">
-                    <input type="text" id="friend-code" class="input-field" placeholder="أدخل كود صديق (إن وجد)">
-                    <button onclick="useReferralCode()" class="btn btn-secondary">تطبيق كود</button>
-                </div>
-                
-                <div style="text-align: center; margin-top: 15px;">
-                    <p>أو شارك الرابط مباشرة:</p>
-                    <div class="social-buttons">
-                        <button onclick="shareOnSocialMedia('whatsapp')" class="social-btn" style="background: #25D366;">
-                            <i class="fab fa-whatsapp"></i> واتساب
-                        </button>
-                        <button onclick="shareOnSocialMedia('telegram')" class="social-btn" style="background: #0088CC;">
-                            <i class="fab fa-telegram"></i> تليجرام
-                        </button>
-                        <button onclick="shareOnSocialMedia('facebook')" class="social-btn" style="background: #3b5998;">
-                            <i class="fab fa-facebook"></i> فيسبوك
-                        </button>
-                    </div>
-                </div>
-                
-                <h4 style="text-align: center; margin-top: 20px;">📋 قائمة الأصدقاء المدعوين</h4>
-                <div id="referrals-list" style="text-align: center; margin: 10px 0;">
-                    لم تقم بدعوة أي أصدقاء بعد
-                </div>
-            </div>
-            
             <h3 style="text-align:center; margin-top:20px;">🏆 أفضل اللاعبين</h3>
             <table id="leaderboard" style="width:100%; text-align:center; border-collapse:collapse;">
                 <thead>
@@ -807,9 +901,114 @@
         </div>
     </div>
 
+    <!-- قسم الإحالة الجديد -->
+    <div id="referral" class="section">
+        <div class="account-card">
+            <div class="account-header">
+                <h1><i class="fas fa-share-alt"></i> نظام الإحالة</h1>
+                <p>ادعُ أصدقاءك واحصل على 200 نقطة لكل صديق</p>
+            </div>
+            
+            <div class="referral-link-container">
+                <h3><i class="fas fa-link"></i> رابط الإحالة الخاص بك</h3>
+                <p>شارك هذا الرابط مع أصدقائك لتحصل على 200 نقطة لكل صديق يسجل</p>
+                
+                <div class="referral-link">
+                    <input type="text" id="referralLinkInput" readonly>
+                    <button onclick="copyReferralLink()">
+                        <i class="fas fa-copy"></i> نسخ
+                    </button>
+                </div>
+                
+                <div class="social-share">
+                    <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> واتساب
+                    </button>
+                    <button class="share-btn telegram" onclick="shareOnTelegram()">
+                        <i class="fab fa-telegram"></i> تليجرام
+                    </button>
+                    <button class="share-btn facebook" onclick="shareOnFacebook()">
+                        <i class="fab fa-facebook"></i> فيسبوك
+                    </button>
+                    <button class="share-btn link" onclick="generateReferralQR()">
+                        <i class="fas fa-qrcode"></i> QR كود
+                    </button>
+                </div>
+            </div>
+            
+            <div class="referral-stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-number" id="referralCount">0</div>
+                    <div>عدد الإحالات</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-coins"></i>
+                    <div class="stat-number" id="referralPoints">0</div>
+                    <div>النقاط المكتسبة</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-gift"></i>
+                    <div class="stat-number">100</div>
+                    <div>نقاط الصديق</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-award"></i>
+                    <div class="stat-number">200</div>
+                    <div>نقاطك لكل صديق</div>
+                </div>
+            </div>
+            
+            <h3><i class="fas fa-history"></i> الإحالات السابقة</h3>
+            <div class="table-container">
+                <table class="referral-table">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الصديق</th>
+                            <th>النقاط</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="referralsList">
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 20px;">
+                                لا توجد إحالات حتى الآن
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> كيف يعمل نظام الإحالة؟</h3>
+                <ol>
+                    <li>انسخ رابط الإحالة الخاص بك</li>
+                    <li>أرسله إلى أصدقائك</li>
+                    <li>صديقك يسجل عن طريق الرابط</li>
+                    <li>تحصل على 200 نقطة فورًا</li>
+                    <li>صديقك يحصل على 100 نقطة هدية</li>
+                </ol>
+                <p class="note">ملاحظة: كل صديق يمكنه استخدام رابط إحالة واحد فقط</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة QR Code -->
+    <div id="qrcode-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>QR كود رابط الإحالة</h3>
+            <div id="qrcode"></div>
+            <p>اطبع هذا الكود أو احفظه على جوالك لمشاركته بسهولة</p>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    
     <script>
         // تهيئة Firebase
         const firebaseConfig = {
@@ -899,96 +1098,87 @@
             ],
         };
         
-        // دالة إنشاء كود إحالة
-        function generateReferralCode(userId) {
-            const base = userId.substring(0, 4).toUpperCase();
-            const random = Math.floor(1000 + Math.random() * 9000);
-            return base + random;
+        // دالة إنشاء رابط الإحالة
+        function generateReferralLink() {
+            if (!currentUserUid) return "https://freefire-points-new.onrender.com/";
+            return `https://freefire-points-new.onrender.com/r/${currentUserUid}`;
         }
         
-        // دالة نسخ كود الإحالة
-        function copyReferralCode() {
-            const codeInput = document.getElementById('referral-code');
-            codeInput.select();
-            document.execCommand('copy');
-            alert('تم نسخ كود الإحالة: ' + codeInput.value);
-        }
-        
-        // دالة تطبيق كود الإحالة
-        function useReferralCode() {
-            const friendCode = document.getElementById('friend-code').value.trim();
-            if (!friendCode) {
-                alert('يرجى إدخال كود الإحالة');
-                return;
-            }
-            
-            localStorage.setItem('referralCode', friendCode);
-            alert('تم حفظ كود الإحالة! سيتم تطبيقه عند تسجيلك في الموقع');
-        }
-        
-        // دالة مشاركة على وسائل التواصل
-        function shareOnSocialMedia(platform) {
+        // نسخ رابط الإحالة
+        function copyReferralLink() {
             if (!currentUserUid) {
-                alert('يجب تسجيل الدخول أولاً');
+                alert("يجب تسجيل الدخول أولاً");
                 return;
             }
             
             const link = generateReferralLink();
-            const text = `انضم إلى موقع نقاط الألعاب واحصل على 100 نقطة مجانية! استخدم كود الإحالة: ${document.getElementById('referral-code').value}`;
-            
-            let url;
-            switch(platform) {
-                case 'whatsapp':
-                    url = `https://wa.me/?text=${encodeURIComponent(text + ' ' + link)}`;
-                    break;
-                case 'telegram':
-                    url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
-                    break;
-                case 'facebook':
-                    url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
-                    break;
+            navigator.clipboard.writeText(link).then(() => {
+                alert("✅ تم نسخ رابط الإحالة: " + link);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+        
+        // مشاركة على وسائل التواصل
+        function shareOnWhatsApp() {
+            const link = generateReferralLink();
+            const text = "انضم إلى أفضل منصة لشحن الألعاب مجاناً! سجل الآن واحصل على 100 نقطة هدية: ";
+            window.open(`https://wa.me/?text=${encodeURIComponent(text + link)}`, '_blank');
+        }
+        
+        function shareOnTelegram() {
+            const link = generateReferralLink();
+            const text = "انضم إلى أفضل منصة لشحن الألعاب مجاناً! سجل الآن واحصل على 100 نقطة هدية: ";
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`, '_blank');
+        }
+        
+        function shareOnFacebook() {
+            const link = generateReferralLink();
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank');
+        }
+        
+        // إنشاء QR كود
+        function generateReferralQR() {
+            if (!currentUserUid) {
+                alert("يجب تسجيل الدخول أولاً");
+                return;
             }
             
-            window.open(url, '_blank');
-        }
-        
-        // دالة إنشاء رابط الإحالة
-        function generateReferralLink() {
-            const baseUrl = window.location.origin + window.location.pathname;
-            return `${baseUrl}?ref=${document.getElementById('referral-code').value}`;
-        }
-        
-        // دالة تطبيق كود الإحالة عند التسجيل
-        function applyReferralCode(refCode, newUserId) {
-            db.ref('users').orderByChild('referralCode').equalTo(refCode).once('value')
-                .then(snapshot => {
-                    if (snapshot.exists()) {
-                        const referrerId = Object.keys(snapshot.val())[0];
-                        rewardReferral(referrerId, newUserId);
-                    }
-                });
-        }
-        
-        // دالة مكافأة الإحالة
-        function rewardReferral(referrerId, referredUserId) {
-            // منح 200 نقطة للمُحيل
-            db.ref('users/' + referrerId).transaction(user => {
-                user.points = (user.points || 0) + 200;
-                user.referralCount = (user.referralCount || 0) + 1;
-                user.referrals = user.referrals || [];
-                user.referrals.push({
-                    userId: referredUserId,
-                    date: new Date().toISOString(),
-                    rewarded: true
-                });
-                return user;
+            const link = generateReferralLink();
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            QRCode.toCanvas(qrcodeDiv, link, { width: 200 }, function(error) {
+                if (error) console.error(error);
             });
             
-            // منح 100 نقطة للمُحال
-            db.ref('users/' + referredUserId).transaction(user => {
-                user.points = (user.points || 0) + 100;
-                user.referredBy = referrerId;
-                return user;
+            document.getElementById('qrcode-modal').style.display = 'block';
+        }
+        
+        // تطبيق الإحالة تلقائياً عند التسجيل
+        function applyReferralOnSignup(userId) {
+            // التحقق من وجود رابط إحالة في الكوكيز
+            const referralId = getCookie('referralId');
+            if (!referralId || referralId === userId) return;
+            
+            // إرسال طلب تطبيق الإحالة
+            fetch('/apply-referral', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("✅ تم تطبيق الإحالة بنجاح");
+                    // تحديث النقاط بعد الإحالة
+                    updateUserData();
+                }
+            })
+            .catch(error => {
+                console.error("❌ Error applying referral:", error);
             });
         }
         
@@ -999,39 +1189,98 @@
             db.ref('users/' + currentUserUid).once('value').then(snapshot => {
                 const userData = snapshot.val();
                 if (userData) {
-                    document.getElementById('referral-count').textContent = userData.referralCount || 0;
-                    document.getElementById('referral-points').textContent = (userData.referralCount || 0) * 200;
+                    document.getElementById('referralCount').textContent = userData.referralCount || 0;
+                    document.getElementById('referralPoints').textContent = userData.totalEarned || 0;
                     
-                    const referralsList = document.getElementById('referrals-list');
+                    // تحديث رابط الإحالة
+                    document.getElementById('referralLinkInput').value = generateReferralLink();
+                    
+                    // تحديث قائمة الإحالات
+                    const referralsList = document.getElementById('referralsList');
                     if (userData.referrals && userData.referrals.length > 0) {
-                        referralsList.innerHTML = userData.referrals.map(ref => 
-                            `<div>صديق #${ref.userId.substring(0, 8)} - ${new Date(ref.date).toLocaleDateString()}</div>`
-                        ).join('');
+                        referralsList.innerHTML = userData.referrals.map(ref => `
+                            <tr>
+                                <td>${new Date(ref.date).toLocaleDateString()}</td>
+                                <td>${ref.userId.substring(0, 8)}...</td>
+                                <td>+${ref.points}</td>
+                                <td><span class="status-completed">مكتمل</span></td>
+                            </tr>
+                        `).join('');
                     } else {
-                        referralsList.innerHTML = 'لم تقم بدعوة أي أصدقاء بعد';
+                        referralsList.innerHTML = `
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 20px;">
+                                    لا توجد إحالات حتى الآن
+                                </td>
+                            </tr>
+                        `;
                     }
                 }
             });
         }
         
-        // تحديث لوحة المتصدرين
-        function updateLeaderboard(){
-            const leaderboardRef = db.ref('users');
-            leaderboardRef.orderByChild('points').limitToLast(10).on('value', snapshot => {
-                const tbody = document.getElementById('leaderboard-body'); 
-                tbody.innerHTML = '';
-                if(!snapshot.exists()){ 
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>'; 
-                    return; 
+        // دالة مساعدة للحصول على الكوكيز
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        
+        // دالة للحصول على معرف المستخدم
+        function getUserID() {
+            let userId = localStorage.getItem('userID');
+            
+            if (!userId) {
+                userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('userID', userId);
+            }
+            
+            return userId;
+        }
+        
+        // تحديث الروابط بمعرف المستخدم
+        function updateLinksWithUserID() {
+            const userId = getUserID();
+            
+            document.getElementById('user-id-display-mylead').textContent = userId;
+            document.getElementById('user-id-display-adgem').textContent = userId;
+            
+            const myleadLink = document.getElementById('mylead-link');
+            myleadLink.href = `https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea?userid=${userId}`;
+            
+            const adgemLink = document.getElementById('adgem-link');
+            adgemLink.href = `https://api.adgem.com/v1/wall?appid=31011&playerid=${userId}`;
+        }
+        
+        // دالة لربط المعرف التلقائي بمعرف جوجل
+        async function linkUserAccounts(googleUserId) {
+            try {
+                const autoGeneratedId = localStorage.getItem('userID');
+                
+                if (!autoGeneratedId) {
+                    console.error('لا يوجد معرف تلقائي في localStorage');
+                    return;
                 }
-                const users = []; 
-                snapshot.forEach(child => { users.push(child.val()); });
-                users.sort((a, b) => (b.points || 0) - (a.points || 0));
-                users.forEach((user, index) => {
-                    const row = `<tr><td>${index+1}</td><td>${user.userId || 'غير محدد'}</td><td>${user.points || 0}</td></tr>`;
-                    tbody.innerHTML += row;
+                
+                const response = await fetch('/link-account', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        autoGeneratedId: autoGeneratedId,
+                        googleUserId: googleUserId
+                    }),
                 });
-            });
+                
+                if (response.ok) {
+                    console.log('✅ تم ربط الحسابين بنجاح');
+                } else {
+                    console.error('❌ فشل في ربط الحسابين:', await response.text());
+                }
+            } catch (error) {
+                console.error('❌ خطأ في ربط الحسابين:', error);
+            }
         }
         
         // عرض خيارات الشحن
@@ -1161,78 +1410,56 @@
             });
         }
         
-        // دالة لربط المعرف التلقائي بمعرف جوجل
-        async function linkUserAccounts(googleUserId) {
-            try {
-                // الحصول على المعرف التلقائي من localStorage
-                const autoGeneratedId = localStorage.getItem('userID');
-                
-                if (!autoGeneratedId) {
-                    console.error('لا يوجد معرف تلقائي في localStorage');
-                    return;
+        // تحديث بيانات المستخدم
+        function updateUserData() {
+            if (!currentUserUid) return;
+            
+            db.ref('users/' + currentUserUid).on('value', snapshot => {
+                const data = snapshot.val();
+                if (data) {
+                    document.getElementById('user-points').innerText = data.points || 0;
+                    document.getElementById('user-id').value = data.userId || "";
                 }
-                
-                // إرسال طلب لربط الحسابين
-                const response = await fetch('/link-account', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        autoGeneratedId: autoGeneratedId,
-                        googleUserId: googleUserId
-                    }),
+            });
+        }
+        
+        // تحديث لوحة المتصدرين
+        function updateLeaderboard(){
+            const leaderboardRef = db.ref('users');
+            leaderboardRef.orderByChild('points').limitToLast(10).on('value', snapshot => {
+                const tbody = document.getElementById('leaderboard-body'); 
+                tbody.innerHTML = '';
+                if(!snapshot.exists()){ 
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>'; 
+                    return; 
+                }
+                const users = []; 
+                snapshot.forEach(child => { users.push(child.val()); });
+                users.sort((a, b) => (b.points || 0) - (a.points || 0));
+                users.forEach((user, index) => {
+                    const row = `<tr><td>${index+1}</td><td>${user.userId || 'غير محدد'}</td><td>${user.points || 0}</td></tr>`;
+                    tbody.innerHTML += row;
                 });
-                
-                if (response.ok) {
-                    console.log('✅ تم ربط الحسابين بنجاح');
-                } else {
-                    console.error('❌ فشل في ربط الحسابين:', await response.text());
-                }
-            } catch (error) {
-                console.error('❌ خطأ في ربط الحسابين:', error);
-            }
-        }
-        
-        // محاكاة بيانات المستخدم (في التطبيق الحقيقي، سيتم جلبها من Firebase أو نظام التسجيل)
-        function getUserID() {
-            // محاكاة لمعرف المستخدم (في التطبيق الحقيقي، سيتم جلبها من نظام التسجيل)
-            let userId = localStorage.getItem('userID');
-            
-            if (!userId) {
-                // إنشاء معرف فريد إذا لم يكن موجوداً
-                userId = 'user_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('userID', userId);
-            }
-            
-            return userId;
-        }
-        
-        // تحديث الروابط بمعرف المستخدم
-        function updateLinksWithUserID() {
-            const userId = getUserID();
-            
-            // عرض معرف المستخدم
-            document.getElementById('user-id-display-mylead').textContent = userId;
-            document.getElementById('user-id-display-adgem').textContent = userId;
-            
-            // تحديث رابط MyLead
-            const myleadLink = document.getElementById('mylead-link');
-            myleadLink.href = `https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea?userid=${userId}`;
-            
-            // تحديث رابط AdGem
-            const adgemLink = document.getElementById('adgem-link');
-            adgemLink.href = `https://api.adgem.com/v1/wall?appid=31011&playerid=${userId}`;
+            });
         }
         
         // عند تحميل الصفحة
         window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const refCode = urlParams.get('ref');
-            if (refCode) {
-                localStorage.setItem('referralCode', refCode);
-            }
+            // تحديث روابط العروض بمعرف المستخدم
+            updateLinksWithUserID();
             
+            // إغلاق نافذة QR code
+            document.querySelector('.close').addEventListener('click', function() {
+                document.getElementById('qrcode-modal').style.display = 'none';
+            });
+            
+            // عند النقر خارج النافذة، إغلاقها
+            window.addEventListener('click', function(event) {
+                if (event.target == document.getElementById('qrcode-modal')) {
+                    document.getElementById('qrcode-modal').style.display = 'none';
+                }
+            });
+
             auth.onAuthStateChanged(user => {
                 if(user){
                     currentUserUid = user.uid;
@@ -1243,33 +1470,28 @@
                     // ربط المعرف التلقائي بمعرف جوجل
                     linkUserAccounts(user.uid);
                     
+                    // تطبيق الإحالة إذا كان هناك رابط
+                    applyReferralOnSignup(user.uid);
+                    
                     const userRef = db.ref('users/' + currentUserUid);
                     userRef.once('value').then(snapshot => {
                         if(!snapshot.exists()){
-                            const referralCode = generateReferralCode(user.uid);
-                            const storedRefCode = localStorage.getItem('referralCode');
-                            
                             userRef.set({
-                                points: storedRefCode ? 100 : 0,
+                                points: 0,
                                 userId: "",
-                                referralCode: referralCode,
-                                referredBy: storedRefCode || null
+                                referralCount: 0,
+                                totalEarned: 0,
+                                referrals: []
                             }).then(() => {
-                                document.getElementById('user-points').innerText = storedRefCode ? "100" : "0";
+                                document.getElementById('user-points').innerText = "0";
                                 document.getElementById('user-id').value = "";
-                                document.getElementById('referral-code').value = referralCode;
-                                
-                                if (storedRefCode) {
-                                    applyReferralCode(storedRefCode, user.uid);
-                                    localStorage.removeItem('referralCode');
-                                }
                             });
                         } else {
                             const data = snapshot.val();
                             document.getElementById('user-points').innerText = data?.points || "0";
                             document.getElementById('user-id').value = data?.userId || "";
-                            document.getElementById('referral-code').value = data?.referralCode || generateReferralCode(user.uid);
                             
+                            // تحديث إحصائيات الإحالة
                             updateReferralStats();
                         }
                     });
@@ -1283,7 +1505,6 @@
                     document.getElementById('logout-btn').style.display = 'none';
                     document.getElementById('user-points').innerText = "0";
                     document.getElementById('user-id').value = "";
-                    document.getElementById('referral-code').value = "يجب تسجيل الدخول أولاً";
                     document.getElementById('leaderboard-body').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>';
                 }
             });
@@ -1308,10 +1529,7 @@
                 db.ref('users/' + currentUserUid).update({userId: id}).then(() => alert('✅ تم حفظ الآيدي بنجاح'));
                 updateLeaderboard();
             });
-            
-            // تحديث روابط العروض بمعرف المستخدم
-            updateLinksWithUserID();
         });
     </script>
 </body>
-    </html>
+                </html>
