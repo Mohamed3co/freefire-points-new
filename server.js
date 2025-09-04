@@ -20,29 +20,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅ Firebase إعداد
+// ✅ Firebase إعداد - باستخدام المفتاح الصحيح
+const serviceAccount = {
+  type: "service_account",
+  project_id: "freefirerewardsdz-69572",
+  private_key_id: "bdd2a923e0fc55a883a2c11428cab094519e1a5a",
+  private_key: process.env.FIREBASE_PRIVATE_KEY || "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCzVV76R610zn6Y\nCMp7WQlKz8Wq9q84A0YzYNgkOTRZMWqyTqx1sHbS8iLoLX6dYMir3tJ6/oPXu1ep\nOYiJ5jVZ4RBZo30rZPHO5jFWrsMAI58PpqmSWpO4HOuJmEiQDzmXLisFml4KehQS\nx1pdV1m7yT2/NDDEIgwzUs+oKX2a4OSbSNRxi4MvemrQriA9rGvHYZm9sWf2kYGq\nHiFeTAtKHQe+wPcUxULaN1AoQAXVcTj3cr0+WHzs/+HJiA15Cxi1O43i9zFXz5Ce\nXqgt7Fhh72CEc5QHMLu0ZQFLeIt9Rr82YUS6oAmsRslDasFjiIE8X27wzsyQ46aa\nas8xkD7ZAgMBAAECggEAEb1pNtLuWraumTWNaiRFogvpnt7mOGFCiYST/QlXn1cf\nGeJkdwPszTM8tsEBXGodj7rsEVSqECYtJsVVN2b5chmsd2GP2UIUFYZ57Pw+t/3O\nF0tCTQL+x+C8gBD7ZJzM8qKTiOtbUCgBYlYsHz2r18Kxg/+Sr2Q61rzjY9wu26on\nKp9nWA6TQ3XAcXJ7+J7Ter2Yr7dSei7jaZ0H4eVmyROWI62NQEImn2zeYX68mEU6\nJZ4RLtcAPvXEl4M/RUPwblWmjPSNf5wJabQlqgd7+zGW0r8BURTS9PcvKn3Cklmc\ncK5TlWDJT/jdMaFDNf4qVXNl6wMcQ/Afml5IH7reLQKBgQDcaAt5tvB75l1ylHNC\naWasZpFE2T6MBOzzLITkhs+3foi1e14vY13fWcRWYdJ5jEfYNNi8bZVo54YjV/MA\nmCQZECqnycqqAktTU+1eQt/6YbAOTQUV3dGLUlQc1k/m/vA0L7lDbDDLn2d8wfkA\ngTxnfa3G3iBI/Ry7JcsWEBRNKwKBgQDQS04FBaLBZAD6AR6ToJc/I3xxRZaqwvQk\nAu6DDdlpsS/Q7hCRrljw2Hza9c8KQHs4SozIWfmlp35r0u0d6sQacj3rZ8AyCKbo\nrbFnDaJDR8bh5lSL+pzT/V3FKBTRMIANmdY8J66sErWh8BxjDPgEmDQwXnU0wexL\nHYSnjufKCwKBgCHoF6vXytMks0eHMtwKnvLyrHJtAURFFbarKJ6HZrkRzDIvEmQz\n4yMTCjNHxTtRq1PFfXovWYbT5zzUsNtsjFEWvZkmX/kbdT8ScDfKDe7UzGLG0nt0\nrmHCfpIZHh2pJobAuL14jWEl2qPEq2u6dfJt0SgAz/KqjZr0y3NPcfAVAoGAO4T5\nM1gr7MUNvmKpgRfHgEQ8oAV5iywQJWYtD4fak2gNOM9+LpK6WYATFWJeGhjY3Pn4\nhpunSZ2180ufdAgMp13zsZvBAMsWHrDbW446yqzs+MofaKxhOfZRYDAW2rvYK4rE\n/AV+1S63diGtiuQ+ztlLOHMVXND5G3HA4TxloYcCgYEAoOaSJg8IVh+Id2x1vy9t\necUjnvda92GhbwlWvUzvZRMUBdid91o0BzXdY8lEhdhv1xkdM6bayJHaKPmxZeCj\ni3BXMwrbBNBq97c3FL2ijglXCx27wdP1b0u86qpjmZO+4V1zAQ1YDgiqs+XHvO+y\nrP2I53MJrNEIPJ1eGPEVOcY=\n-----END PRIVATE KEY-----\n",
+  client_email: "firebase-adminsdk-fbsvc@freefirerewardsdz-69572.iam.gserviceaccount.com",
+  client_id: "103224328110678020788",
+  auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  token_uri: "https://oauth2.googleapis.com/token",
+  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40freefirerewardsdz-69572.iam.gserviceaccount.com",
+  universe_domain: "googleapis.com"
+};
+
+// استبدال \\n بـ \n إذا كان المفتاح من متغير البيئة
+if (serviceAccount.private_key.includes('\\n')) {
+  serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+}
+
 admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: "freefirerewardsdz-69572",
-    clientEmail: "firebase-adminsdk-fbsvc@freefirerewardsdz-69572.iam.gserviceaccount.com",
-    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || `-----BEGIN PRIVATE KEY-----
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCdxbOc5RFjmNN4
-IIqTZSnHkW+THjkcfZvMt1Nz2b3O8YTJMQG7xVkRY10TKpvwPy7KFA4/U7QdXJf7
-cw11wrBUh8EKtg+vfQaC/lGFVzeNr2wCGB96NIlScF1TmcQWU7YQqGd6u4YirTrH
-NOj/aDr57HEH9zCcndBFYpJV5YCGgm1uUeo/ui2OPnSsy6+xcTtY9pC1kj7YcyLh
-Mu/j8mGsLgX8oxAFqvijYurgEAXFXEym3sXPx5LwVHvGPUwEDvTSmgj4I1aPKt1k
-5TaTlwnV+hbIqovFr0B+vJmTWLv0N44PVqD2JmV1htK/+wgVnSmsbEww3tqo8Y1+
-NzmNIuUNAgMBAAECggEAFe8orakWDg3u5m5FvcCseouQYrhqsbiPyrn4/uv4bLcc
-ohjvWALTg2yYQcQkelXaZCs+INU6/vMCySlBZ4wJ1jKqZpoRm7Dq0RbY0AwkU80d
-27utUqDPr5eiDe+ceIsqTm4PNtuvxg3l1FCZjPqZamoR+8zEpB13mVHfLNRzlh9/
-ZrJbzaP4A0JyESTaKHg9VI5R5i0FSkq87VTA1O/rqY3VTB8vvlDKlREGOcPplJ2c
-iaK++XOXdSCbDWizXh9PPjb4rV9zzSctif7QLY9QoK02oz4CILqCIdI+FEMQZF3/
-gtLBZRxbwIavHkc5HZ7VMYGo6ge00BJzPvHB1agJ0QKBgQDWTqthpFA4YyMcFtXO
-06lSQIG9V6ghEFVuSAy/fapURrLa2ysLv06jwoV7PIJhS/MmaxBXtDFwTnCHtTrG
-HmDAJsC7PtiQzwf2C0KBlklqylcIzOs+deGKN3qkfAKZSrh2/yFmMsKB8OIguCiY
-Z3Agn8Y4ocPrt2YickHofUaGXQKBgQC8d16XRhipToZA极速4.0
------END PRIVATE KEY-----`,
-  }),
+  credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
 });
 
