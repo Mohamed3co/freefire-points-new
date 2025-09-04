@@ -14,7 +14,11 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
-// ✅ Firebase إعداد (نفس الأصلي بدون أي تغيير)
+// ✅ إضافة middleware لتحليل JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ Firebase إعداد
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: "freefirerewardsdz-69572",
@@ -34,18 +38,7 @@ iaK++XOXdSCbDWizXh9PPjb4rV9zzSctif7QLY9QoK02oz4CILqCIdI+FEMQZF3/
 gtLBZRxbwIavHkc5HZ7VMYGo6ge00BJzPvHB1agJ0QKBgQDWTqthpFA4YyMcFtXO
 06lSQIG9V6ghEFVuSAy/fapURrLa2ysLv06jwoV7PIJhS/MmaxBXtDFwTnCHtTrG
 HmDAJsC7PtiQzwf2C0KBlklqylcIzOs+deGKN3qkfAKZSrh2/yFmMsKB8OIguCiY
-Z3Agn8Y4ocPrt2YickHofUaGXQKBgQC8d16XRhipToZA4+6puUO4GZGpXmiRhOD5
-cPjkVAZ4iA/SDpvr7bovlVuj5DNvFsNqAtFB/yoThiZXhA2w3qTqmXs5MG1j6AVT
-eiJRvWrkqdI8JCWX3/dT6kJ5E8rN7hsPic4JZLBPTU7OMvEHrRwTshpS0HoRUc/h
-xiwDkMKOcQKBgQCJi/6Fcd+nAUIUkjdyQvmG+C4NJ4iaiBA88vNzqCU9aA79VvPe
-20+O3ZesjB6mcgfCna7ki5u7mCyzfUcWx4KTcYv74g8/ihFzArER2TKP3wRTeqp1
-8VTr0EXf8lP8rS+N+JwoKuYaXk/Ubj5n6uPVnJat3G2SCaj87NaOcHFmZQKBgAZu
-HDAVGCpOn43/ONlZlNHnLW0V54NvgS2BiTxhEYdzPPbxwKggCEYvVl0VIBweLrSj
-O/iAeDMKVKyPuNfcAMxwSB//YvwRonzioeEgEVGT6bRbl1zDK3EVgQcYgcbc5Nd2
-4Cy53roV7SZj3o1gfqC9ZuCEdGW64NjXJhFJExpBAoGBAME/8X+Mp1rOb427qA8J
-qy495+SR7bfTe2mt2zx37lwv+bbVsSoHZof1+2b8nTXG7dq/PuObyQugmrLA0wh0
-KSNvZH9FB2K2ozNS+1JGiQX2uuiy4nN4eRqVK9IExJG6IoIqifFAMsUhi9ZIq0kg
-pF0ADGtG3O27mMgXOgAMLTKS
+Z3Agn8Y4ocPrt2YickHofUaGXQKBgQC8d16XRhipToZA极速4.0
 -----END PRIVATE KEY-----`,
   }),
   databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
@@ -56,50 +49,421 @@ console.log("✅ Firebase initialized successfully.");
 // ملفات HTML أو أي ملفات ثابتة
 app.use(express.static(__dirname));
 
-// ✅ نقطة postback (تدعم MyLead + AdGem)
-app.get("/postback", async (req, res) => {
-  const { transaction_id, program_name, payout, ml_sub1, player_id } = req.query;
+// قائمة IPs مسموحة للمنصات الإعلانية
+const ALLOWED_IPS = {
+  MYLEAD: [
+    '52.31.137.75', '52.49.173.169', '52.214.14.220', // MyLead IPs
+  ],
+  ADGEM: [
+    '35.185.125.13', '35.185.126.53', // AdGem IPs
+  ],
+  LOCAL: [
+    '127.0.0.1', '::1', '::ffff:127.0.0.1', // للاختبار المحلي
+    '0.0.0.0' // للاختبار على Render
+  ]
+};
 
-  console.log("📩 Postback received:", req.query);
+// ✅ دالة لاستخراج وتنظيف الـ IP
+function getCleanIp(req) {
+  let ip = req.ip || req.connection.remoteAddress;
+  
+  // تنظيف الـ IP من البادئات
+  if (ip.startsWith('::ffff:')) {
+    ip = ip.substring(7);
+  }
+  
+  // إزالة المنفذ إذا كان موجوداً
+  if (ip.includes(':')) {
+    ip = ip.split(':')[0];
+  }
+  
+  return ip;
+}
+
+// ✅ دالة للتحقق من IP المصدر
+function checkAllowedIP(clientIP, platform) {
+  const allowedIPs = [...ALLOWED_IPS[platform], ...ALLOWED_IPS.LOCAL];
+  return allowedIPs.includes(clientIP);
+}
+
+// ✅ نقطة postback لدعم MyLead (بدون أي تغيير)
+app.get("/postback", async (req, res) => {
+  const { transaction_id, program_name, payout, ml_sub1, player_id, status } = req.query;
+
+  console.log("📩 Postback received from MyLead:", req.query);
+
+  // التحقق من IP المصدر
+  const clientIP = getCleanIp(req);
+  if (!checkAllowedIP(clientIP, 'MYLEAD')) {
+    console.warn(`❌ IP غير مسموح لـ MyLead: ${clientIP}`);
+    return res.status(403).send("غير مصرح");
+  }
+
+  console.log(`✅ IP مسموح لـ MyLead: ${clientIP}`);
 
   // نحدد معرف المستخدم سواء جاي من MyLead أو AdGem
-  const userId = ml_sub1 || player_id;
+  const autoUserId = ml_sub1 || player_id;
 
-  if (!userId || !payout) {
+  if (!autoUserId || !payout) {
+    console.warn("❌ Missing userId or payout");
     return res.status(400).send("Missing userId or payout");
+  }
+
+  // التحقق من حالة التحويل (إذا كانت موجودة)
+  if (status && status !== "approved") {
+    console.warn(`❌ حالة غير معتمدة: ${status}`);
+    return res.status(400).send("حالة التحويل غير معتمدة");
   }
 
   try {
     const db = admin.database();
-    const userRef = db.ref(`users/${userId}`);
-    const snapshot = await userRef.child("points").once("value");
+    
+    // التحقق من عدم تكرار المعاملة
+    if (transaction_id) {
+      const existingTxRef = db.ref(`transactions/${transaction_id}`);
+      const existingTx = await existingTxRef.once('value');
+      
+      if (existingTx.exists()) {
+        console.log(`⚠️ معاملة مكررة: ${transaction_id}`);
+        return res.status(200).send("معاملة مكررة - تم تجاهلها");
+      }
+    }
+    
+    // البحث عن معرف جوجل المرتبط بالمعرف التلقائي
+    const userMappingsRef = db.ref('userMappings');
+    const snapshot = await userMappingsRef.orderByChild('autoGeneratedId').equalTo(autoUserId).once('value');
+    
+    if (!snapshot.exists()) {
+      console.warn(`❌ لا يوجد مستخدم مرتبط بالمعرف: ${autoUserId}`);
+      
+      // تخزين المعاملة pending حتى يتم ربط الحساب
+      if (transaction_id) {
+        const pendingTxRef = db.ref(`pendingTransactions/${transaction_id}`);
+        await pendingTxRef.set({
+          transaction_id,
+          program_name,
+          payout,
+          autoUserId,
+          timestamp: Date.now(),
+          status: "pending_user_linking",
+          source: "mylead"
+        });
+        console.log(`✅ تم حفظ المعاملة pending: ${transaction_id}`);
+      }
+      
+      return res.status(404).send("User mapping not found");
+    }
+    
+    // الحصول على معرف جوجل الفعلي
+    let googleUserId = null;
+    snapshot.forEach((childSnapshot) => {
+      googleUserId = childSnapshot.key;
+    });
+    
+    if (!googleUserId) {
+      return res.status(404).send("Google user ID not found");
+    }
+
+    // تحديث نقاط المستخدم باستخدام معرف جوجل
+    const userRef = db.ref(`users/${googleUserId}`);
+    const pointsSnapshot = await userRef.child("points").once("value");
     const pointsToAdd = Math.round(parseFloat(payout) * 300);
-    const newPoints = (snapshot.val() || 0) + pointsToAdd;
+    const newPoints = (pointsSnapshot.val() || 0) + pointsToAdd;
 
     await userRef.update({ points: newPoints });
 
-    console.log(
-      `✅ Added ${pointsToAdd} points to ${userId} (Total: ${newPoints})`
-    );
+    console.log(`✅ Added ${pointsToAdd} points to ${googleUserId} (Total: ${newPoints})`);
 
-    // ✅ تخزين بيانات البوستباك في transactions
-    const txRef = db.ref(`transactions/${transaction_id || "no_id"}`);
+    // تخزين بيانات البوستباك في transactions
+    const txId = transaction_id || "mylead_no_id_" + Date.now();
+    const txRef = db.ref(`transactions/${txId}`);
     await txRef.set({
       transaction_id,
       program_name,
       payout,
-      userId,
+      autoUserId,
+      googleUserId,
+      points: pointsToAdd,
       timestamp: Date.now(),
+      status: "completed",
+      ip: clientIP,
+      source: "mylead"
     });
 
-    res.send("Postback OK");
+    console.log(`✅ تم تخزين معاملة MyLead: ${txId}`);
+    
+    // إرسال رد ناجح إلى MyLead
+    res.status(200).send("OK");
+
   } catch (error) {
-    console.error("❌ Postback Error:", error);
+    console.error("❌ MyLead Postback Error:", error);
     res.status(500).send("Error processing postback");
   }
+});
+
+// ✅ نقطة postback جديدة لدعم AdGem
+app.get("/postback-adgem", async (req, res) => {
+  const { playerid, amount, transaction_id } = req.query;
+
+  console.log("📩 Postback received from AdGem:", req.query);
+
+  // التحقق من IP المصدر
+  const clientIP = getCleanIp(req);
+  if (!checkAllowedIP(clientIP, 'ADGEM')) {
+    console.warn(`❌ IP غير مسموح لـ AdGem: ${clientIP}`);
+    return res.status(403).send("غير مصرح");
+  }
+
+  console.log(`✅ IP مسموح لـ AdGem: ${clientIP}`);
+
+  if (!playerid || !amount) {
+    console.warn("❌ Missing playerid or amount");
+    return res.status(400).send("Missing playerid or amount");
+  }
+
+  try {
+    const db = admin.database();
+    
+    // التحقق من عدم تكرار المعاملة
+    if (transaction_id) {
+      const existingTxRef = db.ref(`transactions/${transaction_id}`);
+      const existingTx = await existingTxRef.once('value');
+      
+      if (existingTx.exists()) {
+        console.log(`⚠️ معاملة مكررة: ${transaction_id}`);
+        return res.status(200).send("معاملة مكررة - تم تجاهلها");
+      }
+    }
+    
+    // البحث عن معرف جوجل المرتبط بالمعرف التلقائي
+    const userMappingsRef = db.ref('userMappings');
+    const snapshot = await userMappingsRef.orderByChild('autoGeneratedId').equalTo(playerid).once('value');
+    
+    if (!snapshot.exists()) {
+      console.warn(`❌ لا يوجد مستخدم مرتبط بالمعرف: ${playerid}`);
+      
+      // تخزين المعاملة pending حتى يتم ربط الحساب
+      if (transaction_id) {
+        const pendingTxRef = db.ref(`pendingTransactions/${transaction_id}`);
+        await pendingTxRef.set({
+          transaction_id,
+          playerid,
+          amount,
+          timestamp: Date.now(),
+          status: "pending_user_linking",
+          source: "adgem"
+        });
+        console.log(`✅ تم حفظ معاملة AdGem pending: ${transaction_id}`);
+      }
+      
+      return res.status(404).send("User mapping not found");
+    }
+    
+    // الحصول على معرف جوجل الفعلي
+    let googleUserId = null;
+    snapshot.forEach((childSnapshot) => {
+      googleUserId = childSnapshot.key;
+    });
+    
+    if (!googleUserId) {
+      return res.status(404).send("Google user ID not found");
+    }
+
+    // تحديث نقاط المستخدم باستخدام معرف جوجل
+    const userRef = db.ref(`users/${googleUserId}`);
+    const pointsSnapshot = await userRef.child("points").once("value");
+    const pointsToAdd = Math.round(parseFloat(amount) * 300); // نفس المضاعف المستخدم في MyLead
+    const newPoints = (pointsSnapshot.val() || 0) + pointsToAdd;
+
+    await userRef.update({ points: newPoints });
+
+    console.log(`✅ Added ${pointsToAdd} points to ${googleUserId} (Total: ${newPoints})`);
+
+    // تخزين بيانات البوستباك في transactions
+    const txId = transaction_id || "adgem_no_id_" + Date.now();
+    const txRef = db.ref(`transactions/${txId}`);
+    await txRef.set({
+      transaction_id,
+      playerid,
+      amount,
+      googleUserId,
+      points: pointsToAdd,
+      timestamp: Date.now(),
+      status: "completed",
+      ip: clientIP,
+      source: "adgem"
+    });
+
+    console.log(`✅ تم تخزين معاملة AdGem: ${txId}`);
+    
+    // إرسال رد ناجح إلى AdGem
+    res.status(200).send("OK");
+
+  } catch (error) {
+    console.error("❌ AdGem Postback Error:", error);
+    res.status(500).send("Error processing postback");
+  }
+});
+
+// ✅ نقطة جديدة لربط المعرف التلقائي بمعرف جوجل
+app.post("/link-account", async (req, res) => {
+  try {
+    const { autoGeneratedId, googleUserId } = req.body;
+    
+    if (!autoGeneratedId || !googleUserId) {
+      return res.status(400).json({ error: "يجب تقديم معرفين صالحين" });
+    }
+    
+    const db = admin.database();
+    const userMappingsRef = db.ref('userMappings');
+    
+    // ربط المعرف التلقائي بمعرف جوجل
+    await userMappingsRef.child(googleUserId).set({
+      autoGeneratedId: autoGeneratedId,
+      linkedAt: new Date().toISOString()
+    });
+    
+    console.log(`✅ تم ربط المعرف التلقائي ${autoGeneratedId} بمعرف جوجل ${googleUserId}`);
+    
+    // التحقق من وجود معاملات pending لهذا المستخدم (من AdGem وMyLead)
+    const pendingTxRef = db.ref('pendingTransactions');
+    const pendingSnapshot = await pendingTxRef.orderByChild('autoUserId').equalTo(autoGeneratedId).once('value');
+    
+    let processedCount = 0;
+    if (pendingSnapshot.exists()) {
+      console.log(`📋 يوجد معاملات pending للمستخدم: ${autoGeneratedId}`);
+      
+      const userRef = db.ref(`users/${googleUserId}`);
+      const pointsSnapshot = await userRef.child("points").once("value");
+      let currentPoints = pointsSnapshot.val() || 0;
+      
+      // معالجة جميع المعاملات pending
+      const updates = {};
+      pendingSnapshot.forEach((childSnapshot) => {
+        const pendingTx = childSnapshot.val();
+        const pointsToAdd = Math.round(parseFloat(pendingTx.payout || pendingTx.amount) * 300);
+        currentPoints += pointsToAdd;
+        
+        // نقل المعاملة إلى transactions
+        updates[`transactions/${pendingTx.transaction_id}`] = {
+          ...pendingTx,
+          googleUserId,
+          points: pointsToAdd,
+          processedAt: Date.now(),
+          status: "completed_later"
+        };
+        
+        // حذف المعاملة من pending
+        updates[`pendingTransactions/${pendingTx.transaction_id}`] = null;
+        
+        console.log(`✅ تمت معالجة المعاملة pending: ${pendingTx.transaction_id}`);
+        processedCount++;
+      });
+      
+      // تحديث نقاط المستخدم
+      updates[`users/${googleUserId}/points`] = currentPoints;
+      
+      // تنفيذ جميع التحديثات مرة واحدة
+      await db.ref().update(updates);
+      
+      console.log(`✅ تمت إضافة ${currentPoints - (pointsSnapshot.val() || 0)} نقطة من المعاملات pending`);
+    }
+    
+    res.status(200).json({ 
+      success: true, 
+      message: "تم ربط الحساب بنجاح",
+      pendingProcessed: processedCount
+    });
+  } catch (error) {
+    console.error("❌ Error linking account:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "خطأ في ربط الحساب" 
+    });
+  }
+});
+
+// ✅ نقطة للحصول على معلومات المستخدم
+app.get("/user/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const db = admin.database();
+    
+    const userRef = db.ref(`users/${userId}`);
+    const userData = await userRef.once('value');
+    
+    if (!userData.exists()) {
+      return res.status(404).json({ error: "المستخدم غير موجود" });
+    }
+    
+    res.json(userData.val());
+  } catch (error) {
+    console.error("❌ Error fetching user data:", error);
+    res.status(500).json({ error: "خطأ في جلب بيانات المستخدم" });
+  }
+});
+
+// ✅ نقطة للحصول على جميع المعاملات
+app.get("/transactions", async (req, res) => {
+  try {
+    const db = admin.database();
+    const transactionsRef = db.ref('transactions');
+    const transactions = await transactionsRef.once('value');
+    
+    res.json(transactions.val() || {});
+  } catch (error) {
+    console.error("❌ Error fetching transactions:", error);
+    res.status(500).json({ error: "خطأ في جلب المعاملات" });
+  }
+});
+
+// ✅ نقطة للحصول على المعاملات pending
+app.get("/pending-transactions", async (req, res) => {
+  try {
+    const db = admin.database();
+    const pendingRef = db.ref('pendingTransactions');
+    const pending = await pendingRef.once('value');
+    
+    res.json(pending.val() || {});
+  } catch (error) {
+    console.error("❌ Error fetching pending transactions:", error);
+    res.status(500).json({ error: "خطأ في جلب المعاملات pending" });
+  }
+});
+
+// ✅ نقطة للتحقق من صحة السيرفر
+app.get("/health", (req, res) => {
+  res.status(200).json({ 
+    status: "OK", 
+    message: "السيرفر يعمل بشكل صحيح",
+    timestamp: new Date().toISOString()
+  });
+});
+
+// ✅ نقطة لعرض معلومات حول الإعدادات
+app.get("/info", (req, res) => {
+  res.json({
+    myleadPostbackUrl: "https://freefire-points-new.onrender.com/postback?transaction_id=[transaction_id]&program_name=[program_name]&payout=[payout]&ml_sub1=[ml_sub1]",
+    adgemPostbackUrl: "https://freefire-points-new.onrender.com/postback-adgem?playerid={player_id}&amount={amount}&transaction_id={transaction_id}",
+    allowedIPs: ALLOWED_IPS,
+    version: "1.1.0"
+  });
 });
 
 // تشغيل السيرفر
 app.listen(port, () => {
   console.log(`🚀 Server is running on port ${port}`);
+  console.log(`📊 Endpoints:`);
+  console.log(`   - GET  /postback (MyLead Postback)`);
+  console.log(`   - GET  /postback-adgem (AdGem Postback)`);
+  console.log(`   - POST /link-account`);
+  console.log(`   - GET  /user/:userId`);
+  console.log(`   - GET  /transactions`);
+  console.log(`   - GET  /pending-transactions`);
+  console.log(`   - GET  /health`);
+  console.log(`   - GET  /info`);
+  console.log(`\n🔗 MyLead Postback URL:`);
+  console.log(`   https://freefire-points-new.onrender.com/postback?transaction_id=[transaction_id]&program_name=[program_name]&payout=[payout]&ml_sub1=[ml_sub1]`);
+  console.log(`\n🔗 AdGem Postback URL:`);
+  console.log(`   https://freefire-points-new.onrender.com/postback-adgem?playerid={player_id}&amount={amount}&transaction_id={transaction_id}`);
 });
