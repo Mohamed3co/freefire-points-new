@@ -438,6 +438,116 @@
             gap: 5px;
         }
         
+        /* Offer Containers */
+        .offer-container {
+            background: rgba(30, 30, 50, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .offer-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .offer-logo {
+            width: 60px;
+            height: 60px;
+            margin-left: 15px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #33ccff, #3366ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .adgem-logo {
+            background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+        }
+        
+        .offer-title {
+            font-size: 1.5em;
+            color: #ffcc33;
+        }
+        
+        .offer-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        .offer-link {
+            display: block;
+            background: linear-gradient(135deg, var(--secondary), #3366ff);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+        
+        .offer-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(51, 204, 255, 0.4);
+        }
+        
+        .adgem-link {
+            background: linear-gradient(135deg, var(--primary), #ff1a1a);
+        }
+        
+        .adgem-link:hover {
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+        }
+        
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .instructions h3 {
+            color: #33ff77;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            padding-right: 20px;
+            line-height: 1.8;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .user-id-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .user-id-value {
+            font-weight: bold;
+            color: #ffcc33;
+            word-break: break-all;
+            margin: 10px 0;
+            direction: ltr;
+            display: inline-block;
+        }
+        
         /* Responsive */
         @media (max-width: 600px) {
             header { font-size: 1.3em; padding: 0.8em; } 
@@ -454,6 +564,8 @@
             .account-card { padding: 20px; }
             .referral-stats { flex-direction: column; gap: 10px; }
             .social-buttons { flex-wrap: wrap; }
+            .offer-header { flex-direction: column; text-align: center; }
+            .offer-logo { margin: 0 0 15px 0; }
         }
     </style>
 </head>
@@ -480,14 +592,74 @@
     <!-- قسم العروض -->
     <div id="offers" class="section">
         <h2 style="text-align:center; color:#33ccff; text-shadow:0 0 10px #33ccff;">العروض المتاحة</h2>
-        <div class="offers-container">
-            <div>
-                <h3>MyLead</h3>
-                <iframe id="offerwall-mylead" src="" style="width:100%; height:500px; border:none;"></iframe>
+        
+        <!-- MyLead Offers -->
+        <div class="offer-container">
+            <div class="offer-header">
+                <div class="offer-logo">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h2 class="offer-title">عروض MyLead</h2>
             </div>
-            <div>
-                <h3>AdGem</h3>
-                <iframe id="offerwall-adgem" src="" style="width:100%; height:500px; border:none;"></iframe>
+            
+            <p class="offer-description">
+                استفد من عروض MyLead المميزة لكسب النقاط التي يمكنك استبدالها بمزايا حصرية في ألعابك المفضلة. 
+                كل ما عليك هو إكمال المهام البسيطة والحصول على نقاطك فوراً.
+            </p>
+            
+            <div class="user-id-display">
+                <p>معرف المستخدم الخاص بك:</p>
+                <p class="user-id-value" id="user-id-display-mylead">جاري التحميل...</p>
+            </div>
+            
+            <a href="#" class="offer-link" id="mylead-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i> الانتقال إلى عروض MyLead
+            </a>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> كيفية الاستفادة من العروض:</h3>
+                <ol>
+                    <li>انقر على الرابط أعلاه للانتقال إلى صفحة العروض</li>
+                    <li>اختر العرض الذي يناسبك من القائمة</li>
+                    <li>اتبع التعليمات المطلوبة لإكمال العرض</li>
+                    <li>ستضاف النقاط إلى حسابك تلقائياً بعد إكمال المهمة</li>
+                    <li>يمكنك استبدال النقاط بمزايا داخل الألعاب</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- AdGem Offers -->
+        <div class="offer-container">
+            <div class="offer-header">
+                <div class="offer-logo adgem-logo">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h2 class="offer-title">عروض AdGem</h2>
+            </div>
+            
+            <p class="offer-description">
+                استمتع بمجموعة واسعة من عروض AdGem التي تمنحك فرصة ربح النقاط من خلال تجربة تطبيقات جديدة، 
+                مشاهدة الإعلانات، أو المشاركة في استطلاعات الرأي. احصل على نقاطك فور إكمال المهمة!
+            </p>
+            
+            <div class="user-id-display">
+                <p>معرف المستخدم الخاص بك:</p>
+                <p class="user-id-value" id="user-id-display-adgem">جاري التحميل...</p>
+            </div>
+            
+            <a href="#" class="offer-link adgem-link" id="adgem-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i> الانتقال إلى عروض AdGem
+            </a>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> كيفية الاستفادة من العروض:</h3>
+                <ol>
+                    <li>انقر على الرابط أعلاه للانتقال إلى صفحة العروض</li>
+                    <li>اختر العرض الذي تريد المشاركة فيه</li>
+                    <li>اقرأ متطلبات كل عرض بعناية</li>
+                    <li>أكمل المهمة المطلوبة كما هو موضح</li>
+                    <li>ستتم إضافة النقاط إلى حسابك بعد التحقق من إكمال المهمة</li>
+                </ol>
             </div>
         </div>
     </div>
@@ -596,27 +768,27 @@
                     <p>Free Fire</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('pubg')">
-                    <img src="https://i.ibb.co/cKQqJf9J/pubg.jpg" alt="PUBG Mobile" class="game-image" onerror="this.src='https://via.placeholder.com/150/33ccff/ffffff?text=PUBG'">
+                    <img src="https://i.ibb.co/0j9v7F7/pubg.jpg" alt="PUBG Mobile" class="game-image" onerror="this.src='https://via.placeholder.com/150/33ccff/ffffff?text=PUBG'">
                     <p>PUBG Mobile</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('roblox')">
-                    <img src="https://i.ibb.co/j2K8JnQ/roblox.jpg" alt="Roblox" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff9900/ffffff?text=Roblox'">
+                    <img src="https://i.ibb.co/3vqVg8h/roblox.jpg" alt="Roblox" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff9900/ffffff?text=Roblox'">
                     <p>Roblox</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('efootball')">
-                    <img src="https://i.ibb.co/wrKyCpgt/pes.jpg" alt="eFootball" class="game-image" onerror="this.src='https://via.placeholder.com/150/33ff77/ffffff?text=eFootball'">
+                    <img src="https://i.ibb.co/0X8c0Dk/efootball.jpg" alt="eFootball" class="game-image" onerror="this.src='https://via.placeholder.com/150/33ff77/ffffff?text=eFootball'">
                     <p>eFootball</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('fifa')">
-                    <img src="https://i.ibb.co/XrGPzCLt/fifa.jpg" alt="FIFA Mobile" class="game-image" onerror="this.src='https://via.placeholder.com/150/ffcc33/ffffff?text=FIFA'">
+                    <img src="https://i.ibb.co/6n7p6v0/fifa.jpg" alt="FIFA Mobile" class="game-image" onerror="this.src='https://via.placeholder.com/150/ffcc33/ffffff?text=FIFA'">
                     <p>FIFA Mobile</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('cod')">
-                    <img src="https://i.ibb.co/WvwQNgsg/cod.jpg" alt="Call of Duty" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff1a1a/ffffff?text=COD'">
+                    <img src="https://i.ibb.co/4W9n5V0/cod.jpg" alt="Call of Duty" class="game-image" onerror="this.src='https://via.placeholder.com/150/ff1a1a/ffffff?text=COD'">
                     <p>Call of Duty</p>
                 </div>
                 <div class="game-card" onclick="showGameOptions('bloodstrike')">
-                    <img src="https://i.ibb.co/fVbx0zrV/deltaforce.jpg" alt="Blood Strike" class="game-image" onerror="this.src='https://via.placeholder.com/150/9933ff/ffffff?text=Blood+Strike'">
+                    <img src="https://i.ibb.co/6Jf4c1N/bloodstrike.jpg" alt="Blood Strike" class="game-image" onerror="this.src='https://via.placeholder.com/150/9933ff/ffffff?text=Blood+Strike'">
                     <p>Blood Strike</p>
                 </div>
             </div>
@@ -937,33 +1109,30 @@
         
         // دالة الشحن
         function redeem(pointsRequired, gameKey, option, gameId){
-    if(!currentUserUid) return alert('⚠️ سجل الدخول أولاً');
-    
-    db.ref('users/' + currentUserUid).once('value').then(snapshot => {
-        const data = snapshot.val();
-        if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
-        if((data.points || 0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية لإتمام العملية');
+            if(!currentUserUid) return alert('⚠️ سجل الدخول أولاً');
+            
+            db.ref('users/' + currentUserUid).once('value').then(snapshot => {
+                const data = snapshot.val();
+                if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
+                if((data.points || 0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية لإتمام العملية');
 
-        // خصم النقاط
-        db.ref('users/' + currentUserUid).update({
-            points: (data.points || 0) - pointsRequired
-        });
+                // خصم النقاط
+                db.ref('users/' + currentUserUid).update({
+                    points: (data.points || 0) - pointsRequired
+                });
 
-        // تسجيل طلب الشحن
-        const requestRef = db.ref('redeemRequests').push();
-        requestRef.set({
-            userId: currentUserUid,
-            game: gameKey,
-            option: option,
-            gameId: gameId,
-            date: new Date().toISOString(),
-            status: "قيد المراجعة"
-        });
+                // تسجيل طلب الشحن
+                const requestRef = db.ref('redeemRequests').push();
+                requestRef.set({
+                    userId: currentUserUid,
+                    game: gameKey,
+                    option: option,
+                    gameId: gameId,
+                    date: new Date().toISOString(),
+                    status: "قيد المراجعة"
+                });
 
-        alert('✅ تم إرسال طلب الشحن، سيتم تنفيذه قريباً');
-        hideGameOptions();
-    });
-        }
+                // إرسال إشعار إلى التليجرام
                 const gameNames = {
                     freefire: "Free Fire",
                     pubg: "PUBG Mobile",
@@ -990,6 +1159,37 @@
                   })
                   .catch(() => alert('❌ فشل إرسال طلب الشحن'));
             });
+        }
+        
+        // محاكاة بيانات المستخدم (في التطبيق الحقيقي، سيتم جلبها من Firebase أو نظام التسجيل)
+        function getUserID() {
+            // محاكاة لمعرف المستخدم (في التطبيق الحقيقي، سيتم جلبها من نظام التسجيل)
+            let userId = localStorage.getItem('userID');
+            
+            if (!userId) {
+                // إنشاء معرف فريد إذا لم يكن موجوداً
+                userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('userID', userId);
+            }
+            
+            return userId;
+        }
+        
+        // تحديث الروابط بمعرف المستخدم
+        function updateLinksWithUserID() {
+            const userId = getUserID();
+            
+            // عرض معرف المستخدم
+            document.getElementById('user-id-display-mylead').textContent = userId;
+            document.getElementById('user-id-display-adgem').textContent = userId;
+            
+            // تحديث رابط MyLead
+            const myleadLink = document.getElementById('mylead-link');
+            myleadLink.href = `https://reward-me.eu/3cdf5a64-64d3-11f0-aa29-8a5fb7be40ea?userid=${userId}`;
+            
+            // تحديث رابط AdGem
+            const adgemLink = document.getElementById('adgem-link');
+            adgemLink.href = `https://api.adgem.com/v1/wall?appid=31011&playerid=${userId}`;
         }
         
         // عند تحميل الصفحة
@@ -1072,7 +1272,10 @@
                 db.ref('users/' + currentUserUid).update({userId: id}).then(() => alert('✅ تم حفظ الآيدي بنجاح'));
                 updateLeaderboard();
             });
+            
+            // تحديث روابط العروض بمعرف المستخدم
+            updateLinksWithUserID();
         });
     </script>
 </body>
-</html>
+    </html>
