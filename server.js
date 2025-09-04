@@ -38,7 +38,7 @@ iaK++XOXdSCbDWizXh9PPjb4rV9zzSctif7QLY9QoK02oz4CILqCIdI+FEMQZF3/
 gtLBZRxbwIavHkc5HZ7VMYGo6ge00BJzPvHB1agJ0QKBgQDWTqthpFA4YyMcFtXO
 06lSQIG9V6ghEFVuSAy/fapURrLa2ysLv06jwoV7PIJhS/MmaxBXtDFwTnCHtTrG
 HmDAJsC7PtiQzwf2C0KBlklqylcIzOs+deGKN3qkfAKZSrh2/yFmMsKB8OIguCiY
-Z3Agn8Y4ocPrt2YickHofUaGXQKBgQC8d16XRhipToZA极速4.0
+Z3Agn8Y4ocPrt2YickHofUaGXQKBgQC8d16XRhipToZA4.0
 -----END PRIVATE KEY-----`,
   }),
   databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
