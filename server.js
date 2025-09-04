@@ -2,6 +2,7 @@ import express from "express";
 import admin from "firebase-admin";
 import path from "path";
 import { fileURLToPath } from "url";
+import cookieParser from "cookie-parser";
 
 // لضبط التوقيت على UTC
 process.env.TZ = 'UTC';
@@ -14,42 +15,32 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
-// ✅ إضافة middleware لتحليل JSON
+// ✅ إضافة middleware لتحليل JSON والكوكيز
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // ✅ Firebase إعداد
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: "freefirerewardsdz-69572",
     clientEmail: "firebase-adminsdk-fbsvc@freefirerewardsdz-69572.iam.gserviceaccount.com",
-    privateKey: `-----BEGIN PRIVATE KEY-----
-MIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQCUrZELe0SbjOux
-e0AVmkTlluI8ye7/0ff6pENKMFHhqfIlDS0MAcwPHdY9pCGSD1gM43kkJToE63k6
-UpuQUXOrWQRcRB7E4rXrQfkmG68nbaM6WGJY+PCCBqxF654ygx/Qk74QfNv2lkWi
-PBIsoX0cLdRpzrxYbpHsy5G5qC/bIUSbcFwfL5o9klK1fnc24Bssx2nPckINv5Yq
-+5tCl6de1SBQnteWwM4gR7cje6w0q5kKT0Zs03fSa6acCMjOYzjliQrA69//b7Z3
-Ybd+kLlCrkZgoDtf+0b32hJnb1U8J14P2cVkK49/UynoIdXKbe0005CF8RFikpnP
-eG9bH4QHAgMBAAECgf87UL9Z921nsoy7/cVPHU349WyAKWVSiFAiWWZc/5S8UO6w
-hCrJ9NyFb6YrnBxzOjRvNC9CgKilCZDtb38HJbwRBqXHw0NyOBGPH22cTwjFOrQo
-ktYhMXQXwTxxDyj8/f3VfRvwZvD0PJkk7Ti5Yl6prCea26yM8KEC6LzUQ97T0U2z
-RPkdZXUNE2wxs4DnOe1bd8ud//wFd3Mu152BrALjNWPctwoifqr6SHBcIrjdvOAN
-dw3S45gtAwTe/H1XKIMjTl4E3sH+KXel9H28VKWkzkRj9zJ6rvQWUBy2mA8Jh07E
-RXwVQs5DqiCBUXdm4so3uHpVszXQh7RAn4WIyeECgYEAyC9yxZyXUQ4mI8HJrRLT
-RvQLxka1nOqLma7+rgqsr01rBN/k8KLVacb0p42mjvGy2zWUbAMzDn8EG+rifKaM
-2kKokwyHd1WVbSNMwmTaqMtUCxbLTe4fszkHQSrhW91haDc/AEgrpLbZPhD2qKVT
-PtQWvUfksoKJG8q65NzDtt0CgYEAviGytaFrEkHN65n/EnwfIkyhWvcz8587U8Ea
-rNhzh7XK/7D2zm5nCm8A+OtJC2CQyLd4Px6S1JwUAPWl5RH+glJ0bFy8sl1aowlU
-xmszxKqFO6HP8gLeAG9zZ2U6fk4YUAJusYFmS44mDtc48zGW27yzZSaK1mZelXTh
-iG2KDjMCgYBh996aWTUwhNUjgK47VlAxlDPC+E3fGmXxc1PORwkVzbSHMS9wmLAK
-0URgT5FouV6HqyQU7EfrWzvekcf/qt6Z3i9zr5kITMkRHUpuhD8Chmd9+czLObMn
-2cv0F5EsjR4ji434jFlXheixWEnuZOJliBQM1AdXWUzSXhey81uQvQKBgG1373Hd
-50zSsGHW/2JALpjL8Bb0v2ekJT9ariYYVaQsSh2fYOqH7DG4qaGnrh2r0pCN+eC1
-lKpu1qGazZIvIw8btEZzun0jfLzj8XhwXpT77MvhpV1cwz8S7Cn6wYvZIOxoCh2P
-ODuGM2lWB0cWJRqM8ejqIQPCWvDII9Yt40+7AoGBAImOAncrWagvrSKLaXDSzDyV
-zUmgIyg9oTzADl3a0uQfpXv1V9ggyJEFTccmZ03ln+2Db//WX8dOb6R29a4FLHJV
-Zi5OImTLeOSDnrYS76CyT4BNKincJnByDoJIBpUH5zMI+8G9C82CPr5oHfjJ/SWt
-Y7HSlngWesUHhECM4Q8p
+    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || `-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCdxbOc5RFjmNN4
+IIqTZSnHkW+THjkcfZvMt1Nz2b3O8YTJMQG7xVkRY10TKpvwPy7KFA4/U7QdXJf7
+cw11wrBUh8EKtg+vfQaC/lGFVzeNr2wCGB96NIlScF1TmcQWU7YQqGd6u4YirTrH
+NOj/aDr57HEH9zCcndBFYpJV5YCGgm1uUeo/ui2OPnSsy6+xcTtY9pC1kj7YcyLh
+Mu/j8mGsLgX8oxAFqvijYurgEAXFXEym3sXPx5LwVHvGPUwEDvTSmgj4I1aPKt1k
+5TaTlwnV+hbIqovFr0B+vJmTWLv0N44PVqD2JmV1htK/+wgVnSmsbEww3tqo8Y1+
+NzmNIuUNAgMBAAECggEAFe8orakWDg3u5m5FvcCseouQYrhqsbiPyrn4/uv4bLcc
+ohjvWALTg2yYQcQkelXaZCs+INU6/vMCySlBZ4wJ1jKqZpoRm7Dq0RbY0AwkU80d
+27utUqDPr5eiDe+ceIsqTm4PNtuvxg3l1FCZjPqZamoR+8zEpB13mVHfLNRzlh9/
+ZrJbzaP4A0JyESTaKHg9VI5R5i0FSkq87VTA1O/rqY3VTB8vvlDKlREGOcPplJ2c
+iaK++XOXdSCbDWizXh9PPjb4rV9zzSctif7QLY9QoK02oz4CILqCIdI+FEMQZF3/
+gtLBZRxbwIavHkc5HZ7VMYGo6ge00BJzPvHB1agJ0QKBgQDWTqthpFA4YyMcFtXO
+06lSQIG9V6ghEFVuSAy/fapURrLa2ysLv06jwoV7PIJhS/MmaxBXtDFwTnCHtTrG
+HmDAJsC7PtiQzwf2C0KBlklqylcIzOs+deGKN3qkfAKZSrh2/yFmMsKB8OIguCiY
+Z3Agn8Y4ocPrt2YickHofUaGXQKBgQC8d16XRhipToZA极速4.0
 -----END PRIVATE KEY-----`,
   }),
   databaseURL: "https://freefirerewardsdz-69572-default-rtdb.firebaseio.com"
@@ -97,7 +88,121 @@ function checkAllowedIP(clientIP, platform) {
   return allowedIPs.includes(clientIP);
 }
 
-// ✅ نقطة postback لدعم MyLead (بدون أي تغيير)
+// ✅ دالة للحصول على IP العميل
+function getClientIP(req) {
+  return req.ip || req.connection.remoteAddress || req.socket.remoteAddress || 
+         (req.connection.socket ? req.connection.socket.remoteAddress : null);
+}
+
+// ✅ معالجة روابط الإحالة
+app.get("/r/:referralId", async (req, res) => {
+  try {
+    const { referralId } = req.params;
+    const clientIP = getClientIP(req);
+    
+    console.log(`📩 زيارة رابط إحالة: ${referralId} من IP: ${clientIP}`);
+    
+    // التحقق إذا كان IP قد زار من قبل
+    const ipRef = admin.database().ref(`referralIPs/${clientIP}`);
+    const ipSnapshot = await ipRef.once('value');
+    
+    if (ipSnapshot.exists()) {
+      console.log(`⚠️ IP مكرر: ${clientIP}`);
+      return res.redirect('/');
+    }
+    
+    // حفظ IP لمنع重复使用
+    await ipRef.set({
+      referralId,
+      timestamp: Date.now(),
+      userAgent: req.get('User-Agent')
+    });
+    
+    // حفظ في الكوكيز لمدة 30 يوم
+    res.cookie('referralId', referralId, { 
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true
+    });
+    
+    res.redirect('/');
+  } catch (error) {
+    console.error("❌ Error processing referral link:", error);
+    res.redirect('/');
+  }
+});
+
+// ✅ تطبيق مكافأة الإحالة عند تسجيل مستخدم جديد
+app.post("/apply-referral", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const referralId = req.cookies.referralId;
+    
+    if (!referralId || !userId) {
+      return res.status(400).json({ error: "بيانات ناقصة" });
+    }
+    
+    // منع المستخدم من استخدام رابط الإحالة الخاص به
+    if (referralId === userId) {
+      return res.status(400).json({ error: "لا يمكن استخدام رابط الإحالة الخاص بك" });
+    }
+    
+    // التحقق إذا كان المستخدم قد استخدم إحالة من قبل
+    const userRef = admin.database().ref(`users/${userId}`);
+    const userSnapshot = await userRef.once('value');
+    
+    if (userSnapshot.exists() && userSnapshot.val().referredBy) {
+      return res.status(400).json({ error: "لقد استخدمت رابط إحالة من قبل" });
+    }
+    
+    // منح المكافآت
+    await rewardReferral(referralId, userId);
+    
+    // مسح كوكيز الإحالة
+    res.clearCookie('referralId');
+    
+    res.json({ success: true, message: "تم تطبيق رابط الإحالة بنجاح" });
+  } catch (error) {
+    console.error("❌ Error applying referral:", error);
+    res.status(500).json({ error: "فشل في تطبيق رابط الإحالة" });
+  }
+});
+
+// ✅ دالة منح مكافآت الإحالة
+async function rewardReferral(referrerId, referredUserId) {
+  const db = admin.database();
+  
+  // منح 200 نقطة للمُحيل
+  const referrerRef = db.ref(`users/${referrerId}`);
+  await referrerRef.transaction(user => {
+    if (user) {
+      user.points = (user.points || 0) + 200;
+      user.referralCount = (user.referralCount || 0) + 1;
+      user.totalEarned = (user.totalEarned || 0) + 200;
+      user.referrals = user.referrals || [];
+      user.referrals.push({
+        userId: referredUserId,
+        date: new Date().toISOString(),
+        points: 200
+      });
+    }
+    return user;
+  });
+  
+  // منح 100 نقطة للمُحال
+  const referredUserRef = db.ref(`users/${referredUserId}`);
+  await referredUserRef.transaction(user => {
+    if (user) {
+      user.points = (user.points || 0) + 100;
+      user.referredBy = referrerId;
+      user.signupBonus = 100;
+    }
+    return user;
+  });
+  
+  console.log(`✅ تم منح مكافآت الإحالة: ${referrerId} -> ${referredUserId}`);
+}
+
+// ✅ نقطة postback لدعم MyLead
 app.get("/postback", async (req, res) => {
   const { transaction_id, program_name, payout, ml_sub1, player_id, status } = req.query;
 
@@ -456,8 +561,9 @@ app.get("/info", (req, res) => {
   res.json({
     myleadPostbackUrl: "https://freefire-points-new.onrender.com/postback?transaction_id=[transaction_id]&program_name=[program_name]&payout=[payout]&ml_sub1=[ml_sub1]",
     adgemPostbackUrl: "https://freefire-points-new.onrender.com/postback-adgem?playerid={player_id}&amount={amount}&transaction_id={transaction_id}",
+    referralUrl: "https://freefire-points-new.onrender.com/r/:userId",
     allowedIPs: ALLOWED_IPS,
-    version: "1.1.0"
+    version: "2.0.0"
   });
 });
 
@@ -467,6 +573,8 @@ app.listen(port, () => {
   console.log(`📊 Endpoints:`);
   console.log(`   - GET  /postback (MyLead Postback)`);
   console.log(`   - GET  /postback-adgem (AdGem Postback)`);
+  console.log(`   - GET  /r/:userId (رابط الإحالة)`);
+  console.log(`   - POST /apply-referral (تطبيق الإحالة)`);
   console.log(`   - POST /link-account`);
   console.log(`   - GET  /user/:userId`);
   console.log(`   - GET  /transactions`);
@@ -477,4 +585,6 @@ app.listen(port, () => {
   console.log(`   https://freefire-points-new.onrender.com/postback?transaction_id=[transaction_id]&program_name=[program_name]&payout=[payout]&ml_sub1=[ml_sub1]`);
   console.log(`\n🔗 AdGem Postback URL:`);
   console.log(`   https://freefire-points-new.onrender.com/postback-adgem?playerid={player_id}&amount={amount}&transaction_id={transaction_id}`);
+  console.log(`\n🔗 Referral URL:`);
+  console.log(`   https://freefire-points-new.onrender.com/r/:userId`);
 });
