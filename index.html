@@ -1035,69 +1035,69 @@
             document.getElementById(id).classList.add('active');
         }
         
-        // بيانات الألعاب
-        const gameData = {
-            freefire: [
-                {gems: "100+10", points: 2670},
-                {gems: "210+21", points: 5775},
-                {gems: "530+53", points: 14220},
-                {gems: "1080+108", points: 27225},
-                {gems: "2200+220", points: 55440},
-            ],
-            pubg: [
-                {uc: 60, points: 3780},
-                {uc: 325, points: 14775},
-                {uc: 660, points: 28335},
-                {uc: 1800, points: 68340},
-                {uc: 3850, points: 135555},
-                {uc: 8100, points: 271005},
-            ],
-            roblox: [
-                {robux: 400, points: 15450},
-                {robux: 800, points: 27660},
-                {robux: 1700, points: 55440},
-                {robux: 4500, points: 133215},
-                {robux: 10000, points: 268890},
-            ],
-            efootball: [
-                {coins: 550, points: 16665},
-                {coins: 750, points: 24330},
-                {coins: 1040, points: 32220},
-                {coins: 2130, points: 61005},
-                {coins: 3250, points: 88785},
-                {coins: 5700, points: 149445},
-            ],
-            fifa: [
-                {fc: 499, points: 16665},
-                {fc: 520, points: 16665},
-                {fc: 999, points: 31005},
-                {fc: 1070, points: 31005},
-                {fc: 1999, points: 61005},
-                {fc: 2200, points: 61005},
-                {fc: 4999, points: 149445},
-                {fc: 5750, points: 149445},
-                {fc: 9999, points: 294450},
-                {fc: 12000, points: 294450},
-            ],
-            cod: [
-                {cp: 420, points: 15450},
-                {cp: 880, points: 30555},
-                {cp: 2400, points: 75450},
-                {cp: 5000, points: 148005},
-                {cp: 10800, points: 294330},
-            ],
-            bloodstrike: [
-                {gold: 105, points: 3105},
-                {gold: 320, points: 8340},
-                {gold: 540, points: 13215},
-                {gold: 1100, points: 25440},
-                {gold: 2260, points: 47670},
-                {gold: 5800, points: 115440},
-                {pass: "Elite Pass", points: 10995},
-                {pass: "Premium Pass", points: 22215},
-            ],
-        };
-        
+        // بيانات الألعاب المعدلة
+const gameData = {
+    freefire: [
+        {gems: "100+10", points: 1000},      // كان 2670
+        {gems: "210+21", points: 2000},      // كان 5775
+        {gems: "530+53", points: 5000},      // كان 14220
+        {gems: "1080+108", points: 10000},   // كان 27225
+        {gems: "2200+220", points: 20000},   // كان 55440
+    ],
+    pubg: [
+        {uc: 60, points: 1500},              // كان 3780
+        {uc: 325, points: 6000},             // كان 14775
+        {uc: 660, points: 11500},            // كان 28335
+        {uc: 1800, points: 27000},           // كان 68340
+        {uc: 3850, points: 54000},           // كان 135555
+        {uc: 8100, points: 108000},          // كان 271005
+    ],
+    roblox: [
+        {robux: 400, points: 5000},          // كان 15450
+        {robux: 800, points: 9000},          // كان 27660
+        {robux: 1700, points: 18000},        // كان 55440
+        {robux: 4500, points: 45000},        // كان 133215
+        {robux: 10000, points: 90000},       // كان 268890
+    ],
+    efootball: [
+        {coins: 550, points: 6000},          // كان 16665
+        {coins: 750, points: 8000},          // كان 24330
+        {coins: 1040, points: 12000},        // كان 32220
+        {coins: 2130, points: 25000},        // كان 61005
+        {coins: 3250, points: 35000},        // كان 88785
+        {coins: 5700, points: 50000},        // كان 149445
+    ],
+    fifa: [
+        {fc: 499, points: 6000},             // كان 16665
+        {fc: 520, points: 6000},             // كان 16665
+        {fc: 999, points: 12000},            // كان 31005
+        {fc: 1070, points: 12000},           // كان 31005
+        {fc: 1999, points: 25000},           // كان 61005
+        {fc: 2200, points: 25000},           // كان 61005
+        {fc: 4999, points: 50000},           // كان 149445
+        {fc: 5750, points: 50000},           // كان 149445
+        {fc: 9999, points: 100000},          // كان 294450
+        {fc: 12000, points: 100000},         // كان 294450
+    ],
+    cod: [
+        {cp: 420, points: 5000},             // كان 15450
+        {cp: 880, points: 10000},            // كان 30555
+        {cp: 2400, points: 25000},           // كان 75450
+        {cp: 5000, points: 50000},           // كان 148005
+        {cp: 10800, points: 100000},         // كان 294330
+    ],
+    bloodstrike: [
+        {gold: 105, points: 1200},           // كان 3105
+        {gold: 320, points: 2500},           // كان 8340
+        {gold: 540, points: 4000},           // كان 13215
+        {gold: 1100, points: 8000},          // كان 25440
+        {gold: 2260, points: 15000},         // كان 47670
+        {gold: 5800, points: 30000},         // كان 115440
+        {pass: "Elite Pass", points: 4000},  // كان 10995
+        {pass: "Premium Pass", points: 8000},// كان 22215
+    ],
+};
+              
         // دالة إنشاء رابط الإحالة
         function generateReferralLink() {
             if (!currentUserUid) return "https://freefire-points-new.onrender.com/";
