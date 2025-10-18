@@ -1029,6 +1029,17 @@
         let currentUserUid = null;
         let currentGameKey = "";
         
+        // التحقق من وجود إحالة في الرابط عند تحميل الصفحة
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const referralId = urlParams.get('r');
+            
+            if (referralId) {
+                console.log("🔗 تم اكتشاف رابط إحالة:", referralId);
+                localStorage.setItem('pendingReferral', referralId);
+            }
+        });
+        
         // دالة عرض الأقسام
         function showSection(id){
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -1036,72 +1047,122 @@
         }
         
         // بيانات الألعاب المعدلة
-const gameData = {
-    freefire: [
-        {gems: "100+10", points: 1000},      // كان 2670
-        {gems: "210+21", points: 2000},      // كان 5775
-        {gems: "530+53", points: 5000},      // كان 14220
-        {gems: "1080+108", points: 10000},   // كان 27225
-        {gems: "2200+220", points: 20000},   // كان 55440
-    ],
-    pubg: [
-        {uc: 60, points: 1500},              // كان 3780
-        {uc: 325, points: 6000},             // كان 14775
-        {uc: 660, points: 11500},            // كان 28335
-        {uc: 1800, points: 27000},           // كان 68340
-        {uc: 3850, points: 54000},           // كان 135555
-        {uc: 8100, points: 108000},          // كان 271005
-    ],
-    roblox: [
-        {robux: 400, points: 5000},          // كان 15450
-        {robux: 800, points: 9000},          // كان 27660
-        {robux: 1700, points: 18000},        // كان 55440
-        {robux: 4500, points: 45000},        // كان 133215
-        {robux: 10000, points: 90000},       // كان 268890
-    ],
-    efootball: [
-        {coins: 550, points: 6000},          // كان 16665
-        {coins: 750, points: 8000},          // كان 24330
-        {coins: 1040, points: 12000},        // كان 32220
-        {coins: 2130, points: 25000},        // كان 61005
-        {coins: 3250, points: 35000},        // كان 88785
-        {coins: 5700, points: 50000},        // كان 149445
-    ],
-    fifa: [
-        {fc: 499, points: 6000},             // كان 16665
-        {fc: 520, points: 6000},             // كان 16665
-        {fc: 999, points: 12000},            // كان 31005
-        {fc: 1070, points: 12000},           // كان 31005
-        {fc: 1999, points: 25000},           // كان 61005
-        {fc: 2200, points: 25000},           // كان 61005
-        {fc: 4999, points: 50000},           // كان 149445
-        {fc: 5750, points: 50000},           // كان 149445
-        {fc: 9999, points: 100000},          // كان 294450
-        {fc: 12000, points: 100000},         // كان 294450
-    ],
-    cod: [
-        {cp: 420, points: 5000},             // كان 15450
-        {cp: 880, points: 10000},            // كان 30555
-        {cp: 2400, points: 25000},           // كان 75450
-        {cp: 5000, points: 50000},           // كان 148005
-        {cp: 10800, points: 100000},         // كان 294330
-    ],
-    bloodstrike: [
-        {gold: 105, points: 1200},           // كان 3105
-        {gold: 320, points: 2500},           // كان 8340
-        {gold: 540, points: 4000},           // كان 13215
-        {gold: 1100, points: 8000},          // كان 25440
-        {gold: 2260, points: 15000},         // كان 47670
-        {gold: 5800, points: 30000},         // كان 115440
-        {pass: "Elite Pass", points: 4000},  // كان 10995
-        {pass: "Premium Pass", points: 8000},// كان 22215
-    ],
-};
-              
+        const gameData = {
+            freefire: [
+                {gems: "100+10", points: 1000},
+                {gems: "210+21", points: 2000},
+                {gems: "530+53", points: 5000},
+                {gems: "1080+108", points: 10000},
+                {gems: "2200+220", points: 20000},
+            ],
+            pubg: [
+                {uc: 60, points: 1500},
+                {uc: 325, points: 6000},
+                {uc: 660, points: 11500},
+                {uc: 1800, points: 27000},
+                {uc: 3850, points: 54000},
+                {uc: 8100, points: 108000},
+            ],
+            roblox: [
+                {robux: 400, points: 5000},
+                {robux: 800, points: 9000},
+                {robux: 1700, points: 18000},
+                {robux: 4500, points: 45000},
+                {robux: 10000, points: 90000},
+            ],
+            efootball: [
+                {coins: 550, points: 6000},
+                {coins: 750, points: 8000},
+                {coins: 1040, points: 12000},
+                {coins: 2130, points: 25000},
+                {coins: 3250, points: 35000},
+                {coins: 5700, points: 50000},
+            ],
+            fifa: [
+                {fc: 499, points: 6000},
+                {fc: 520, points: 6000},
+                {fc: 999, points: 12000},
+                {fc: 1070, points: 12000},
+                {fc: 1999, points: 25000},
+                {fc: 2200, points: 25000},
+                {fc: 4999, points: 50000},
+                {fc: 5750, points: 50000},
+                {fc: 9999, points: 100000},
+                {fc: 12000, points: 100000},
+            ],
+            cod: [
+                {cp: 420, points: 5000},
+                {cp: 880, points: 10000},
+                {cp: 2400, points: 25000},
+                {cp: 5000, points: 50000},
+                {cp: 10800, points: 100000},
+            ],
+            bloodstrike: [
+                {gold: 105, points: 1200},
+                {gold: 320, points: 2500},
+                {gold: 540, points: 4000},
+                {gold: 1100, points: 8000},
+                {gold: 2260, points: 15000},
+                {gold: 5800, points: 30000},
+                {pass: "Elite Pass", points: 4000},
+                {pass: "Premium Pass", points: 8000},
+            ],
+        };
+        
+        // تطبيق الإحالة تلقائياً عند التسجيل
+        function applyReferralOnSignup(userId) {
+            const referralId = localStorage.getItem('pendingReferral');
+            
+            if (!referralId || referralId === userId) {
+                localStorage.removeItem('pendingReferral');
+                return;
+            }
+            
+            console.log("🚀 تطبيق الإحالة للمستخدم:", userId, "من قبل:", referralId);
+            
+            // إضافة نقاط للمستخدم الذي قام بالإحالة
+            db.ref('users/' + referralId).once('value').then(snapshot => {
+                const referrerData = snapshot.val();
+                if (referrerData) {
+                    const newPoints = (referrerData.points || 0) + 200;
+                    const referralCount = (referrerData.referralCount || 0) + 1;
+                    const totalEarned = (referrerData.totalEarned || 0) + 200;
+                    
+                    // تحديث بيانات المُحيل
+                    db.ref('users/' + referralId).update({
+                        points: newPoints,
+                        referralCount: referralCount,
+                        totalEarned: totalEarned,
+                        referrals: [...(referrerData.referrals || []), {
+                            userId: userId,
+                            date: new Date().toISOString(),
+                            points: 200
+                        }]
+                    }).then(() => {
+                        // إعطاء المستخدم الجديد 100 نقطة هدية
+                        db.ref('users/' + userId).update({
+                            points: 100
+                        });
+                        
+                        console.log("✅ تم تطبيق الإحالة بنجاح");
+                        alert("🎉 تم تطبيق الإحالة بنجاح! حصلت على 100 نقطة هدية");
+                        
+                        // تحديث البيانات المعروضة
+                        updateUserData();
+                        updateReferralStats();
+                    });
+                }
+            }).catch(error => {
+                console.error("❌ Error applying referral:", error);
+            });
+            
+            localStorage.removeItem('pendingReferral');
+        }
+        
         // دالة إنشاء رابط الإحالة
         function generateReferralLink() {
             if (!currentUserUid) return "https://freefire-points-new.onrender.com/";
-            return `https://freefire-points-new.onrender.com/r/${currentUserUid}`;
+            return `https://freefire-points-new.onrender.com/?r=${currentUserUid}`;
         }
         
         // نسخ رابط الإحالة
@@ -1155,33 +1216,6 @@ const gameData = {
             document.getElementById('qrcode-modal').style.display = 'block';
         }
         
-        // تطبيق الإحالة تلقائياً عند التسجيل
-        function applyReferralOnSignup(userId) {
-            // التحقق من وجود رابط إحالة في الكوكيز
-            const referralId = getCookie('referralId');
-            if (!referralId || referralId === userId) return;
-            
-            // إرسال طلب تطبيق الإحالة
-            fetch('/apply-referral', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log("✅ تم تطبيق الإحالة بنجاح");
-                    // تحديث النقاط بعد الإحالة
-                    updateUserData();
-                }
-            })
-            .catch(error => {
-                console.error("❌ Error applying referral:", error);
-            });
-        }
-        
         // تحديث إحصائيات الإحالة
         function updateReferralStats() {
             if (!currentUserUid) return;
@@ -1200,7 +1234,7 @@ const gameData = {
                     if (userData.referrals && userData.referrals.length > 0) {
                         referralsList.innerHTML = userData.referrals.map(ref => `
                             <tr>
-                                <td>${new Date(ref.date).toLocaleDateString()}</td>
+                                <td>${new Date(ref.date).toLocaleDateString('ar-EG')}</td>
                                 <td>${ref.userId.substring(0, 8)}...</td>
                                 <td>+${ref.points}</td>
                                 <td><span class="status-completed">مكتمل</span></td>
@@ -1217,13 +1251,6 @@ const gameData = {
                     }
                 }
             });
-        }
-        
-        // دالة مساعدة للحصول على الكوكيز
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
         }
         
         // دالة للحصول على معرف المستخدم
@@ -1250,37 +1277,6 @@ const gameData = {
             
             const adgemLink = document.getElementById('adgem-link');
             adgemLink.href = `https://api.adgem.com/v1/wall?appid=31011&playerid=${userId}`;
-        }
-        
-        // دالة لربط المعرف التلقائي بمعرف جوجل
-        async function linkUserAccounts(googleUserId) {
-            try {
-                const autoGeneratedId = localStorage.getItem('userID');
-                
-                if (!autoGeneratedId) {
-                    console.error('لا يوجد معرف تلقائي في localStorage');
-                    return;
-                }
-                
-                const response = await fetch('/link-account', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        autoGeneratedId: autoGeneratedId,
-                        googleUserId: googleUserId
-                    }),
-                });
-                
-                if (response.ok) {
-                    console.log('✅ تم ربط الحسابين بنجاح');
-                } else {
-                    console.error('❌ فشل في ربط الحسابين:', await response.text());
-                }
-            } catch (error) {
-                console.error('❌ خطأ في ربط الحسابين:', error);
-            }
         }
         
         // عرض خيارات الشحن
@@ -1467,31 +1463,28 @@ const gameData = {
                     document.getElementById('login-btn').style.display = 'none';
                     document.getElementById('logout-btn').style.display = 'inline-block';
                     
-                    // ربط المعرف التلقائي بمعرف جوجل
-                    linkUserAccounts(user.uid);
-                    
-                    // تطبيق الإحالة إذا كان هناك رابط
+                    // تطبيق الإحالة أولاً
                     applyReferralOnSignup(user.uid);
                     
+                    // ثم تحديث بيانات المستخدم
                     const userRef = db.ref('users/' + currentUserUid);
                     userRef.once('value').then(snapshot => {
                         if(!snapshot.exists()){
                             userRef.set({
-                                points: 0,
+                                points: 100, // 100 نقطة هدية للمستخدم الجديد
                                 userId: "",
                                 referralCount: 0,
                                 totalEarned: 0,
                                 referrals: []
                             }).then(() => {
-                                document.getElementById('user-points').innerText = "0";
+                                document.getElementById('user-points').innerText = "100";
                                 document.getElementById('user-id').value = "";
+                                updateReferralStats();
                             });
                         } else {
                             const data = snapshot.val();
                             document.getElementById('user-points').innerText = data?.points || "0";
                             document.getElementById('user-id').value = data?.userId || "";
-                            
-                            // تحديث إحصائيات الإحالة
                             updateReferralStats();
                         }
                     });
@@ -1533,4 +1526,4 @@ const gameData = {
     </script>
     <script type='text/javascript' src='//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js'></script>
 </body>
-                    </html>
+</html>
