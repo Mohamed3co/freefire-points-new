@@ -1217,76 +1217,75 @@
     </div>
 
     <!-- قسم المتصدرين الجديد -->
-    <div id="leaderboard" class="section">
-        <div class="account-card">
-            <div class="account-header">
-                <h1><i class="fas fa-trophy"></i> لوحة المتصدرين</h1>
-                <p>أفضل اللاعبين في المنصة</p>
+<div id="leaderboard" class="section">
+    <div class="account-card">
+        <div class="account-header">
+            <h1><i class="fas fa-trophy"></i> لوحة المتصدرين</h1>
+            <p>أفضل اللاعبين في المنصة</p>
+        </div>
+        
+        <!-- إحصائيات سريعة -->
+        <div class="referral-stats">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-number" id="totalUsers">0</div>
+                <div>إجمالي اللاعبين</div>
             </div>
-            
-            <!-- إحصائيات سريعة -->
-            <div class="referral-stats">
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <div class="stat-number" id="totalUsers">0</div>
-                    <div>إجمالي اللاعبين</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-crown"></i>
-                    <div class="stat-number" id="topPlayerPoints">0</div>
-                    <div>أعلى نقاط</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-chart-line"></i>
-                    <div class="stat-number" id="totalPoints">0</div>
-                    <div>إجمالي النقاط</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-user-check"></i>
-                    <div class="stat-number" id="activeUsers">0</div>
-                    <div>لاعبين نشطين</div>
-                </div>
+            <div class="stat-card">
+                <i class="fas fa-crown"></i>
+                <div class="stat-number" id="topPlayerPoints">0</div>
+                <div>أعلى نقاط</div>
             </div>
-            
-            <!-- جدول المتصدرين -->
-            <h3 style="text-align:center; margin:30px 0 20px 0; color:#ffcc33;">
-                <i class="fas fa-list-ol"></i> ترتيب أفضل اللاعبين
-            </h3>
-            
-            <div class="table-container">
-                <table class="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>المركز</th>
-                            <th>المستخدم</th>
-                            <th>النقاط</th>
-                            <th>الإحالات</th>
-                            <th>المستوى</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-body">
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 30px;">
-                                <i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <div class="stat-number" id="totalPoints">0</div>
+                <div>إجمالي النقاط</div>
             </div>
-            
-            <div class="instructions">
-                <h3><i class="fas fa-info-circle"></i> كيف تصل إلى القمة؟</h3>
-                <ol>
-                    <li>أكمل العروض من قسم "العروض"</li>
-                    <li>ادعُ أصدقاءك من قسم "الإحالة"</li>
-                    <li>استمر في التفاعل يومياً</li>
-                    <li>استبدل نقاطك بمزايا حصرية</li>
-                </ol>
-                <p class="note">ملاحظة: يتم تحديث اللوحة تلقائياً كل 5 دقائق</p>
+            <div class="stat-card">
+                <i class="fas fa-user-check"></i>
+                <div class="stat-number" id="activeUsers">0</div>
+                <div>لاعبين نشطين</div>
             </div>
         </div>
+        
+        <!-- جدول المتصدرين -->
+        <h3 style="text-align:center; margin:30px 0 20px 0; color:#ffcc33;">
+            <i class="fas fa-list-ol"></i> ترتيب أفضل اللاعبين
+        </h3>
+        
+        <div class="table-container">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>المركز</th>
+                        <th>المستخدم</th>
+                        <th>النقاط</th>
+                        <th>الإحالات</th>
+                        <th>المستوى</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-table-body"> <!-- غيرت الـ ID هنا -->
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 30px;">
+                            <i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> كيف تصل إلى القمة؟</h3>
+            <ol>
+                <li>أكمل العروض من قسم "العروض"</li>
+                <li>ادعُ أصدقاءك من قسم "الإحالة"</li>
+                <li>استمر في التفاعل يومياً</li>
+                <li>استبدل نقاطك بمزايا حصرية</li>
+            </ol>
+            <p class="note">ملاحظة: يتم تحديث اللوحة تلقائياً كل 5 دقائق</p>
+        </div>
     </div>
-
+</div>
     <!-- قسم الشروط والسياسات -->
     <div id="terms" class="section">
         <div class="account-card">
@@ -1783,52 +1782,50 @@
         }
         
         // تحديث لوحة المتصدرين
-        function updateLeaderboard(){
-            const leaderboardRef = db.ref('users');
-            leaderboardRef.orderByChild('points').limitToLast(10).on('value', snapshot => {
-                const tbody = document.getElementById('leaderboard-body'); 
-                tbody.innerHTML = '';
-                if(!snapshot.exists()){ 
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:10px;">لا يوجد مستخدمون بعد</td></tr>'; 
-                    return; 
-                }
-                const users = []; 
-                snapshot.forEach(child => { users.push(child.val()); });
-                users.sort((a, b) => (b.points || 0) - (a.points || 0));
-                users.forEach((user, index) => {
-                    const row = `<tr><td>${index+1}</td><td>${user.userId || 'غير محدد'}</td><td>${user.points || 0}</td></tr>`;
-                    tbody.innerHTML += row;
-                });
-            });
-        }
+       function updateLeaderboardTable(users) {
+    const tbody = document.getElementById('leaderboard-table-body'); // غيرت الـ ID هنا
+    tbody.innerHTML = '';
+    
+    if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px;">لا يوجد لاعبين بعد</td></tr>';
+        return;
+    }
+    
+    // ترتيب المستخدمين حسب النقاط
+    users.sort((a, b) => (b.points || 0) - (a.points || 0));
+    
+    // عرض أفضل 50 لاعب فقط
+    const topUsers = users.slice(0, 50);
+    
+    topUsers.forEach((user, index) => {
+        const rank = index + 1;
+        const row = document.createElement('tr');
         
-        // دوال جديدة للمتصدرين والشروط
-        function updateLeaderboardStats() {
-            if (!currentUserUid) return;
-            
-            const usersRef = db.ref('users');
-            usersRef.once('value').then(snapshot => {
-                const users = [];
-                let totalPoints = 0;
-                let totalUsers = 0;
-                let topPoints = 0;
-                let activeUsers = 0;
-                
-                snapshot.forEach(child => {
-                    const user = child.val();
-                    if (user && user.points) {
-                        users.push(user);
-                        totalPoints += user.points || 0;
-                        totalUsers++;
-                        if (user.points > topPoints) {
-                            topPoints = user.points;
-                        }
-                        if (user.points > 0) {
-                            activeUsers++;
-                        }
-                    }
-                });
-                
+        // إضافة كلاس للمراكز الأولى
+        if (rank === 1) row.className = 'rank-1';
+        else if (rank === 2) row.className = 'rank-2';
+        else if (rank === 3) row.className = 'rank-3';
+        
+        // تحديد المستوى
+        const points = user.points || 0;
+        let level = 'مبتدئ';
+        if (points >= 10000) level = 'محترف';
+        else if (points >= 5000) level = 'متقدم';
+        else if (points >= 1000) level = 'متوسط';
+        
+        row.innerHTML = `
+            <td>
+                ${rank <= 3 ? `<div class="rank-badge">${rank}</div>` : rank}
+            </td>
+            <td>${user.userId || 'مستخدم'}</td>
+            <td><strong>${points}</strong></td>
+            <td>${user.referralCount || 0}</td>
+            <td><span style="color: #33ff77;">${level}</span></td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+       }         
                 // تحديث الإحصائيات
                 document.getElementById('totalUsers').textContent = totalUsers;
                 document.getElementById('topPlayerPoints').textContent = topPoints;
