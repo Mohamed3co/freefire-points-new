@@ -1788,45 +1788,76 @@
             }
         }
         
-        // دالة الشحن
+        // دالة الشحن المصححة تماماً
         function redeem(pointsRequired, gameKey, option, gameId){
-            if(!currentUserUid) return alert('⚠️ سجل الدخول أولاً');
+            if(!currentUserUid) {
+                alert('⚠️ سجل الدخول أولاً');
+                return;
+            }
             
+            const gameIdValue = document.getElementById('game-id-input').value.trim();
+            if(!gameIdValue) {
+                alert('⚠️ يرجى إدخال آيدي اللعبة أولاً');
+                return;
+            }
+
+            // جلب بيانات المستخدم
             db.ref('users/' + currentUserUid).once('value').then(snapshot => {
-                const data = snapshot.val();
-                if(!data) return alert('⚠️ لم يتم حفظ بياناتك بعد');
-                if((data.points || 0) < pointsRequired) return alert('❌ ليس لديك نقاط كافية لإتمام العملية');
+                const userData = snapshot.val();
+                if(!userData) {
+                    alert('⚠️ لم يتم حفظ بياناتك بعد');
+                    return;
+                }
+                
+                if((userData.points || 0) < pointsRequired) {
+                    alert('❌ ليس لديك نقاط كافية لإتمام العملية');
+                    return;
+                }
 
-                // خصم النقاط
-                db.ref('users/' + currentUserUid).update({
-                    points: (data.points || 0) - pointsRequired
-                });
-
-                // تسجيل طلب الشحن
-                const requestRef = db.ref('redeemRequests').push();
+                // 1. أولاً نخفض النقاط
+                const newPoints = (userData.points || 0) - pointsRequired;
+                
+                // 2. نحفظ الطلب أولاً
                 const requestData = {
                     userId: currentUserUid,
                     game: gameKey,
                     option: option,
-                    gameId: gameId,
+                    gameId: gameIdValue,
                     date: new Date().toISOString(),
                     status: "قيد المراجعة"
                 };
                 
-                requestRef.set(requestData).then(() => {
-                    // إرسال إشعار إلى التليجرام
-                    sendTelegramNotification(requestData, data).then(success => {
-                        if (success) {
+                // حفظ الطلب في Firebase
+                const requestRef = db.ref('redeemRequests').push();
+                requestRef.set(requestData)
+                    .then(() => {
+                        // 3. بعد ما الطلب يحفظ بنجاح، نخفض النقاط
+                        return db.ref('users/' + currentUserUid).update({
+                            points: newPoints
+                        });
+                    })
+                    .then(() => {
+                        // 4. بعد ما النقاط تنخفض، نرسل للتليجرام
+                        return sendTelegramNotification(requestData, userData);
+                    })
+                    .then((telegramSuccess) => {
+                        // 5. نخلي المستخدم يعرف أن الطلب تم
+                        if (telegramSuccess) {
                             alert('✅ تم إرسال طلب الشحن بنجاح وإرسال الإشعار للتليجرام');
                         } else {
                             alert('✅ تم إرسال طلب الشحن بنجاح (لم يتم إرسال الإشعار للتليجرام)');
                         }
                         hideGameOptions();
+                        updateUserData();
+                    })
+                    .catch(error => {
+                        console.error('Error in redeem process:', error);
+                        alert('❌ حدث خطأ في عملية الشحن: ' + error.message);
                     });
-                }).catch(error => {
-                    console.error('Error saving request:', error);
-                    alert('❌ حدث خطأ في حفظ الطلب');
-                });
+                    
+            }).catch(error => {
+                console.error('Error fetching user data:', error);
+                alert('❌ حدث خطأ في جلب بيانات المستخدم');
             });
         }
         
@@ -2124,4 +2155,4 @@
         });
     </script>
 </body>
-                    </html>
+    </html>
