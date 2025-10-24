@@ -470,10 +470,6 @@
             color: white;
         }
         
-        .ayet-logo {
-            background: linear-gradient(135deg, #9933ff, #6600cc);
-        }
-        
         .mylead-logo {
             background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
         }
@@ -509,14 +505,6 @@
         .offer-link:hover {
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(51, 204, 255, 0.4);
-        }
-        
-        .ayet-link {
-            background: linear-gradient(135deg, #9933ff, #6600cc);
-        }
-        
-        .ayet-link:hover {
-            box-shadow: 0 5px 15px rgba(153, 51, 255, 0.4);
         }
         
         .mylead-link {
@@ -573,7 +561,6 @@
             display: inline-block;
         }
         
-        /* أنماط جديدة لنظام الإحالة */
         .referral-link-container {
             background: rgba(30, 30, 50, 0.8);
             border-radius: 15px;
@@ -710,6 +697,39 @@
             color: var(--success);
             font-weight: bold;
         }
+
+        .offer-platform {
+            display: none;
+        }
+
+        .platform-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: rgba(30, 30, 50, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 180px;
+        }
+
+        .platform-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            background: rgba(40, 40, 60, 0.8);
+        }
+
+        .platform-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+        }
         
         @media (max-width: 600px) {
             header { font-size: 1.3em; padding: 0.8em; } 
@@ -733,6 +753,7 @@
             .referral-link { flex-direction: column; }
             .referral-link input { border-radius: 10px; margin-bottom: 10px; }
             .referral-link button { border-radius: 10px; width: 100%; }
+            .platform-card { width: 150px; }
         }
     </style>
 </head>
@@ -761,108 +782,161 @@
     <div id="offers" class="section">
         <h2 style="text-align:center; color:#33ccff; text-shadow:0 0 10px #33ccff;">العروض المتاحة</h2>
         
-        <!-- AyetStudio Offers - الجديد في الأعلى -->
-        <div class="offer-container">
-            <div class="offer-header">
-                <div class="offer-logo ayet-logo">
-                    <i class="fas fa-star"></i>
+        <!-- صفحة العروض الرئيسية -->
+        <div id="offers-main-page">
+            <div class="account-card">
+                <div class="account-header">
+                    <h1><i class="fas fa-gift"></i> منصات العروض</h1>
+                    <p>اختر المنصة المناسبة وابدأ ربح النقاط</p>
                 </div>
-                <h2 class="offer-title">عروض AyetStudio 🆕</h2>
-            </div>
-            
-            <p class="offer-description">
-                استفد من عروض AyetStudio المميزة لكسب النقاط من خلال إكمال مهام بسيطة. 
-                اختر من بين مئات العروض المناسبة واحصل على نقاطك فور إكمال المهمة!
-            </p>
-            
-            <div class="user-id-display">
-                <p>معرف المستخدم الخاص بك:</p>
-                <p class="user-id-value" id="user-id-display-ayet">جاري التحميل...</p>
-            </div>
-            
-            <a href="#" class="offer-link ayet-link" id="ayet-link" target="_blank">
-                <i class="fas fa-external-link-alt"></i> الانتقال إلى عروض AyetStudio
-            </a>
-            
-            <div class="instructions">
-                <h3><i class="fas fa-info-circle"></i> كيفية الاستفادة من العروض:</h3>
-                <ol>
-                    <li>انقر على الرابط أعلاه للانتقال إلى صفحة العروض</li>
-                    <li>اختر العرض الذي يناسبك من القائمة</li>
-                    <li>اتبع التعليمات المطلوبة لإكمال العرض</li>
-                    <li>ستضاف النقاط إلى حسابك تلقائياً بعد إكمال المهمة</li>
-                    <li>يمكنك استبدال النقاط بمزايا داخل الألعاب</li>
-                </ol>
+                
+                <!-- بطاقات المنصات -->
+                <div class="games-container">
+                    <!-- منصة MyLead -->
+                    <div class="platform-card" onclick="showOfferPlatform('mylead')">
+                        <div class="platform-logo mylead-logo">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <p style="font-size: 1.2em; margin-bottom: 5px;">MyLead</p>
+                        <small style="color: #ccc;">عروض متنوعة ومربحة</small>
+                    </div>
+                    
+                    <!-- منصة AdGem -->
+                    <div class="platform-card" onclick="showOfferPlatform('adgem')">
+                        <div class="platform-logo adgem-logo">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <p style="font-size: 1.2em; margin-bottom: 5px;">AdGem</p>
+                        <small style="color: #ccc;">تطبيقات وألعاب مجانية</small>
+                    </div>
+                    
+                    <!-- منصة جديدة يمكن إضافتها لاحقاً -->
+                    <div class="platform-card" onclick="showOfferPlatform('coming-soon')">
+                        <div class="platform-logo" style="background: linear-gradient(135deg, #33ff77, #00cc44);">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <p style="font-size: 1.2em; margin-bottom: 5px;">قريباً</p>
+                        <small style="color: #ccc;">منصات جديدة قريباً</small>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> كيف تعمل المنصات؟</h3>
+                    <p>كل منصة تقدم أنواع مختلفة من العروض. اختر المنصة التي تناسبك وابدأ بربح النقاط من خلال إكمال المهام البسيطة.</p>
+                    <ol>
+                        <li>اختر المنصة التي تفضلها</li>
+                        <li>انقر على الرابط للانتقال إلى صفحة العروض</li>
+                        <li>اختر العرض المناسب من القائمة</li>
+                        <li>اتبع التعليمات المطلوبة لإكمال العرض</li>
+                        <li>ستضاف النقاط إلى حسابك تلقائياً بعد إكمال المهمة</li>
+                    </ol>
+                </div>
             </div>
         </div>
         
-        <!-- MyLead Offers -->
-        <div class="offer-container">
-            <div class="offer-header">
-                <div class="offer-logo mylead-logo">
-                    <i class="fas fa-coins"></i>
+        <!-- صفحة MyLead -->
+        <div id="mylead-offers" class="offer-platform">
+            <div class="offer-container">
+                <div class="offer-header">
+                    <button onclick="showMainOffersPage()" class="btn" style="background: rgba(255,255,255,0.1); color: white; margin-left: 15px;">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                    <div class="offer-logo mylead-logo">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h2 class="offer-title">عروض MyLead</h2>
                 </div>
-                <h2 class="offer-title">عروض MyLead</h2>
-            </div>
-            
-            <p class="offer-description">
-                استفد من عروض MyLead المميزة لكسب النقاط التي يمكنك استبدالها بمزايا حصرية في ألعابك المفضلة. 
-                كل ما عليك هو إكمال المهام البسيطة والحصول على نقاطك فوراً.
-            </p>
-            
-            <div class="user-id-display">
-                <p>معرف المستخدم الخاص بك:</p>
-                <p class="user-id-value" id="user-id-display-mylead">جاري التحميل...</p>
-            </div>
-            
-            <a href="#" class="offer-link mylead-link" id="mylead-link" target="_blank">
-                <i class="fas fa-external-link-alt"></i> الانتقال إلى عروض MyLead
-            </a>
-            
-            <div class="instructions">
-                <h3><i class="fas fa-info-circle"></i> كيفية الاستفادة من العروض:</h3>
-                <ol>
-                    <li>انقر على الرابط أعلاه للانتقال إلى صفحة العروض</li>
-                    <li>اختر العرض الذي يناسبك من القائمة</li>
-                    <li>اتبع التعليمات المطلوبة لإكمال العرض</li>
-                    <li>ستضاف النقاط إلى حسابك تلقائياً بعد إكمال المهمة</li>
-                    <li>يمكنك استبدال النقاط بمزايا داخل الألعاب</li>
-                </ol>
+                
+                <p class="offer-description">
+                    استفد من عروض MyLead المميزة لكسب النقاط التي يمكنك استبدالها بمزايا حصرية في ألعابك المفضلة. 
+                    كل ما عليك هو إكمال المهام البسيطة والحصول على نقاطك فوراً.
+                </p>
+                
+                <div class="user-id-display">
+                    <p>معرف المستخدم الخاص بك:</p>
+                    <p class="user-id-value" id="user-id-display-mylead">جاري التحميل...</p>
+                </div>
+                
+                <a href="#" class="offer-link mylead-link" id="mylead-link" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> الانتقال إلى عروض MyLead
+                </a>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> كيفية الاستفادة من العروض:</h3>
+                    <ol>
+                        <li>انقر على الرابط أعلاه للانتقال إلى صفحة العروض</li>
+                        <li>اختر العرض الذي يناسبك من القائمة</li>
+                        <li>اتبع التعليمات المطلوبة لإكمال العرض</li>
+                        <li>ستضاف النقاط إلى حسابك تلقائياً بعد إكمال المهمة</li>
+                        <li>يمكنك استبدال النقاط بمزايا داخل الألعاب</li>
+                    </ol>
+                </div>
             </div>
         </div>
         
-        <!-- AdGem Offers -->
-        <div class="offer-container">
-            <div class="offer-header">
-                <div class="offer-logo adgem-logo">
-                    <i class="fas fa-gem"></i>
+        <!-- صفحة AdGem -->
+        <div id="adgem-offers" class="offer-platform">
+            <div class="offer-container">
+                <div class="offer-header">
+                    <button onclick="showMainOffersPage()" class="btn" style="background: rgba(255,255,255,0.1); color: white; margin-left: 15px;">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                    <div class="offer-logo adgem-logo">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h2 class="offer-title">عروض AdGem</h2>
                 </div>
-                <h2 class="offer-title">عروض AdGem</h2>
+                
+                <p class="offer-description">
+                    استمتع بمجموعة واسعة من عروض AdGem التي تمنحك فرصة ربح النقاط من خلال تجربة تطبيقات جديدة، 
+                    مشاهدة الإعلانات، أو المشاركة في استطلاعات الرأي. احصل على نقاطك فور إكمال المهمة!
+                </p>
+                
+                <div class="user-id-display">
+                    <p>معرف المستخدم الخاص بك:</p>
+                    <p class="user-id-value" id="user-id-display-adgem">جاري التحميل...</p>
+                </div>
+                
+                <a href="#" class="offer-link adgem-link" id="adgem-link" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> الانتقال إلى عروض AdGem
+                </a>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> كيفية الاستفادة من العروض:</h3>
+                    <ol>
+                        <li>انقر على الرابط أعلاه للانتقال إلى صفحة العروض</li>
+                        <li>اختر العرض الذي تريد المشاركة فيه</li>
+                        <li>اقرأ متطلبات كل عرض بعناية</li>
+                        <li>أكمل المهمة المطلوبة كما هو موضح</li>
+                        <li>ستتم إضافة النقاط إلى حسابك بعد التحقق من إكمال المهمة</li>
+                    </ol>
+                </div>
             </div>
-            
-            <p class="offer-description">
-                استمتع بمجموعة واسعة من عروض AdGem التي تمنحك فرصة ربح النقاط من خلال تجربة تطبيقات جديدة، 
-                مشاهدة الإعلانات، أو المشاركة في استطلاعات الرأي. احصل على نقاطك فور إكمال المهمة!
-            </p>
-            
-            <div class="user-id-display">
-                <p>معرف المستخدم الخاص بك:</p>
-                <p class="user-id-value" id="user-id-display-adgem">جاري التحميل...</p>
-            </div>
-            
-            <a href="#" class="offer-link adgem-link" id="adgem-link" target="_blank">
-                <i class="fas fa-external-link-alt"></i> الانتقال إلى عروض AdGem
-            </a>
-            
-            <div class="instructions">
-                <h3><i class="fas fa-info-circle"></i> كيفية الاستفادة من العروض:</h3>
-                <ol>
-                    <li>انقر على الرابط أعلاه للانتقال إلى صفحة العروض</li>
-                    <li>اختر العرض الذي تريد المشاركة فيه</li>
-                    <li>اقرأ متطلبات كل عرض بعناية</li>
-                    <li>أكمل المهمة المطلوبة كما هو موضح</li>
-                    <li>ستتم إضافة النقاط إلى حسابك بعد التحقق من إكمال المهمة</li>
-                </ol>
+        </div>
+        
+        <!-- صفحة Coming Soon -->
+        <div id="coming-soon-offers" class="offer-platform">
+            <div class="offer-container">
+                <div class="offer-header">
+                    <button onclick="showMainOffersPage()" class="btn" style="background: rgba(255,255,255,0.1); color: white; margin-left: 15px;">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                    <div class="offer-logo" style="background: linear-gradient(135deg, #33ff77, #00cc44);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h2 class="offer-title">قريباً إن شاء الله</h2>
+                </div>
+                
+                <p class="offer-description">
+                    نحن نعمل على إضافة منصات جديدة ومميزة لتوفير المزيد من فرص ربح النقاط. 
+                    ترقبوا الإعلان عن المنصات الجديدة قريباً!
+                </p>
+                
+                <div style="text-align: center; padding: 30px;">
+                    <i class="fas fa-tools" style="font-size: 60px; color: #33ff77; margin-bottom: 20px;"></i>
+                    <h3 style="color: #ffcc33;">قيد التطوير</h3>
+                    <p>سنعلن عن المنصات الجديدة قريباً</p>
+                </div>
             </div>
         </div>
     </div>
@@ -960,7 +1034,7 @@
         </div>
     </div>
 
-    <!-- قسم الإحالة الجديد -->
+    <!-- قسم الإحالة -->
     <div id="referral" class="section">
         <div class="account-card">
             <div class="account-header">
@@ -1088,6 +1162,43 @@
         let currentUserUid = null;
         let currentGameKey = "";
         
+        // دوال التنقل بين صفحات العروض
+        function showOfferPlatform(platform) {
+            // إخفاء جميع الصفحات
+            document.getElementById('offers-main-page').style.display = 'none';
+            document.querySelectorAll('.offer-platform').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // إظهار الصفحة المطلوبة
+            if (platform === 'coming-soon') {
+                document.getElementById('coming-soon-offers').style.display = 'block';
+            } else {
+                document.getElementById(platform + '-offers').style.display = 'block';
+            }
+        }
+
+        function showMainOffersPage() {
+            // إخفاء جميع صفحات المنصات
+            document.querySelectorAll('.offer-platform').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // إظهار الصفحة الرئيسية
+            document.getElementById('offers-main-page').style.display = 'block';
+        }
+
+        // دالة عرض الأقسام
+        function showSection(id){
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            // إذا كان قسم العروض، إظهار الصفحة الرئيسية
+            if (id === 'offers') {
+                showMainOffersPage();
+            }
+        }
+        
         // التحقق من وجود إحالة في الرابط عند تحميل الصفحة
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1098,12 +1209,6 @@
                 localStorage.setItem('pendingReferral', referralId);
             }
         });
-        
-        // دالة عرض الأقسام
-        function showSection(id){
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
         
         // بيانات الألعاب
         const gameData = {
@@ -1327,10 +1432,6 @@
         // تحديث الروابط بمعرف المستخدم
         function updateLinksWithUserID() {
             const userId = getUserID();
-            
-            // AyetStudio - الجديد في الأعلى
-            document.getElementById('user-id-display-ayet').textContent = userId;
-            document.getElementById('ayet-link').href = `https://offerwall.ayet.io/offers?adSlot=23600&externalIdentifier=${userId}`;
             
             // MyLead
             document.getElementById('user-id-display-mylead').textContent = userId;
@@ -1588,4 +1689,4 @@
     </script>
     <script type='text/javascript' src='//pl27543353.revenuecpmgate.com/69/01/31/69013192078fbb6c49bf6dd3f9880d81.js'></script>
 </body>
-    </html>
+            </html>
